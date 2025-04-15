@@ -1,3 +1,24 @@
+# Voxline Call Manager
+
+Este projeto foi desenvolvido como parte do Projeto de Extensão III do curso de Engenharia de Software pelo Centro Universitário UniAmérica Descomplica. O PEX tem como objetivo conectar os conhecimentos acadêmicos com as necessidades reais de instituições, ONGs e comunidades, por meio da análise crítica de problemas, identificação de fatores-chave e proposição de soluções tecnológicas aplicáveis.
+
+Neste contexto, foi realizado um diagnóstico detalhado em parceria com a Prefeitura de Palmital, resultando no desenvolvimento de um protótipo funcional para gestão de chamadas telefônicas, com foco na melhoria do atendimento à população na área da saúde.
+
+Este projeto também é desenvolvido pelo PEX em parceria com a Prefeitura Municipal de Palmital.
+
+## Finalidade do Projeto
+
+Desenvolver um sistema capaz de interagir com a central telefônica, permitindo a gestão das chamadas, geração de relatórios, integração com outros sistemas e acompanhamento das operações em tempo real.
+
+### Objetivos Detalhados
+
+- Coletar ligações telefônicas da central telefônica via API CDR Output da Grandstream.
+- Processar e armazenar esses dados pelo máximo de período possível.
+- Sistema com acesso a telefonistas e usuários para verificar seus registros telefônicos, com auditoria, logs, permissão de acesso por nível, segurança, agenda telefônica integrada e todos os CRUD necessários.
+- Geração de relatórios personalizados e completos (detalhes adicionais estarão nos próximos cards).
+
+---
+
 # Welcome to your Lovable project
 
 ## Project info
