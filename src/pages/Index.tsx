@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Phone, PhoneCall, Users, Settings, BarChart3, PhoneIncoming } from "lucide-react";
+import { Phone, PhoneCall, Users, Settings, BarChart3, PhoneIncoming, PieChart } from "lucide-react";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -71,6 +71,9 @@ const Index = () => {
       case "settings":
         navigate("/settings");
         break;
+      case "reports":
+        navigate("/reports");
+        break;
     }
   };
 
@@ -138,6 +141,15 @@ const Index = () => {
                   >
                     <Settings className="h-4 w-4 mr-2" />
                     <span>Configurações</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton 
+                    className={activePage === "reports" ? "bg-sidebar-accent" : ""}
+                    onClick={() => handleMenuClick("reports")}
+                  >
+                    <PieChart className="h-4 w-4 mr-2" />
+                    <span>Relatórios</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
