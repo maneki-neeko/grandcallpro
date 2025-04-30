@@ -196,7 +196,6 @@ const Extensions = () => {
                   <TableHead>Número</TableHead>
                   <TableHead>Departamento</TableHead>
                   <TableHead>Setor</TableHead>
-                  <TableHead>Subsetor</TableHead>
                   <TableHead>Colaborador</TableHead>
                   <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
@@ -209,7 +208,6 @@ const Extensions = () => {
                     </TableCell>
                     <TableCell>{extension.departamento}</TableCell>
                     <TableCell>{extension.setor}</TableCell>
-                    <TableCell>{extension.subsetor}</TableCell>
                     <TableCell>{extension.colaborador}</TableCell>
                     <TableCell className="text-right space-x-2">
                       <Button
@@ -285,20 +283,6 @@ const Extensions = () => {
                   name="setor"
                   placeholder="Ex: Contabilidade"
                   value={formData.setor}
-                  onChange={handleChange}
-                  className="col-span-3"
-                />
-              </div>
-
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="subsetor" className="text-right">
-                  Subsetor
-                </Label>
-                <Input
-                  id="subsetor"
-                  name="subsetor"
-                  placeholder="Ex: Pagamentos"
-                  value={formData.subsetor}
                   onChange={handleChange}
                   className="col-span-3"
                 />

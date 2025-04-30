@@ -61,7 +61,6 @@ const Settings = () => {
               <TabsTrigger value="integration">
                 Integração Grandstream
               </TabsTrigger>
-              <TabsTrigger value="notifications">Notificações</TabsTrigger>
               <TabsTrigger value="backup">Backup</TabsTrigger>
             </TabsList>
             <TabsContent value="general">
@@ -183,54 +182,6 @@ const Settings = () => {
                       Testar Conexão
                     </Button>
                     <Button variant="secondary">Sincronizar Ramais</Button>
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button onClick={handleSave} disabled={saving}>
-                    {saving ? "Salvando..." : "Salvar Alterações"}
-                  </Button>
-                </CardFooter>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="notifications">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Configurações de Notificações</CardTitle>
-                  <CardDescription>
-                    Gerencie como o sistema notifica os eventos.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <Switch id="email-notifications" defaultChecked />
-                    <Label htmlFor="email-notifications">
-                      Notificações por Email
-                    </Label>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Switch id="desktop-notifications" defaultChecked />
-                    <Label htmlFor="desktop-notifications">
-                      Notificações Desktop
-                    </Label>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Switch id="sound-notifications" defaultChecked />
-                    <Label htmlFor="sound-notifications">
-                      Notificações Sonoras
-                    </Label>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="email-recipient">
-                      Email do Administrador
-                    </Label>
-                    <Input
-                      id="email-recipient"
-                      defaultValue="admin@empresa.com"
-                    />
                   </div>
                 </CardContent>
                 <CardFooter>
