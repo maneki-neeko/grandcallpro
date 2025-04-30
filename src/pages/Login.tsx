@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
-import { useAuth } from '../lib/auth';
-import { useNavigate, Link } from 'react-router-dom';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
-import { LockKeyhole, Mail } from 'lucide-react';
+import React, { useState } from "react";
+import { useAuth } from "../lib/auth";
+import { useNavigate, Link } from "react-router-dom";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { LockKeyhole, Mail } from "lucide-react";
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -19,9 +26,9 @@ const Login: React.FC = () => {
     setIsSubmitting(true);
     try {
       // Simulação de login (substitua pela lógica real)
-      await new Promise(res => setTimeout(res, 800));
+      await new Promise((res) => setTimeout(res, 800));
       login();
-      navigate('/');
+      navigate("/");
     } finally {
       setIsSubmitting(false);
     }
@@ -32,7 +39,9 @@ const Login: React.FC = () => {
       <div className="flex-1 flex justify-center items-center">
         <Card className="border-none shadow-xl w-full max-w-md">
           <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-3xl font-extrabold tracking-tight text-[#004a80]">Voxline Call Manager</CardTitle>
+            <CardTitle className="text-3xl font-extrabold tracking-tight text-[#004a80]">
+              Voxline Call Manager
+            </CardTitle>
             <CardDescription>
               Entre com suas credenciais para acessar o sistema
             </CardDescription>
@@ -48,7 +57,7 @@ const Login: React.FC = () => {
                     placeholder="seu.email@exemplo.com"
                     type="email"
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="pl-10 font-sora"
                     required
                     autoComplete="email"
@@ -66,7 +75,7 @@ const Login: React.FC = () => {
                     placeholder="••••••••"
                     type="password"
                     value={password}
-                    onChange={e => setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="pl-10 font-sora"
                     required
                     autoComplete="current-password"
@@ -83,13 +92,16 @@ const Login: React.FC = () => {
                 {isSubmitting ? "Entrando..." : "Entrar"}
               </Button>
               <div className="text-center text-sm text-muted-foreground mt-2">
-                Não tem uma conta?{' '}
+                Não tem uma conta?{" "}
                 <Link to="/register" className="text-primary hover:underline">
                   Registre-se
                 </Link>
               </div>
               <div className="text-center text-xs mt-1">
-                <Link to="/forgot-password" className="text-primary hover:underline">
+                <Link
+                  to="/forgot-password"
+                  className="text-primary hover:underline"
+                >
                   Esqueceu a senha?
                 </Link>
               </div>

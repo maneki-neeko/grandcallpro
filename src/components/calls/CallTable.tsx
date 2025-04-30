@@ -1,17 +1,15 @@
-
-import React from 'react';
-import { 
+import React from "react";
+import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
-import CallStatusBadge from './CallStatusBadge';
-import ExtensionHoverCard, { DepartmentInfo } from './ExtensionHoverCard';
+import CallStatusBadge from "./CallStatusBadge";
+import ExtensionHoverCard, { DepartmentInfo } from "./ExtensionHoverCard";
 
 // Type for call data
 export interface CallRecord {
@@ -34,25 +32,35 @@ const CallTable: React.FC<CallTableProps> = ({ calls, extensionInfo }) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-center w-28">Origem <span className="text-gray-400">↑</span></TableHead>
-              <TableHead className="text-center w-28">Destino <span className="text-gray-400">↑</span></TableHead>
-              <TableHead className="text-center w-40">Data e Hora <span className="text-gray-400">↓</span></TableHead>
-              <TableHead className="text-center w-32">Desfecho <span className="text-gray-400">↑</span></TableHead>
-              <TableHead className="text-center w-28">Duração <span className="text-gray-400">↑</span></TableHead>
+              <TableHead className="text-center w-28">
+                Origem <span className="text-gray-400">↑</span>
+              </TableHead>
+              <TableHead className="text-center w-28">
+                Destino <span className="text-gray-400">↑</span>
+              </TableHead>
+              <TableHead className="text-center w-40">
+                Data e Hora <span className="text-gray-400">↓</span>
+              </TableHead>
+              <TableHead className="text-center w-32">
+                Desfecho <span className="text-gray-400">↑</span>
+              </TableHead>
+              <TableHead className="text-center w-28">
+                Duração <span className="text-gray-400">↑</span>
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {calls.map((call, idx) => (
               <TableRow key={idx}>
                 <TableCell className="text-center">
-                  <ExtensionHoverCard 
-                    extension={call.origem} 
+                  <ExtensionHoverCard
+                    extension={call.origem}
                     info={extensionInfo[call.origem]}
                   />
                 </TableCell>
                 <TableCell className="text-center">
-                  <ExtensionHoverCard 
-                    extension={call.destino} 
+                  <ExtensionHoverCard
+                    extension={call.destino}
                     info={extensionInfo[call.destino]}
                   />
                 </TableCell>

@@ -1,18 +1,24 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { Phone, PhoneCall, Users, Settings, BarChart3, PhoneIncoming, PieChart } from "lucide-react";
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import { useNavigate } from "react-router-dom";
+import { Phone } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { callData, extensionInfo } from "@/data/callsData";
 
 const Index = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [activePage, setActivePage] = useState("dashboard");
   const [notificationModalOpen, setNotificationModalOpen] = useState(false);
 
   // Mock data for recent calls
@@ -23,41 +29,27 @@ const Index = () => {
     time: call.data.split(" ")[1],
     duration: call.duracao,
     type: call.desfecho === "ATENDIDA" ? "incoming" : "missed",
-    status: call.desfecho === "ATENDIDA" ? "completed" : "missed"
+    status: call.desfecho === "ATENDIDA" ? "completed" : "missed",
   }));
 
   // Mock notifications
   const notifications = [
-    { id: 1, title: "Nova chamada recebida", description: "Você recebeu uma chamada de (11) 98765-4321." },
-    { id: 2, title: "Chamada perdida", description: "Você perdeu uma chamada de (11) 91234-5678." },
-    { id: 3, title: "Usuário adicionado", description: "Novo usuário Paulo foi adicionado ao sistema." },
+    {
+      id: 1,
+      title: "Nova chamada recebida",
+      description: "Você recebeu uma chamada de (11) 98765-4321.",
+    },
+    {
+      id: 2,
+      title: "Chamada perdida",
+      description: "Você perdeu uma chamada de (11) 91234-5678.",
+    },
+    {
+      id: 3,
+      title: "Usuário adicionado",
+      description: "Novo usuário Paulo foi adicionado ao sistema.",
+    },
   ];
-
-  const handleMenuClick = (page: string) => {
-    setActivePage(page);
-    
-    // Navegar para a página correspondente
-    switch (page) {
-      case "dashboard":
-        navigate("/");
-        break;
-      case "calls":
-        navigate("/calls");
-        break;
-      case "users":
-        navigate("/users");
-        break;
-      case "extensions":
-        navigate("/extensions");
-        break;
-      case "backup":
-        navigate("/backup");
-        break;
-      case "reports":
-        navigate("/reports");
-        break;
-    }
-  };
 
   return (
     <div className="flex min-h-screen w-full">
@@ -69,20 +61,29 @@ const Index = () => {
             Notificações
           </Button>
         </header>
-        <Dialog open={notificationModalOpen} onOpenChange={setNotificationModalOpen}>
+        <Dialog
+          open={notificationModalOpen}
+          onOpenChange={setNotificationModalOpen}
+        >
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Notificações</DialogTitle>
-              <DialogDescription>Veja as notificações recentes do sistema.</DialogDescription>
+              <DialogDescription>
+                Veja as notificações recentes do sistema.
+              </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 mt-4">
               {notifications.length === 0 ? (
-                <div className="text-center text-muted-foreground">Nenhuma notificação.</div>
+                <div className="text-center text-muted-foreground">
+                  Nenhuma notificação.
+                </div>
               ) : (
                 notifications.map((n) => (
                   <div key={n.id} className="border rounded p-3 bg-muted">
                     <div className="font-semibold">{n.title}</div>
-                    <div className="text-sm text-muted-foreground">{n.description}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {n.description}
+                    </div>
                   </div>
                 ))
               )}

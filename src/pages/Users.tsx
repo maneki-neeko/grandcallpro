@@ -1,39 +1,18 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { UserPlus, Pencil, Trash } from "lucide-react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import {
-  BarChart3,
-  Phone,
-  PhoneCall,
-  PhoneIncoming,
-  Settings,
-  Users as UsersIcon,
-} from "lucide-react";
 
 const Users = () => {
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
 
   // Mock de dados para usuários

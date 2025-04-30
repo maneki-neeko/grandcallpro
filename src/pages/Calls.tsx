@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Phone } from "lucide-react";
 import CallFilters from "@/components/calls/CallFilters";
 import CallTable from "@/components/calls/CallTable";

@@ -1,25 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  BarChart3,
-  Phone,
-  PhoneCall,
-  PhoneIncoming,
-  Settings,
-  Users,
-  ArrowUpDown,
-  CalendarIcon,
-} from "lucide-react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+import { ArrowUpDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
@@ -43,7 +23,6 @@ import { Input } from "@/components/ui/input";
 import { DateRange } from "react-day-picker";
 
 const Reports = () => {
-  const navigate = useNavigate();
   const [reportType, setReportType] = useState("missed-calls");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [department, setDepartment] = useState("all");

@@ -9,7 +9,6 @@ import NotFound from "./pages/NotFound";
 import Calls from "./pages/Calls";
 import Users from "./pages/Users";
 import Extensions from "./pages/Extensions";
-import Settings from "./pages/Backup";
 import Login from "./pages/Login";
 import Register from "./pages/Register"; // Added import
 import ForgotPassword from "./pages/ForgotPassword"; // Added import

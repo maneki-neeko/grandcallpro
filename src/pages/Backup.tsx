@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -13,7 +12,6 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 
 const Backup = () => {
-  const navigate = useNavigate();
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
 
@@ -37,7 +35,8 @@ const Backup = () => {
             <CardHeader>
               <CardTitle>Backup</CardTitle>
               <CardDescription>
-                Realize o backup dos dados do sistema manualmente ou configure o backup automático.
+                Realize o backup dos dados do sistema manualmente ou configure o
+                backup automático.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -46,7 +45,11 @@ const Backup = () => {
                 <Label htmlFor="auto-backup">Backup Automático</Label>
               </div>
               <div className="pt-4">
-                <Button variant="secondary" onClick={handleSave} disabled={saving}>
+                <Button
+                  variant="secondary"
+                  onClick={handleSave}
+                  disabled={saving}
+                >
                   {saving ? "Realizando backup..." : "Iniciar Backup Manual"}
                 </Button>
               </div>
