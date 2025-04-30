@@ -59,9 +59,6 @@ const Index = () => {
       case "calls":
         navigate("/calls");
         break;
-      // Removido: case "active":
-        // Removido: navigate("/active-calls");
-        break;
       case "users":
         navigate("/users");
         break;
@@ -79,144 +76,69 @@ const Index = () => {
 
   return (
     <div className="flex min-h-screen w-full">
-      {/* Sidebar */}
-      <Sidebar>
-        <div className="p-4">
-          <h1 className="text-xl font-bold">GrandCallPro</h1>
-        </div>
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>Menu</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton 
-                    className={activePage === "dashboard" ? "bg-sidebar-accent" : ""}
-                    onClick={() => handleMenuClick("dashboard")}
-                  >
-                    <BarChart3 className="h-4 w-4 mr-2" />
-                    <span>Dashboard</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton 
-                    className={activePage === "calls" ? "bg-sidebar-accent" : ""}
-                    onClick={() => handleMenuClick("calls")}
-                  >
-                    <Phone className="h-4 w-4 mr-2" />
-                    <span>Chamadas</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                {/* Removido: <SidebarMenuItem>
-                  <SidebarMenuButton 
-                    className={activePage === "active" ? "bg-sidebar-accent" : ""}
-                    onClick={() => handleMenuClick("active")}
-                  >
-                    <PhoneCall className="h-4 w-4 mr-2" />
-                    <span>Chamadas Ativas</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem> */}
-                <SidebarMenuItem>
-                  <SidebarMenuButton 
-                    className={activePage === "extensions" ? "bg-sidebar-accent" : ""}
-                    onClick={() => handleMenuClick("extensions")}
-                  >
-                    <PhoneIncoming className="h-4 w-4 mr-2" />
-                    <span>Ramais</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton 
-                    className={activePage === "users" ? "bg-sidebar-accent" : ""}
-                    onClick={() => handleMenuClick("users")}
-                  >
-                    <Users className="h-4 w-4 mr-2" />
-                    <span>Usuários</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton 
-                    className={activePage === "settings" ? "bg-sidebar-accent" : ""}
-                    onClick={() => handleMenuClick("settings")}
-                  >
-                    <Settings className="h-4 w-4 mr-2" />
-                    <span>Configurações</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton 
-                    className={activePage === "reports" ? "bg-sidebar-accent" : ""}
-                    onClick={() => handleMenuClick("reports")}
-                  >
-                    <PieChart className="h-4 w-4 mr-2" />
-                    <span>Relatórios</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-          <SidebarGroup>
-            <SidebarGroupLabel>Status</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <div className="px-3 py-2">
-                <div className="flex items-center">
-                  <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
-                  <span className="text-sm">Sistema conectado</span>
-                </div>
-                <div className="flex items-center mt-1">
-                  <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
-                  <span className="text-sm">Central Grandstream ativa</span>
-                </div>
-              </div>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </Sidebar>
-
       {/* Main content */}
       <div className="flex-1 p-6">
         <header className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Dashboard</h1>
-          <Button onClick={() => navigate("/calls")}>Ver Registros de Chamadas</Button>
+          <Button onClick={() => navigate("/calls")}>
+            Ver Registros de Chamadas
+          </Button>
         </header>
 
         {/* Stats overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Total de Chamadas Hoje</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total de Chamadas Hoje
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">142</div>
-              <p className="text-xs text-muted-foreground">+12% em relação a ontem</p>
+              <p className="text-xs text-muted-foreground">
+                +12% em relação a ontem
+              </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Chamadas Perdidas</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Chamadas Perdidas
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">8</div>
-              <p className="text-xs text-muted-foreground">-3% em relação a ontem</p>
+              <p className="text-xs text-muted-foreground">
+                -3% em relação a ontem
+              </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Duração Média</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Duração Média
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">3:25</div>
-              <p className="text-xs text-muted-foreground">+30s em relação a ontem</p>
+              <p className="text-xs text-muted-foreground">
+                +30s em relação a ontem
+              </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Chamadas Ativas</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Chamadas Ativas
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">5</div>
               <div className="w-full bg-secondary rounded-full h-1.5 mt-2">
-                <div className="bg-primary h-1.5 rounded-full" style={{ width: "40%" }}></div>
+                <div
+                  className="bg-primary h-1.5 rounded-full"
+                  style={{ width: "40%" }}
+                ></div>
               </div>
             </CardContent>
           </Card>
@@ -232,29 +154,71 @@ const Index = () => {
               <table className="w-full text-sm text-left">
                 <thead className="text-xs uppercase bg-muted">
                   <tr>
-                    <th scope="col" className="px-4 py-2">Número</th>
-                    <th scope="col" className="px-4 py-2">Nome</th>
-                    <th scope="col" className="px-4 py-2">Horário</th>
-                    <th scope="col" className="px-4 py-2">Duração</th>
-                    <th scope="col" className="px-4 py-2">Tipo</th>
-                    <th scope="col" className="px-4 py-2">Status</th>
+                    <th scope="col" className="px-4 py-2">
+                      Número
+                    </th>
+                    <th scope="col" className="px-4 py-2">
+                      Nome
+                    </th>
+                    <th scope="col" className="px-4 py-2">
+                      Horário
+                    </th>
+                    <th scope="col" className="px-4 py-2">
+                      Duração
+                    </th>
+                    <th scope="col" className="px-4 py-2">
+                      Tipo
+                    </th>
+                    <th scope="col" className="px-4 py-2">
+                      Status
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {recentCalls.map((call) => (
                     <tr key={call.id} className="border-b">
                       <td className="px-4 py-3">
-                        {extensionInfo[call.number as keyof typeof extensionInfo] ? (
+                        {extensionInfo[
+                          call.number as keyof typeof extensionInfo
+                        ] ? (
                           <HoverCard>
                             <HoverCardTrigger className="underline cursor-help text-blue-500">
                               {call.number}
                             </HoverCardTrigger>
                             <HoverCardContent className="bg-blue-500 text-white p-4 w-72">
                               <div className="space-y-1">
-                                <p><strong>Departamento:</strong> {extensionInfo[call.number as keyof typeof extensionInfo].departamento}</p>
-                                <p><strong>Setor:</strong> {extensionInfo[call.number as keyof typeof extensionInfo].setor}</p>
-                                <p><strong>Subsetor:</strong> {extensionInfo[call.number as keyof typeof extensionInfo].subsetor}</p>
-                                <p><strong>Colaborador:</strong> {extensionInfo[call.number as keyof typeof extensionInfo].colaborador}</p>
+                                <p>
+                                  <strong>Departamento:</strong>{" "}
+                                  {
+                                    extensionInfo[
+                                      call.number as keyof typeof extensionInfo
+                                    ].departamento
+                                  }
+                                </p>
+                                <p>
+                                  <strong>Setor:</strong>{" "}
+                                  {
+                                    extensionInfo[
+                                      call.number as keyof typeof extensionInfo
+                                    ].setor
+                                  }
+                                </p>
+                                <p>
+                                  <strong>Subsetor:</strong>{" "}
+                                  {
+                                    extensionInfo[
+                                      call.number as keyof typeof extensionInfo
+                                    ].subsetor
+                                  }
+                                </p>
+                                <p>
+                                  <strong>Colaborador:</strong>{" "}
+                                  {
+                                    extensionInfo[
+                                      call.number as keyof typeof extensionInfo
+                                    ].colaborador
+                                  }
+                                </p>
                               </div>
                             </HoverCardContent>
                           </HoverCard>
@@ -266,25 +230,35 @@ const Index = () => {
                       <td className="px-4 py-3">{call.time}</td>
                       <td className="px-4 py-3">{call.duration}</td>
                       <td className="px-4 py-3">
-                        <span className={`inline-flex items-center ${
-                          call.type === "incoming" 
-                            ? "text-blue-500" 
-                            : call.type === "outgoing" 
-                            ? "text-green-500" 
-                            : "text-red-500"
-                        }`}>
-                          {call.type === "incoming" && <Phone className="h-3 w-3 mr-1 transform rotate-45" />}
-                          {call.type === "outgoing" && <Phone className="h-3 w-3 mr-1 transform -rotate-45" />}
-                          {call.type === "missed" && <Phone className="h-3 w-3 mr-1 text-red-500" />}
+                        <span
+                          className={`inline-flex items-center ${
+                            call.type === "incoming"
+                              ? "text-blue-500"
+                              : call.type === "outgoing"
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }`}
+                        >
+                          {call.type === "incoming" && (
+                            <Phone className="h-3 w-3 mr-1 transform rotate-45" />
+                          )}
+                          {call.type === "outgoing" && (
+                            <Phone className="h-3 w-3 mr-1 transform -rotate-45" />
+                          )}
+                          {call.type === "missed" && (
+                            <Phone className="h-3 w-3 mr-1 text-red-500" />
+                          )}
                           {call.type}
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className={`px-2 py-1 rounded-full text-xs ${
-                          call.status === "completed" 
-                            ? "bg-green-100 text-green-800" 
-                            : "bg-red-100 text-red-800"
-                        }`}>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs ${
+                            call.status === "completed"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
                           {call.status}
                         </span>
                       </td>
@@ -294,7 +268,11 @@ const Index = () => {
               </table>
             </div>
             <div className="mt-4 flex justify-end">
-              <Button variant="outline" size="sm" onClick={() => navigate("/calls")}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/calls")}
+              >
                 Ver todas as chamadas
               </Button>
             </div>

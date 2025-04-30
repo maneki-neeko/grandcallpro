@@ -1,11 +1,42 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BarChart3, Phone, PhoneCall, PhoneIncoming, Settings, Users, ArrowUpDown, CalendarIcon } from "lucide-react";
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import {
+  BarChart3,
+  Phone,
+  PhoneCall,
+  PhoneIncoming,
+  Settings,
+  Users,
+  ArrowUpDown,
+  CalendarIcon,
+} from "lucide-react";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { DateRangePicker } from "../components/ui/date-range-picker";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -51,7 +82,7 @@ const Reports = () => {
       { hour: "09:00", total: 85, percentage: "15%", avgDuration: "5m" },
       { hour: "10:00", total: 92, percentage: "16%", avgDuration: "4m" },
       { hour: "11:00", total: 78, percentage: "14%", avgDuration: "6m" },
-    ]
+    ],
   };
 
   const reportTitles = {
@@ -60,7 +91,7 @@ const Reports = () => {
     "slow-response": "Ramais com Maior Tempo de Resposta",
     "most-calls": "Ramais com Maior Volume de Chamadas",
     "longest-calls": "Ramais com Maior Duração Média",
-    "peak-hours": "Horários com Maior Volume de Chamadas"
+    "peak-hours": "Horários com Maior Volume de Chamadas",
   };
 
   const departments = [
@@ -69,11 +100,11 @@ const Reports = () => {
     "Depto. Administrativo",
     "Depto. Comercial",
     "Depto. TI",
-    "Depto. Saúde"
+    "Depto. Saúde",
   ];
 
   const handleSort = () => {
-    setSortOrder(prev => prev === "asc" ? "desc" : "asc");
+    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
   };
 
   const handleDateRangeChange = (newDateRange: DateRange | undefined) => {
@@ -82,55 +113,6 @@ const Reports = () => {
 
   return (
     <div className="flex min-h-screen w-full">
-      {/* Sidebar */}
-      <Sidebar>
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>Menu</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => navigate("/")}>
-                    <BarChart3 className="h-4 w-4 mr-2" />
-                    <span>Dashboard</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => navigate("/calls")}>
-                    <Phone className="h-4 w-4 mr-2" />
-                    <span>Chamadas</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => navigate("/extensions")}>
-                    <PhoneIncoming className="h-4 w-4 mr-2" />
-                    <span>Ramais</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => navigate("/users")}>
-                    <Users className="h-4 w-4 mr-2" />
-                    <span>Usuários</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => navigate("/settings")}>
-                    <Settings className="h-4 w-4 mr-2" />
-                    <span>Configurações</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => navigate("/reports")}>
-                    <BarChart3 className="h-4 w-4 mr-2" />
-                    <span>Relatórios</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </Sidebar>
-
       {/* Main content */}
       <div className="flex-1 p-6">
         <header className="flex justify-between items-center mb-6">
@@ -151,12 +133,24 @@ const Reports = () => {
                       <SelectValue placeholder="Selecione o tipo" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="missed-calls">Chamadas Perdidas</SelectItem>
-                      <SelectItem value="least-answering">Menor Taxa de Atendimento</SelectItem>
-                      <SelectItem value="slow-response">Tempo de Resposta</SelectItem>
-                      <SelectItem value="most-calls">Volume de Chamadas</SelectItem>
-                      <SelectItem value="longest-calls">Duração das Chamadas</SelectItem>
-                      <SelectItem value="peak-hours">Horários de Pico</SelectItem>
+                      <SelectItem value="missed-calls">
+                        Chamadas Perdidas
+                      </SelectItem>
+                      <SelectItem value="least-answering">
+                        Menor Taxa de Atendimento
+                      </SelectItem>
+                      <SelectItem value="slow-response">
+                        Tempo de Resposta
+                      </SelectItem>
+                      <SelectItem value="most-calls">
+                        Volume de Chamadas
+                      </SelectItem>
+                      <SelectItem value="longest-calls">
+                        Duração das Chamadas
+                      </SelectItem>
+                      <SelectItem value="peak-hours">
+                        Horários de Pico
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -179,7 +173,7 @@ const Reports = () => {
 
                 <div className="space-y-2">
                   <Label>Período</Label>
-                  <DateRangePicker 
+                  <DateRangePicker
                     date={dateRange}
                     onDateChange={handleDateRangeChange}
                   />
@@ -206,7 +200,10 @@ const Reports = () => {
                 </div>
 
                 <div className="flex items-end">
-                  <Button className="w-full" onClick={() => console.log("Aplicar filtros")}>
+                  <Button
+                    className="w-full"
+                    onClick={() => console.log("Aplicar filtros")}
+                  >
                     Aplicar Filtros
                   </Button>
                 </div>
@@ -217,7 +214,9 @@ const Reports = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex justify-between items-center">
-                <span>{reportTitles[reportType as keyof typeof reportTitles]}</span>
+                <span>
+                  {reportTitles[reportType as keyof typeof reportTitles]}
+                </span>
                 <Button variant="ghost" size="sm" onClick={handleSort}>
                   <ArrowUpDown className="h-4 w-4 mr-2" />
                   {sortOrder === "asc" ? "Crescente" : "Decrescente"}
@@ -242,10 +241,14 @@ const Reports = () => {
                     })
                     .map((item, index) => (
                       <TableRow key={index}>
-                        <TableCell className="font-medium">{item.ramal}</TableCell>
+                        <TableCell className="font-medium">
+                          {item.ramal}
+                        </TableCell>
                         <TableCell>{item.total}</TableCell>
                         <TableCell>{item.percentage}</TableCell>
-                        <TableCell>{item.avgResponseTime || item.avgDuration || "-"}</TableCell>
+                        <TableCell>
+                          {item.avgResponseTime || item.avgDuration || "-"}
+                        </TableCell>
                       </TableRow>
                     ))}
                 </TableBody>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
+import {
   Table,
   TableBody,
   TableCaption,
@@ -14,11 +14,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Pencil, Trash, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
-import { BarChart3, Phone, PhoneCall, PhoneIncoming, Settings, Users } from "lucide-react";
 
 // Tipo para extensões (ramais)
 type Extension = {
@@ -31,12 +35,13 @@ type Extension = {
 };
 
 const Extensions = () => {
-  const navigate = useNavigate();
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
-  const [currentExtension, setCurrentExtension] = useState<Extension | null>(null);
-  
+  const [currentExtension, setCurrentExtension] = useState<Extension | null>(
+    null
+  );
+
   // Mock de dados para extensões
   const [extensions, setExtensions] = useState<Extension[]>([
     {
@@ -45,7 +50,7 @@ const Extensions = () => {
       departamento: "Depto. Financeiro",
       setor: "Contabilidade",
       subsetor: "Pagamentos",
-      colaborador: "Ana Silva"
+      colaborador: "Ana Silva",
     },
     {
       id: 2,
@@ -53,7 +58,7 @@ const Extensions = () => {
       departamento: "Depto. Administrativo",
       setor: "RH",
       subsetor: "Admissão",
-      colaborador: "Carlos Santos"
+      colaborador: "Carlos Santos",
     },
     {
       id: 3,
@@ -61,7 +66,7 @@ const Extensions = () => {
       departamento: "Depto. Comercial",
       setor: "Vendas",
       subsetor: "Negociação",
-      colaborador: "Paula Oliveira"
+      colaborador: "Paula Oliveira",
     },
     {
       id: 4,
@@ -69,7 +74,7 @@ const Extensions = () => {
       departamento: "Depto. TI",
       setor: "Suporte",
       subsetor: "Atendimento",
-      colaborador: "João Costa"
+      colaborador: "João Costa",
     },
     {
       id: 5,
@@ -77,25 +82,26 @@ const Extensions = () => {
       departamento: "Depto. Saúde",
       setor: "PSF2",
       subsetor: "Recepção",
-      colaborador: "Glenda"
+      colaborador: "Glenda",
     },
   ]);
-  
+
   // Estado para o formulário
   const [formData, setFormData] = useState({
     numero: "",
     departamento: "",
     setor: "",
     subsetor: "",
-    colaborador: ""
+    colaborador: "",
   });
 
   // Filtrar extensões com base no termo de pesquisa
-  const filteredExtensions = extensions.filter(ext => 
-    ext.numero.includes(searchTerm) || 
-    ext.departamento.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    ext.setor.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    ext.colaborador.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredExtensions = extensions.filter(
+    (ext) =>
+      ext.numero.includes(searchTerm) ||
+      ext.departamento.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ext.setor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ext.colaborador.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Manipular abertura do diálogo para edição
@@ -106,7 +112,7 @@ const Extensions = () => {
       departamento: extension.departamento,
       setor: extension.setor,
       subsetor: extension.subsetor,
-      colaborador: extension.colaborador
+      colaborador: extension.colaborador,
     });
     setOpenDialog(true);
   };
@@ -119,14 +125,14 @@ const Extensions = () => {
       departamento: "",
       setor: "",
       subsetor: "",
-      colaborador: ""
+      colaborador: "",
     });
     setOpenDialog(true);
   };
 
   // Manipular exclusão de ramal
   const handleDelete = (id: number) => {
-    setExtensions(extensions.filter(ext => ext.id !== id));
+    setExtensions(extensions.filter((ext) => ext.id !== id));
     toast({
       title: "Ramal removido",
       description: "O ramal foi removido com sucesso.",
@@ -136,24 +142,25 @@ const Extensions = () => {
   // Manipular mudanças no formulário
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // Manipular envio do formulário
   const handleSubmit = () => {
     if (currentExtension) {
       // Edição
-      setExtensions(prev => prev.map(ext => ext.id === currentExtension.id ? { ...ext, ...formData } : ext));
+      setExtensions((prev) =>
+        prev.map((ext) =>
+          ext.id === currentExtension.id ? { ...ext, ...formData } : ext
+        )
+      );
       toast({
         title: "Ramal atualizado",
         description: "O ramal foi atualizado com sucesso.",
       });
     } else {
       // Novo
-      setExtensions(prev => [
-        ...prev,
-        { ...formData, id: prev.length + 1 }
-      ]);
+      setExtensions((prev) => [...prev, { ...formData, id: prev.length + 1 }]);
       toast({
         title: "Ramal adicionado",
         description: "Novo ramal cadastrado com sucesso.",
@@ -164,48 +171,6 @@ const Extensions = () => {
 
   return (
     <div className="flex min-h-screen w-full">
-      {/* Sidebar */}
-      <Sidebar>
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>Menu</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => navigate("/")}> {/* Dashboard */}
-                    <BarChart3 className="h-4 w-4 mr-2" />
-                    <span>Dashboard</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => navigate("/calls")}> {/* Chamadas */}
-                    <Phone className="h-4 w-4 mr-2" />
-                    <span>Chamadas</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => navigate("/extensions")}> {/* Ramais */}
-                    <PhoneIncoming className="h-4 w-4 mr-2" />
-                    <span>Ramais</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => navigate("/users")}> {/* Usuários */}
-                    <Users className="h-4 w-4 mr-2" />
-                    <span>Usuários</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => navigate("/settings")}> {/* Configurações */}
-                    <Settings className="h-4 w-4 mr-2" />
-                    <span>Configurações</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </Sidebar>
       {/* Conteúdo principal */}
       <main className="flex-1 flex flex-col items-center justify-start py-8 px-8 max-w-5xl mx-auto">
         <div className="flex justify-between items-center mb-6 w-full">
@@ -239,16 +204,27 @@ const Extensions = () => {
               <TableBody>
                 {filteredExtensions.map((extension) => (
                   <TableRow key={extension.id}>
-                    <TableCell className="font-medium">{extension.numero}</TableCell>
+                    <TableCell className="font-medium">
+                      {extension.numero}
+                    </TableCell>
                     <TableCell>{extension.departamento}</TableCell>
                     <TableCell>{extension.setor}</TableCell>
                     <TableCell>{extension.subsetor}</TableCell>
                     <TableCell>{extension.colaborador}</TableCell>
                     <TableCell className="text-right space-x-2">
-                      <Button variant="outline" size="sm" onClick={() => handleEdit(extension)}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEdit(extension)}
+                      >
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button variant="outline" size="sm" className="text-red-500" onClick={() => handleDelete(extension.id)}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-red-500"
+                        onClick={() => handleDelete(extension.id)}
+                      >
                         <Trash className="h-4 w-4" />
                       </Button>
                     </TableCell>
@@ -261,17 +237,21 @@ const Extensions = () => {
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{currentExtension ? "Editar Ramal" : "Novo Ramal"}</DialogTitle>
+              <DialogTitle>
+                {currentExtension ? "Editar Ramal" : "Novo Ramal"}
+              </DialogTitle>
               <DialogDescription>
-                {currentExtension 
+                {currentExtension
                   ? "Atualize as informações do ramal existente."
                   : "Preencha as informações para registrar um novo ramal."}
               </DialogDescription>
             </DialogHeader>
-            
+
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="numero" className="text-right">Número</Label>
+                <Label htmlFor="numero" className="text-right">
+                  Número
+                </Label>
                 <Input
                   id="numero"
                   name="numero"
@@ -281,9 +261,11 @@ const Extensions = () => {
                   className="col-span-3"
                 />
               </div>
-              
+
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="departamento" className="text-right">Departamento</Label>
+                <Label htmlFor="departamento" className="text-right">
+                  Departamento
+                </Label>
                 <Input
                   id="departamento"
                   name="departamento"
@@ -293,9 +275,11 @@ const Extensions = () => {
                   className="col-span-3"
                 />
               </div>
-              
+
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="setor" className="text-right">Setor</Label>
+                <Label htmlFor="setor" className="text-right">
+                  Setor
+                </Label>
                 <Input
                   id="setor"
                   name="setor"
@@ -305,9 +289,11 @@ const Extensions = () => {
                   className="col-span-3"
                 />
               </div>
-              
+
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="subsetor" className="text-right">Subsetor</Label>
+                <Label htmlFor="subsetor" className="text-right">
+                  Subsetor
+                </Label>
                 <Input
                   id="subsetor"
                   name="subsetor"
@@ -317,9 +303,11 @@ const Extensions = () => {
                   className="col-span-3"
                 />
               </div>
-              
+
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="colaborador" className="text-right">Colaborador</Label>
+                <Label htmlFor="colaborador" className="text-right">
+                  Colaborador
+                </Label>
                 <Input
                   id="colaborador"
                   name="colaborador"
@@ -330,12 +318,9 @@ const Extensions = () => {
                 />
               </div>
             </div>
-            
+
             <DialogFooter>
-              <Button 
-                variant="outline" 
-                onClick={() => setOpenDialog(false)}
-              >
+              <Button variant="outline" onClick={() => setOpenDialog(false)}>
                 Cancelar
               </Button>
               <Button onClick={handleSubmit}>
