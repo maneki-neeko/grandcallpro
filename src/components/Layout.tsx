@@ -1,4 +1,4 @@
-import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -26,6 +26,9 @@ export function Layout() {
   const handleMenuClick = (page: string) => {
     setActivePage(page);
     navigate(`/${page}`);
+
+    window.document.title =
+      page.charAt(0).toUpperCase() + page.slice(1) || "Dashboard";
   };
 
   return (
