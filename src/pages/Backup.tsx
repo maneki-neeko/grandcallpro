@@ -1,0 +1,61 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/hooks/use-toast";
+
+const Backup = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = () => {
+    setSaving(true);
+    setTimeout(() => {
+      setSaving(false);
+      toast({
+        title: "Backup realizado",
+        description: "O backup foi realizado com sucesso.",
+      });
+    }, 1000);
+  };
+
+  return (
+    <div className="flex min-h-screen w-full">
+      <main className="flex-1 flex flex-col items-center justify-start py-8 px-8 max-w-5xl mx-auto">
+        <h1 className="text-2xl font-bold mb-6">Backup do Sistema</h1>
+        <div className="w-full max-w-5xl">
+          <Card>
+            <CardHeader>
+              <CardTitle>Backup</CardTitle>
+              <CardDescription>
+                Realize o backup dos dados do sistema manualmente ou configure o backup automático.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Switch id="auto-backup" defaultChecked />
+                <Label htmlFor="auto-backup">Backup Automático</Label>
+              </div>
+              <div className="pt-4">
+                <Button variant="secondary" onClick={handleSave} disabled={saving}>
+                  {saving ? "Realizando backup..." : "Iniciar Backup Manual"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default Backup;

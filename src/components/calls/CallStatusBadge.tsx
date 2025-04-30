@@ -26,7 +26,7 @@ const CallStatusBadge: React.FC<CallStatusBadgeProps> = ({ status }) => {
   };
 
   return (
-    <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusStyle()}`}>
+    <span className={`px-2 py-1 rounded-full text-xs font-medium border whitespace-nowrap ${getStatusStyle()}`}>
       {status}
     </span>
   );

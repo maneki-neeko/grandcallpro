@@ -6,47 +6,32 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { callData, extensionInfo } from "@/data/callsData";
 
 const Index = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [activePage, setActivePage] = useState("dashboard");
+  const [notificationModalOpen, setNotificationModalOpen] = useState(false);
 
   // Mock data for recent calls
-  const recentCalls = [
-    { id: 1, number: "(11) 98765-4321", name: "Maria Silva", time: "14:32", duration: "3:45", type: "incoming", status: "completed" },
-    { id: 2, number: "(11) 91234-5678", name: "João Santos", time: "13:15", duration: "5:20", type: "outgoing", status: "completed" },
-    { id: 3, number: "(11) 99876-5432", name: "Carlos Ferreira", time: "12:40", duration: "1:15", type: "missed", status: "missed" },
-    { id: 4, number: "(11) 95555-9999", name: "Ana Oliveira", time: "11:05", duration: "2:30", type: "incoming", status: "completed" },
-  ];
+  const recentCalls = callData.slice(0, 4).map((call, idx) => ({
+    id: idx + 1,
+    number: call.origem,
+    name: extensionInfo[call.origem]?.colaborador || "Desconhecido",
+    time: call.data.split(" ")[1],
+    duration: call.duracao,
+    type: call.desfecho === "ATENDIDA" ? "incoming" : "missed",
+    status: call.desfecho === "ATENDIDA" ? "completed" : "missed"
+  }));
 
-  // Mock data for extension information
-  const extensionInfo = {
-    "270": {
-      departamento: "Depto. Financeiro",
-      setor: "Contabilidade",
-      subsetor: "Pagamentos",
-      colaborador: "Ana Silva"
-    },
-    "204": {
-      departamento: "Depto. Administrativo",
-      setor: "RH",
-      subsetor: "Admissão",
-      colaborador: "Carlos Santos"
-    },
-    "222": {
-      departamento: "Depto. Comercial",
-      setor: "Vendas",
-      subsetor: "Negociação",
-      colaborador: "Paula Oliveira"
-    },
-    "348": {
-      departamento: "Depto. Saúde",
-      setor: "PSF2",
-      subsetor: "Recepção",
-      colaborador: "Glenda"
-    }
-  };
+  // Mock notifications
+  const notifications = [
+    { id: 1, title: "Nova chamada recebida", description: "Você recebeu uma chamada de (11) 98765-4321." },
+    { id: 2, title: "Chamada perdida", description: "Você perdeu uma chamada de (11) 91234-5678." },
+    { id: 3, title: "Usuário adicionado", description: "Novo usuário Paulo foi adicionado ao sistema." },
+  ];
 
   const handleMenuClick = (page: string) => {
     setActivePage(page);
@@ -65,8 +50,8 @@ const Index = () => {
       case "extensions":
         navigate("/extensions");
         break;
-      case "settings":
-        navigate("/settings");
+      case "backup":
+        navigate("/backup");
         break;
       case "reports":
         navigate("/reports");
@@ -80,10 +65,30 @@ const Index = () => {
       <div className="flex-1 p-6">
         <header className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Dashboard</h1>
-          <Button onClick={() => navigate("/calls")}>
-            Ver Registros de Chamadas
+          <Button onClick={() => setNotificationModalOpen(true)}>
+            Notificações
           </Button>
         </header>
+        <Dialog open={notificationModalOpen} onOpenChange={setNotificationModalOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Notificações</DialogTitle>
+              <DialogDescription>Veja as notificações recentes do sistema.</DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 mt-4">
+              {notifications.length === 0 ? (
+                <div className="text-center text-muted-foreground">Nenhuma notificação.</div>
+              ) : (
+                notifications.map((n) => (
+                  <div key={n.id} className="border rounded p-3 bg-muted">
+                    <div className="font-semibold">{n.title}</div>
+                    <div className="text-sm text-muted-foreground">{n.description}</div>
+                  </div>
+                ))
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
 
         {/* Stats overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">

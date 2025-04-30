@@ -9,13 +9,14 @@ import NotFound from "./pages/NotFound";
 import Calls from "./pages/Calls";
 import Users from "./pages/Users";
 import Extensions from "./pages/Extensions";
-import Settings from "./pages/Settings";
+import Settings from "./pages/Backup";
 import Login from "./pages/Login";
 import Register from "./pages/Register"; // Added import
 import ForgotPassword from "./pages/ForgotPassword"; // Added import
 import Reports from "./pages/Reports";
 import { AuthProvider, useAuth } from "./lib/auth";
 import { Layout } from "./components/Layout";
+import Backup from "./pages/Backup";
 
 const queryClient = new QueryClient();
 
@@ -46,7 +47,7 @@ const App = () => (
                 <Route path="/calls" element={<ProtectedRoute><Calls /></ProtectedRoute>} />
                 <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
                 <Route path="/extensions" element={<ProtectedRoute><Extensions /></ProtectedRoute>} />
-                <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+                <Route path="/backup" element={<ProtectedRoute><Backup /></ProtectedRoute>} />
                 <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
               </Route>
 

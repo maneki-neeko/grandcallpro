@@ -14,7 +14,7 @@ import {
   BarChart3,
   Phone,
   PhoneIncoming,
-  Settings,
+  DatabaseBackup,
   Users,
   FileChartColumn,
 } from "lucide-react";
@@ -87,12 +87,12 @@ export function Layout() {
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     className={
-                      activePage === "settings" ? "bg-sidebar-accent" : ""
+                      activePage === "backup" ? "bg-sidebar-accent" : ""
                     }
-                    onClick={() => handleMenuClick("settings")}
+                    onClick={() => handleMenuClick("backup")}
                   >
-                    <Settings className="h-4 w-4 mr-2" />
-                    <span>Configurações</span>
+                    <DatabaseBackup className="h-4 w-4 mr-2" />
+                    <span>Backup</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
