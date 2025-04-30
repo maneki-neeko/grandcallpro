@@ -21,6 +21,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 
 // Tipo para extensões (ramais)
 type Extension = {
@@ -32,6 +33,14 @@ type Extension = {
   colaborador: string;
 };
 
+const departmentOptions = [
+  "Financeiro",
+  "RH",
+  "Comercial",
+  "TI",
+  "Saúde"
+];
+
 const Extensions = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,6 +48,8 @@ const Extensions = () => {
   const [currentExtension, setCurrentExtension] = useState<Extension | null>(
     null
   );
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [extensionToDelete, setExtensionToDelete] = useState<Extension | null>(null);
 
   // Mock de dados para extensões
   const [extensions, setExtensions] = useState<Extension[]>([
@@ -87,7 +98,7 @@ const Extensions = () => {
   // Estado para o formulário
   const [formData, setFormData] = useState({
     numero: "",
-    departamento: "",
+    departamento: departmentOptions[0],
     setor: "",
     subsetor: "",
     colaborador: "",
@@ -120,7 +131,7 @@ const Extensions = () => {
     setCurrentExtension(null);
     setFormData({
       numero: "",
-      departamento: "",
+      departamento: departmentOptions[0],
       setor: "",
       subsetor: "",
       colaborador: "",
@@ -131,6 +142,8 @@ const Extensions = () => {
   // Manipular exclusão de ramal
   const handleDelete = (id: number) => {
     setExtensions(extensions.filter((ext) => ext.id !== id));
+    setDeleteDialogOpen(false);
+    setExtensionToDelete(null);
     toast({
       title: "Ramal removido",
       description: "O ramal foi removido com sucesso.",
@@ -219,7 +232,7 @@ const Extensions = () => {
                         variant="outline"
                         size="sm"
                         className="text-red-500"
-                        onClick={() => handleDelete(extension.id)}
+                        onClick={() => { setExtensionToDelete(extension); setDeleteDialogOpen(true); }}
                       >
                         <Trash className="h-4 w-4" />
                       </Button>
@@ -262,14 +275,23 @@ const Extensions = () => {
                 <Label htmlFor="departamento" className="text-right">
                   Departamento
                 </Label>
-                <Input
-                  id="departamento"
-                  name="departamento"
-                  placeholder="Ex: Depto. Financeiro"
+                <Select
                   value={formData.departamento}
-                  onChange={handleChange}
-                  className="col-span-3"
-                />
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, departamento: value }))
+                  }
+                >
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Selecione o departamento" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {departmentOptions.map((opt) => (
+                      <SelectItem key={opt} value={opt}>
+                        {opt}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="grid grid-cols-4 items-center gap-4">
@@ -308,6 +330,18 @@ const Extensions = () => {
               <Button onClick={handleSubmit}>
                 {currentExtension ? "Salvar" : "Adicionar"}
               </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirmar exclusão</DialogTitle>
+            </DialogHeader>
+            <p>Tem certeza que deseja apagar o ramal <b>{extensionToDelete?.numero}</b>?</p>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>Cancelar</Button>
+              <Button variant="destructive" onClick={() => handleDelete(extensionToDelete!.id)}>Apagar</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

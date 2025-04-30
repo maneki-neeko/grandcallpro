@@ -22,15 +22,7 @@ const Index = () => {
   const [notificationModalOpen, setNotificationModalOpen] = useState(false);
 
   // Mock data for recent calls
-  const recentCalls = callData.slice(0, 4).map((call, idx) => ({
-    id: idx + 1,
-    number: call.origem,
-    name: extensionInfo[call.origem]?.colaborador || "Desconhecido",
-    time: call.data.split(" ")[1],
-    duration: call.duracao,
-    type: call.desfecho === "ATENDIDA" ? "incoming" : "missed",
-    status: call.desfecho === "ATENDIDA" ? "completed" : "missed",
-  }));
+  const recentCalls = callData.slice(0, 5);
 
   // Mock notifications
   const notifications = [
@@ -155,132 +147,61 @@ const Index = () => {
           <CardHeader>
             <CardTitle>Chamadas Recentes</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="relative overflow-x-auto">
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
               <table className="w-full text-sm text-left">
                 <thead className="text-xs uppercase bg-muted">
                   <tr>
-                    <th scope="col" className="px-4 py-2">
-                      Número
-                    </th>
-                    <th scope="col" className="px-4 py-2">
-                      Nome
-                    </th>
-                    <th scope="col" className="px-4 py-2">
-                      Horário
-                    </th>
-                    <th scope="col" className="px-4 py-2">
-                      Duração
-                    </th>
-                    <th scope="col" className="px-4 py-2">
-                      Tipo
-                    </th>
-                    <th scope="col" className="px-4 py-2">
-                      Status
-                    </th>
+                    <th className="px-4 py-2 text-center">Origem</th>
+                    <th className="px-4 py-2 text-center">Destino</th>
+                    <th className="px-4 py-2 text-center">Data/Hora</th>
+                    <th className="px-4 py-2 text-center">Desfecho</th>
+                    <th className="px-4 py-2 text-center">Duração</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {recentCalls.map((call) => (
-                    <tr key={call.id} className="border-b">
-                      <td className="px-4 py-3">
-                        {extensionInfo[
-                          call.number as keyof typeof extensionInfo
-                        ] ? (
-                          <HoverCard>
-                            <HoverCardTrigger className="underline cursor-help text-blue-500">
-                              {call.number}
-                            </HoverCardTrigger>
-                            <HoverCardContent className="bg-blue-500 text-white p-4 w-72">
-                              <div className="space-y-1">
-                                <p>
-                                  <strong>Departamento:</strong>{" "}
-                                  {
-                                    extensionInfo[
-                                      call.number as keyof typeof extensionInfo
-                                    ].departamento
-                                  }
-                                </p>
-                                <p>
-                                  <strong>Setor:</strong>{" "}
-                                  {
-                                    extensionInfo[
-                                      call.number as keyof typeof extensionInfo
-                                    ].setor
-                                  }
-                                </p>
-                                <p>
-                                  <strong>Subsetor:</strong>{" "}
-                                  {
-                                    extensionInfo[
-                                      call.number as keyof typeof extensionInfo
-                                    ].subsetor
-                                  }
-                                </p>
-                                <p>
-                                  <strong>Colaborador:</strong>{" "}
-                                  {
-                                    extensionInfo[
-                                      call.number as keyof typeof extensionInfo
-                                    ].colaborador
-                                  }
-                                </p>
-                              </div>
-                            </HoverCardContent>
-                          </HoverCard>
-                        ) : (
-                          call.number
-                        )}
+                  {recentCalls.map((call, idx) => (
+                    <tr key={idx} className="border-b">
+                      <td className="px-4 py-3 text-center">
+                        <HoverCard>
+                          <HoverCardTrigger className="underline cursor-help text-blue-500">
+                            {call.origem}
+                          </HoverCardTrigger>
+                          <HoverCardContent className="bg-blue-500 text-white p-4 w-72">
+                            <div className="space-y-1">
+                              <p><strong>Departamento:</strong> {extensionInfo[call.origem]?.departamento || '-'}</p>
+                              <p><strong>Setor:</strong> {extensionInfo[call.origem]?.setor || '-'}</p>
+                              <p><strong>Subsetor:</strong> {extensionInfo[call.origem]?.subsetor || '-'}</p>
+                              <p><strong>Colaborador:</strong> {extensionInfo[call.origem]?.colaborador || '-'}</p>
+                            </div>
+                          </HoverCardContent>
+                        </HoverCard>
                       </td>
-                      <td className="px-4 py-3">{call.name}</td>
-                      <td className="px-4 py-3">{call.time}</td>
-                      <td className="px-4 py-3">{call.duration}</td>
-                      <td className="px-4 py-3">
-                        <span
-                          className={`inline-flex items-center ${
-                            call.type === "incoming"
-                              ? "text-blue-500"
-                              : call.type === "outgoing"
-                              ? "text-green-500"
-                              : "text-red-500"
-                          }`}
-                        >
-                          {call.type === "incoming" && (
-                            <Phone className="h-3 w-3 mr-1 transform rotate-45" />
-                          )}
-                          {call.type === "outgoing" && (
-                            <Phone className="h-3 w-3 mr-1 transform -rotate-45" />
-                          )}
-                          {call.type === "missed" && (
-                            <Phone className="h-3 w-3 mr-1 text-red-500" />
-                          )}
-                          {call.type}
-                        </span>
+                      <td className="px-4 py-3 text-center">
+                        <HoverCard>
+                          <HoverCardTrigger className="underline cursor-help text-blue-500">
+                            {call.destino}
+                          </HoverCardTrigger>
+                          <HoverCardContent className="bg-blue-500 text-white p-4 w-72">
+                            <div className="space-y-1">
+                              <p><strong>Departamento:</strong> {extensionInfo[call.destino]?.departamento || '-'}</p>
+                              <p><strong>Setor:</strong> {extensionInfo[call.destino]?.setor || '-'}</p>
+                              <p><strong>Subsetor:</strong> {extensionInfo[call.destino]?.subsetor || '-'}</p>
+                              <p><strong>Colaborador:</strong> {extensionInfo[call.destino]?.colaborador || '-'}</p>
+                            </div>
+                          </HoverCardContent>
+                        </HoverCard>
                       </td>
-                      <td className="px-4 py-3">
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs ${
-                            call.status === "completed"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
-                          }`}
-                        >
-                          {call.status}
-                        </span>
-                      </td>
+                      <td className="px-4 py-3 text-center">{call.data}</td>
+                      <td className="px-4 py-3 text-center">{call.desfecho}</td>
+                      <td className="px-4 py-3 text-center">{call.duracao}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
             <div className="mt-4 flex justify-end">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate("/calls")}
-              >
-                Ver todas as chamadas
-              </Button>
+              <Button variant="outline" size="sm" onClick={() => navigate("/calls")}>Ver todas as chamadas</Button>
             </div>
           </CardContent>
         </Card>

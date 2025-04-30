@@ -9,15 +9,30 @@ const Calls = () => {
   const [filterOrigin, setFilterOrigin] = useState(true);
   const [filterDestination, setFilterDestination] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [desfecho, setDesfecho] = useState("todos");
+  const [date, setDate] = useState<Date | undefined>(undefined);
 
-  // Filtrar os dados baseados nos critérios
+  // Filtro completo
   const filteredData = callData.filter((call) => {
-    if (searchTerm === "") return true;
-
-    if (filterOrigin && call.origem.includes(searchTerm)) return true;
-    if (filterDestination && call.destino.includes(searchTerm)) return true;
-
-    return false;
+    // Filtro por busca de número
+    let match = false;
+    if (searchTerm) {
+      if (filterOrigin && call.origem.includes(searchTerm)) match = true;
+      if (filterDestination && call.destino.includes(searchTerm)) match = true;
+      if (!match) return false;
+    }
+    // Filtro por desfecho
+    if (desfecho !== "todos") {
+      if (desfecho === "atendida" && call.desfecho !== "ATENDIDA") return false;
+      if (desfecho === "nao-atendida" && call.desfecho === "ATENDIDA") return false;
+    }
+    // Filtro por data (apenas data, sem hora)
+    if (date) {
+      const callDate = call.data.split(" ")[0];
+      const filterDate = date.toISOString().slice(2, 10).replace(/-/g, "-");
+      if (!callDate.endsWith(filterDate)) return false;
+    }
+    return true;
   });
 
   return (
@@ -35,6 +50,10 @@ const Calls = () => {
           setFilterOrigin={setFilterOrigin}
           filterDestination={filterDestination}
           setFilterDestination={setFilterDestination}
+          desfecho={desfecho}
+          setDesfecho={setDesfecho}
+          date={date}
+          setDate={setDate}
         />
         <CallTable calls={filteredData} extensionInfo={extensionInfo} />
         <PaginationControls />

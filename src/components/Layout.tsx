@@ -87,23 +87,23 @@ export function Layout() {
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     className={
-                      activePage === "backup" ? "bg-sidebar-accent" : ""
-                    }
-                    onClick={() => handleMenuClick("backup")}
-                  >
-                    <DatabaseBackup className="h-4 w-4 mr-2" />
-                    <span>Backup</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    className={
                       activePage === "reports" ? "bg-sidebar-accent" : ""
                     }
                     onClick={() => handleMenuClick("reports")}
                   >
                     <FileChartColumn className="h-4 w-4 mr-2" />
                     <span>Relatórios</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    className={
+                      activePage === "backup" ? "bg-sidebar-accent" : ""
+                    }
+                    onClick={() => handleMenuClick("backup")}
+                  >
+                    <DatabaseBackup className="h-4 w-4 mr-2" />
+                    <span>Backup</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
