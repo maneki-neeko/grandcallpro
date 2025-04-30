@@ -48,12 +48,6 @@ const Settings = () => {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => navigate("/active-calls")}> {/* Chamadas Ativas */}
-                    <PhoneCall className="h-4 w-4 mr-2" />
-                    <span>Chamadas Ativas</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
                   <SidebarMenuButton onClick={() => navigate("/extensions")}> {/* Ramais */}
                     <PhoneIncoming className="h-4 w-4 mr-2" />
                     <span>Ramais</span>

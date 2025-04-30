@@ -59,8 +59,8 @@ const Index = () => {
       case "calls":
         navigate("/calls");
         break;
-      case "active":
-        navigate("/active-calls");
+      // Removido: case "active":
+        // Removido: navigate("/active-calls");
         break;
       case "users":
         navigate("/users");
@@ -107,7 +107,7 @@ const Index = () => {
                     <span>Chamadas</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-                <SidebarMenuItem>
+                {/* Removido: <SidebarMenuItem>
                   <SidebarMenuButton 
                     className={activePage === "active" ? "bg-sidebar-accent" : ""}
                     onClick={() => handleMenuClick("active")}
@@ -115,7 +115,7 @@ const Index = () => {
                     <PhoneCall className="h-4 w-4 mr-2" />
                     <span>Chamadas Ativas</span>
                   </SidebarMenuButton>
-                </SidebarMenuItem>
+                </SidebarMenuItem> */}
                 <SidebarMenuItem>
                   <SidebarMenuButton 
                     className={activePage === "extensions" ? "bg-sidebar-accent" : ""}

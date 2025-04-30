@@ -102,12 +102,6 @@ const Reports = () => {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => navigate("/active-calls")}>
-                    <PhoneCall className="h-4 w-4 mr-2" />
-                    <span>Chamadas Ativas</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
                   <SidebarMenuButton onClick={() => navigate("/extensions")}>
                     <PhoneIncoming className="h-4 w-4 mr-2" />
                     <span>Ramais</span>

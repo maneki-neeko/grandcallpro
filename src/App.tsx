@@ -7,7 +7,6 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Calls from "./pages/Calls";
-import ActiveCalls from "./pages/ActiveCalls";
 import Users from "./pages/Users";
 import Extensions from "./pages/Extensions";
 import Settings from "./pages/Settings";
@@ -42,7 +41,6 @@ const App = () => (
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
               <Route path="/calls" element={<ProtectedRoute><Calls /></ProtectedRoute>} />
-              <Route path="/active-calls" element={<ProtectedRoute><ActiveCalls /></ProtectedRoute>} />
               <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
               <Route path="/extensions" element={<ProtectedRoute><Extensions /></ProtectedRoute>} />
               <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />

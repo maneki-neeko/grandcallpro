@@ -5,7 +5,6 @@ import { Button } from './ui/button';
 const navItems = [
   { label: 'Início', path: '/' },
   { label: 'Chamadas', path: '/calls' },
-  { label: 'Chamadas Ativas', path: '/active-calls' },
   { label: 'Usuários', path: '/users' },
   { label: 'Ramais', path: '/extensions' },
   { label: 'Configurações', path: '/settings' },
