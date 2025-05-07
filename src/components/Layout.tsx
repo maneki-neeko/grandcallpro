@@ -18,6 +18,7 @@ import {
   Users,
   FileChartColumn,
 } from "lucide-react";
+import Footer from './Footer';
 
 export function Layout() {
   const [activePage, setActivePage] = useState("");
@@ -32,101 +33,104 @@ export function Layout() {
   };
 
   return (
-    <div className="flex min-h-screen w-full">
-      <Sidebar>
-        <div className="p-4">
-          <h1 className="text-xl font-bold">GrandCallPro</h1>
-        </div>
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>Menu</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    className={!activePage ? "bg-sidebar-accent" : ""}
-                    onClick={() => handleMenuClick("")}
-                  >
-                    <BarChart3 className="h-4 w-4 mr-2" />
-                    <span>Dashboard</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    className={
-                      activePage === "calls" ? "bg-sidebar-accent" : ""
-                    }
-                    onClick={() => handleMenuClick("calls")}
-                  >
-                    <Phone className="h-4 w-4 mr-2" />
-                    <span>Chamadas</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    className={
-                      activePage === "extensions" ? "bg-sidebar-accent" : ""
-                    }
-                    onClick={() => handleMenuClick("extensions")}
-                  >
-                    <PhoneIncoming className="h-4 w-4 mr-2" />
-                    <span>Ramais</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    className={
-                      activePage === "users" ? "bg-sidebar-accent" : ""
-                    }
-                    onClick={() => handleMenuClick("users")}
-                  >
-                    <Users className="h-4 w-4 mr-2" />
-                    <span>Usuários</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    className={
-                      activePage === "reports" ? "bg-sidebar-accent" : ""
-                    }
-                    onClick={() => handleMenuClick("reports")}
-                  >
-                    <FileChartColumn className="h-4 w-4 mr-2" />
-                    <span>Relatórios</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    className={
-                      activePage === "backup" ? "bg-sidebar-accent" : ""
-                    }
-                    onClick={() => handleMenuClick("backup")}
-                  >
-                    <DatabaseBackup className="h-4 w-4 mr-2" />
-                    <span>Backup</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-          <SidebarGroup>
-            <SidebarGroupLabel>Status</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <div className="px-3 py-2">
-                <div className="flex items-center">
-                  <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
-                  <span className="text-sm">Sistema conectado</span>
+    <div className="flex flex-col min-h-screen">
+      <div className="flex flex-1">
+        <Sidebar>
+          <div className="p-4">
+            <h1 className="text-xl font-bold">GrandCallPro</h1>
+          </div>
+          <SidebarContent>
+            <SidebarGroup>
+              <SidebarGroupLabel>Menu</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      className={!activePage ? "bg-sidebar-accent" : ""}
+                      onClick={() => handleMenuClick("")}
+                    >
+                      <BarChart3 className="h-4 w-4 mr-2" />
+                      <span>Dashboard</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      className={
+                        activePage === "calls" ? "bg-sidebar-accent" : ""
+                      }
+                      onClick={() => handleMenuClick("calls")}
+                    >
+                      <Phone className="h-4 w-4 mr-2" />
+                      <span>Chamadas</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      className={
+                        activePage === "extensions" ? "bg-sidebar-accent" : ""
+                      }
+                      onClick={() => handleMenuClick("extensions")}
+                    >
+                      <PhoneIncoming className="h-4 w-4 mr-2" />
+                      <span>Ramais</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      className={
+                        activePage === "users" ? "bg-sidebar-accent" : ""
+                      }
+                      onClick={() => handleMenuClick("users")}
+                    >
+                      <Users className="h-4 w-4 mr-2" />
+                      <span>Usuários</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      className={
+                        activePage === "reports" ? "bg-sidebar-accent" : ""
+                      }
+                      onClick={() => handleMenuClick("reports")}
+                    >
+                      <FileChartColumn className="h-4 w-4 mr-2" />
+                      <span>Relatórios</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      className={
+                        activePage === "backup" ? "bg-sidebar-accent" : ""
+                      }
+                      onClick={() => handleMenuClick("backup")}
+                    >
+                      <DatabaseBackup className="h-4 w-4 mr-2" />
+                      <span>Backup</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+            <SidebarGroup>
+              <SidebarGroupLabel>Status</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <div className="px-3 py-2">
+                  <div className="flex items-center">
+                    <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
+                    <span className="text-sm">Sistema conectado</span>
+                  </div>
+                  <div className="flex items-center mt-1">
+                    <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
+                    <span className="text-sm">Central Grandstream ativa</span>
+                  </div>
                 </div>
-                <div className="flex items-center mt-1">
-                  <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
-                  <span className="text-sm">Central Grandstream ativa</span>
-                </div>
-              </div>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </Sidebar>
-      <Outlet />
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+        </Sidebar>
+        <Outlet />
+      </div>
+      <Footer />
     </div>
   );
 }

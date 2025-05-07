@@ -16,6 +16,7 @@ import Reports from "./pages/Reports";
 import { AuthProvider, useAuth } from "./lib/auth";
 import { Layout } from "./components/Layout";
 import Backup from "./pages/Backup";
+import ConsentForm from "./components/lgpd/ConsentForm";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/lgpd-consent" element={<ConsentForm />} />
 
               <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
                 <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />

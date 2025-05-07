@@ -46,7 +46,7 @@ const Backup = () => {
               </div>
               <div className="pt-4">
                 <Button
-                  variant="secondary"
+                  variant="default"
                   onClick={handleSave}
                   disabled={saving}
                 >

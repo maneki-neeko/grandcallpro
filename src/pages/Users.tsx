@@ -47,6 +47,9 @@ type User = {
   senha: string;
   nivel: string;
   status: string;
+  lgpdAccepted: boolean;
+  lgpdDate: string | null;
+  lgpdVersion: string | null;
 };
 
 const Users = () => {
@@ -61,11 +64,11 @@ const Users = () => {
 
   // Mock de dados para usuários
   const [users, setUsers] = useState<User[]>([
-    { id: 1, nome: "Ana Silva", email: "ana.silva@empresa.com", departamento: "Financeiro", cargo: "Administrador", senha: "", nivel: "Adm", status: "Ativo" },
-    { id: 2, nome: "Carlos Santos", email: "carlos.santos@empresa.com", departamento: "RH", cargo: "Supervisor", senha: "", nivel: "Supervisor", status: "Ativo" },
-    { id: 3, nome: "Paula Oliveira", email: "paula.oliveira@empresa.com", departamento: "Vendas", cargo: "Telefonista", senha: "", nivel: "Telefonista", status: "Ativo" },
-    { id: 4, nome: "João Costa", email: "joao.costa@empresa.com", departamento: "TI", cargo: "Administrador", senha: "", nivel: "Adm", status: "Inativo" },
-    { id: 5, nome: "Mariana Souza", email: "mariana.souza@empresa.com", departamento: "RH", cargo: "Supervisor", senha: "", nivel: "Supervisor", status: "Ativo" },
+    { id: 1, nome: "Ana Silva", email: "ana.silva@empresa.com", departamento: "Financeiro", cargo: "Administrador", senha: "", nivel: "Adm", status: "Ativo", lgpdAccepted: true, lgpdDate: "2025-05-01", lgpdVersion: "1.0" },
+    { id: 2, nome: "Carlos Santos", email: "carlos.santos@empresa.com", departamento: "RH", cargo: "Supervisor", senha: "", nivel: "Supervisor", status: "Ativo", lgpdAccepted: true, lgpdDate: "2025-05-02", lgpdVersion: "1.0" },
+    { id: 3, nome: "Paula Oliveira", email: "paula.oliveira@empresa.com", departamento: "Vendas", cargo: "Telefonista", senha: "", nivel: "Telefonista", status: "Ativo", lgpdAccepted: false, lgpdDate: null, lgpdVersion: null },
+    { id: 4, nome: "João Costa", email: "joao.costa@empresa.com", departamento: "TI", cargo: "Administrador", senha: "", nivel: "Adm", status: "Inativo", lgpdAccepted: true, lgpdDate: "2025-05-03", lgpdVersion: "1.0" },
+    { id: 5, nome: "Mariana Souza", email: "mariana.souza@empresa.com", departamento: "RH", cargo: "Supervisor", senha: "", nivel: "Supervisor", status: "Ativo", lgpdAccepted: true, lgpdDate: "2025-05-04", lgpdVersion: "1.0" },
   ]);
 
   // Estado para o formulário
@@ -143,7 +146,14 @@ const Users = () => {
     } else {
       setUsers((prev) => [
         ...prev,
-        { ...formData, id: prev.length + 1, status: "Ativo" },
+        { 
+          ...formData, 
+          id: prev.length + 1, 
+          status: "Ativo", 
+          lgpdAccepted: false, 
+          lgpdDate: null, 
+          lgpdVersion: null 
+        },
       ]);
       toast({
         title: "Usuário adicionado",
@@ -195,6 +205,9 @@ const Users = () => {
                   <TableHead>Cargo</TableHead>
                   <TableHead>Nível</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>LGPD Aceito</TableHead>
+                  <TableHead>Data de Aceite</TableHead>
+                  <TableHead>Versão LGPD</TableHead>
                   <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
@@ -215,6 +228,9 @@ const Users = () => {
                         {user.status}
                       </span>
                     </TableCell>
+                    <TableCell>{user.lgpdAccepted ? "Sim" : "Não"}</TableCell>
+                    <TableCell>{user.lgpdDate || "-"}</TableCell>
+                    <TableCell>{user.lgpdVersion || "-"}</TableCell>
                     <TableCell className="text-right space-x-2">
                       <Button variant="outline" size="sm" onClick={() => handleEdit(user)}>
                         <Pencil className="h-4 w-4" />
