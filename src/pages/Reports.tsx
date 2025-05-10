@@ -94,7 +94,7 @@ const Reports = () => {
     <div className="flex min-h-screen w-full">
       {/* Main content */}
       <div className="flex-1 p-8 w-full">
-        <header className="flex justify-between items-center mb-6">
+        <header className="flex justify-between items-center mb-6 py-1">
           <h1 className="text-2xl font-bold">Relatórios</h1>
         </header>
 
