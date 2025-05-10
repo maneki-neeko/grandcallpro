@@ -5,11 +5,13 @@ import CallTable from "@/components/calls/CallTable";
 import PaginationControls from "@/components/calls/PaginationControls";
 import { callData, extensionInfo } from "@/data/callsData";
 
+type CallStatus = "answered" | "not-answered";
+
 const Calls = () => {
   const [filterOrigin, setFilterOrigin] = useState(true);
   const [filterDestination, setFilterDestination] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [desfecho, setDesfecho] = useState("todos");
+  const [filterStatus, setFilterStatus] = useState<CallStatus | "all">("all");
   const [date, setDate] = useState<Date | undefined>(undefined);
 
   // Filtro completo
@@ -22,9 +24,11 @@ const Calls = () => {
       if (!match) return false;
     }
     // Filtro por desfecho
-    if (desfecho !== "todos") {
-      if (desfecho === "atendida" && call.desfecho !== "ATENDIDA") return false;
-      if (desfecho === "nao-atendida" && call.desfecho === "ATENDIDA") return false;
+    if (filterStatus !== "all") {
+      if (filterStatus === "answered" && call.desfecho !== "ATENDIDA")
+        return false;
+      if (filterStatus === "not-answered" && call.desfecho === "ATENDIDA")
+        return false;
     }
     // Filtro por data (apenas data, sem hora)
     if (date) {
@@ -34,11 +38,12 @@ const Calls = () => {
     }
     return true;
   });
+  console.log("🚀 ~ filteredData ~ filteredData:", filteredData);
 
   return (
     <div className="flex min-h-screen w-full">
       {/* Conteúdo principal */}
-      <main className="flex-1 flex flex-col items-center justify-start py-8 px-8 max-w-5xl mx-auto">
+      <main className="flex-1 flex flex-col items-center justify-start p-8 max-w-5xl mx-auto">
         <div className="flex items-center gap-2 mb-6">
           <Phone className="text-primary h-6 w-6" />
           <h1 className="text-2xl font-bold">Registros de ligação</h1>
@@ -50,8 +55,8 @@ const Calls = () => {
           setFilterOrigin={setFilterOrigin}
           filterDestination={filterDestination}
           setFilterDestination={setFilterDestination}
-          desfecho={desfecho}
-          setDesfecho={setDesfecho}
+          filterStatus={filterStatus}
+          setFilterStatus={setFilterStatus}
           date={date}
           setDate={setDate}
         />

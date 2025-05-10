@@ -1,8 +1,7 @@
-
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -11,22 +10,26 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Search, Filter, X } from "lucide-react";
-import { 
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { ptBR } from 'date-fns/locale';
+import { ptBR } from "date-fns/locale";
 
 interface CallFiltersProps {
   searchTerm: string;
-  setSearchTerm: (term: string) => void;
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
   filterOrigin: boolean;
-  setFilterOrigin: (filter: boolean) => void;
+  setFilterOrigin: React.Dispatch<React.SetStateAction<boolean>>;
   filterDestination: boolean;
-  setFilterDestination: (filter: boolean) => void;
+  setFilterDestination: React.Dispatch<React.SetStateAction<boolean>>;
+  filterStatus: string;
+  setFilterStatus: React.Dispatch<React.SetStateAction<string>>;
+  date: Date | undefined;
+  setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
 }
 
 const CallFilters: React.FC<CallFiltersProps> = ({
@@ -35,25 +38,28 @@ const CallFilters: React.FC<CallFiltersProps> = ({
   filterOrigin,
   setFilterOrigin,
   filterDestination,
-  setFilterDestination
+  setFilterDestination,
+  filterStatus,
+  setFilterStatus,
+  date,
+  setDate,
 }) => {
-  const [date, setDate] = useState<Date | undefined>(undefined);
   const [showFilters, setShowFilters] = useState(false);
-  
+
   return (
     <div className="space-y-4 mb-6">
       <div className="flex flex-wrap items-center gap-4">
         <div className="flex-1 flex items-center relative">
           <Search className="absolute left-2.5 h-4 w-4 text-muted-foreground" />
-          <Input 
-            className="pl-8 w-full" 
+          <Input
+            className="pl-8 w-full"
             placeholder="Procurar por número..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           {searchTerm && (
-            <button 
-              onClick={() => setSearchTerm('')}
+            <button
+              onClick={() => setSearchTerm("")}
               className="absolute right-2.5 h-4 w-4 text-muted-foreground hover:text-foreground"
             >
               <X className="h-4 w-4" />
@@ -61,8 +67,8 @@ const CallFilters: React.FC<CallFiltersProps> = ({
           )}
         </div>
 
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           className="flex items-center gap-2"
           onClick={() => setShowFilters(!showFilters)}
         >
@@ -70,19 +76,24 @@ const CallFilters: React.FC<CallFiltersProps> = ({
           Filtros
           {(filterOrigin || filterDestination || date) && (
             <span className="ml-1 bg-primary text-primary-foreground rounded-full w-5 h-5 flex items-center justify-center text-xs">
-              {(filterOrigin ? 1 : 0) + (filterDestination ? 1 : 0) + (date ? 1 : 0)}
+              {(filterOrigin ? 1 : 0) +
+                (filterDestination ? 1 : 0) +
+                (date ? 1 : 0)}
             </span>
           )}
         </Button>
 
-        <Select defaultValue="todos">
+        <Select
+          defaultValue={filterStatus}
+          onValueChange={(value) => setFilterStatus(value)}
+        >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Desfecho" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="todos">Todos os desfechos</SelectItem>
-            <SelectItem value="atendida">Atendida</SelectItem>
-            <SelectItem value="nao-atendida">Não atendida</SelectItem>
+            <SelectItem value="all">Todas</SelectItem>
+            <SelectItem value="answered">Atendidas</SelectItem>
+            <SelectItem value="not-answered">Não atendidas</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -92,21 +103,29 @@ const CallFilters: React.FC<CallFiltersProps> = ({
           <div className="flex flex-col gap-2">
             <h3 className="text-sm font-medium">Opções de busca</h3>
             <div className="flex items-center gap-2">
-              <Checkbox 
-                id="filter-origin" 
-                checked={filterOrigin} 
-                onCheckedChange={(checked) => setFilterOrigin(checked as boolean)}
+              <Checkbox
+                id="filter-origin"
+                checked={filterOrigin}
+                onCheckedChange={(checked) =>
+                  setFilterOrigin(checked as boolean)
+                }
               />
-              <label htmlFor="filter-origin" className="text-sm">Filtrar por Origem</label>
+              <label htmlFor="filter-origin" className="text-sm">
+                Filtrar por Origem
+              </label>
             </div>
-            
+
             <div className="flex items-center gap-2">
-              <Checkbox 
-                id="filter-destination" 
-                checked={filterDestination} 
-                onCheckedChange={(checked) => setFilterDestination(checked as boolean)}
+              <Checkbox
+                id="filter-destination"
+                checked={filterDestination}
+                onCheckedChange={(checked) =>
+                  setFilterDestination(checked as boolean)
+                }
               />
-              <label htmlFor="filter-destination" className="text-sm">Filtrar por Destino</label>
+              <label htmlFor="filter-destination" className="text-sm">
+                Filtrar por Destino
+              </label>
             </div>
           </div>
 
@@ -130,25 +149,30 @@ const CallFilters: React.FC<CallFiltersProps> = ({
             <h3 className="text-sm font-medium">Data</h3>
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" className="justify-start text-left font-normal">
-                  {date ? format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR }) : "Selecionar data..."}
+                <Button
+                  variant="outline"
+                  className="justify-start text-left font-normal"
+                >
+                  {date
+                    ? format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
+                    : "Selecionar data..."}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
-                <Calendar 
-                  mode="single" 
-                  selected={date} 
+                <Calendar
+                  mode="single"
+                  selected={date}
                   onSelect={setDate}
-                  initialFocus 
+                  initialFocus
                   locale={ptBR}
                 />
               </PopoverContent>
             </Popover>
             {date && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="self-end" 
+              <Button
+                variant="ghost"
+                size="sm"
+                className="self-end"
                 onClick={() => setDate(undefined)}
               >
                 Limpar data
