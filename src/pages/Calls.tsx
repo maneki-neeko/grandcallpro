@@ -38,7 +38,6 @@ const Calls = () => {
     }
     return true;
   });
-  console.log("🚀 ~ filteredData ~ filteredData:", filteredData);
 
   return (
     <div className="flex min-h-screen w-full">
