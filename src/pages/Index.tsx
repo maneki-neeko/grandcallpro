@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Phone } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +15,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { callData, extensionInfo } from "@/data/callsData";
+import CallStatusBadge from "@/components/calls/CallStatusBadge";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -46,8 +46,8 @@ const Index = () => {
   return (
     <div className="flex min-h-screen w-full">
       {/* Main content */}
-      <div className="flex-1 p-6">
-        <header className="flex justify-between items-center mb-6">
+      <main className="flex-1 flex flex-col items-center justify-start p-8 max-w-5xl mx-auto">
+        <header className="flex justify-between items-center mb-6 w-full">
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <Button onClick={() => setNotificationModalOpen(true)}>
             Notificações
@@ -143,7 +143,7 @@ const Index = () => {
         </div>
 
         {/* Recent calls */}
-        <Card>
+        <Card className="w-full">
           <CardHeader>
             <CardTitle>Chamadas Recentes</CardTitle>
           </CardHeader>
@@ -169,10 +169,23 @@ const Index = () => {
                           </HoverCardTrigger>
                           <HoverCardContent className="bg-blue-500 text-white p-4 w-72">
                             <div className="space-y-1">
-                              <p><strong>Departamento:</strong> {extensionInfo[call.origem]?.departamento || '-'}</p>
-                              <p><strong>Setor:</strong> {extensionInfo[call.origem]?.setor || '-'}</p>
-                              <p><strong>Subsetor:</strong> {extensionInfo[call.origem]?.subsetor || '-'}</p>
-                              <p><strong>Colaborador:</strong> {extensionInfo[call.origem]?.colaborador || '-'}</p>
+                              <p>
+                                <strong>Departamento:</strong>{" "}
+                                {extensionInfo[call.origem]?.departamento ||
+                                  "-"}
+                              </p>
+                              <p>
+                                <strong>Setor:</strong>{" "}
+                                {extensionInfo[call.origem]?.setor || "-"}
+                              </p>
+                              <p>
+                                <strong>Subsetor:</strong>{" "}
+                                {extensionInfo[call.origem]?.subsetor || "-"}
+                              </p>
+                              <p>
+                                <strong>Colaborador:</strong>{" "}
+                                {extensionInfo[call.origem]?.colaborador || "-"}
+                              </p>
                             </div>
                           </HoverCardContent>
                         </HoverCard>
@@ -184,28 +197,50 @@ const Index = () => {
                           </HoverCardTrigger>
                           <HoverCardContent className="bg-blue-500 text-white p-4 w-72">
                             <div className="space-y-1">
-                              <p><strong>Departamento:</strong> {extensionInfo[call.destino]?.departamento || '-'}</p>
-                              <p><strong>Setor:</strong> {extensionInfo[call.destino]?.setor || '-'}</p>
-                              <p><strong>Subsetor:</strong> {extensionInfo[call.destino]?.subsetor || '-'}</p>
-                              <p><strong>Colaborador:</strong> {extensionInfo[call.destino]?.colaborador || '-'}</p>
+                              <p>
+                                <strong>Departamento:</strong>{" "}
+                                {extensionInfo[call.destino]?.departamento ||
+                                  "-"}
+                              </p>
+                              <p>
+                                <strong>Setor:</strong>{" "}
+                                {extensionInfo[call.destino]?.setor || "-"}
+                              </p>
+                              <p>
+                                <strong>Subsetor:</strong>{" "}
+                                {extensionInfo[call.destino]?.subsetor || "-"}
+                              </p>
+                              <p>
+                                <strong>Colaborador:</strong>{" "}
+                                {extensionInfo[call.destino]?.colaborador ||
+                                  "-"}
+                              </p>
                             </div>
                           </HoverCardContent>
                         </HoverCard>
                       </td>
                       <td className="px-4 py-3 text-center">{call.data}</td>
-                      <td className="px-4 py-3 text-center">{call.desfecho}</td>
+                      <td className="px-4 py-3 text-center">
+                        <CallStatusBadge status={call.desfecho} />
+                      </td>
                       <td className="px-4 py-3 text-center">{call.duracao}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <div className="mt-4 flex justify-end">
-              <Button variant="outline" size="sm" onClick={() => navigate("/calls")}>Ver todas as chamadas</Button>
+            <div className="my-4 mr-4 flex justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/calls")}
+              >
+                Ver todas as chamadas
+              </Button>
             </div>
           </CardContent>
         </Card>
-      </div>
+      </main>
     </div>
   );
 };

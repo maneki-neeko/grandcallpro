@@ -18,7 +18,7 @@ import {
   Users,
   FileChartColumn,
 } from "lucide-react";
-import Footer from './Footer';
+import Footer from "./Footer";
 
 export function Layout() {
   const [activePage, setActivePage] = useState("");
@@ -115,13 +115,9 @@ export function Layout() {
               <SidebarGroupLabel>Status</SidebarGroupLabel>
               <SidebarGroupContent>
                 <div className="px-3 py-2">
-                  <div className="flex items-center">
-                    <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
-                    <span className="text-sm">Sistema conectado</span>
-                  </div>
                   <div className="flex items-center mt-1">
                     <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
-                    <span className="text-sm">Central Grandstream ativa</span>
+                    <span className="text-sm">Central Grandstream Ativa</span>
                   </div>
                 </div>
               </SidebarGroupContent>

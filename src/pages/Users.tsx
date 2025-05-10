@@ -20,7 +20,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 
 // Tipo para usuários
@@ -30,13 +36,7 @@ const accessLevels = [
   { value: "Adm", label: "Administrador" },
 ];
 
-const departmentOptions = [
-  "Financeiro",
-  "RH",
-  "Comercial",
-  "TI",
-  "Saúde"
-];
+const departmentOptions = ["Financeiro", "RH", "Comercial", "TI", "Saúde"];
 
 type User = {
   id: number;
@@ -64,11 +64,71 @@ const Users = () => {
 
   // Mock de dados para usuários
   const [users, setUsers] = useState<User[]>([
-    { id: 1, nome: "Ana Silva", email: "ana.silva@empresa.com", departamento: "Financeiro", cargo: "Administrador", senha: "", nivel: "Adm", status: "Ativo", lgpdAccepted: true, lgpdDate: "2025-05-01", lgpdVersion: "1.0" },
-    { id: 2, nome: "Carlos Santos", email: "carlos.santos@empresa.com", departamento: "RH", cargo: "Supervisor", senha: "", nivel: "Supervisor", status: "Ativo", lgpdAccepted: true, lgpdDate: "2025-05-02", lgpdVersion: "1.0" },
-    { id: 3, nome: "Paula Oliveira", email: "paula.oliveira@empresa.com", departamento: "Vendas", cargo: "Telefonista", senha: "", nivel: "Telefonista", status: "Ativo", lgpdAccepted: false, lgpdDate: null, lgpdVersion: null },
-    { id: 4, nome: "João Costa", email: "joao.costa@empresa.com", departamento: "TI", cargo: "Administrador", senha: "", nivel: "Adm", status: "Inativo", lgpdAccepted: true, lgpdDate: "2025-05-03", lgpdVersion: "1.0" },
-    { id: 5, nome: "Mariana Souza", email: "mariana.souza@empresa.com", departamento: "RH", cargo: "Supervisor", senha: "", nivel: "Supervisor", status: "Ativo", lgpdAccepted: true, lgpdDate: "2025-05-04", lgpdVersion: "1.0" },
+    {
+      id: 1,
+      nome: "Ana Silva",
+      email: "ana.silva@empresa.com",
+      departamento: "Financeiro",
+      cargo: "Administrador",
+      senha: "",
+      nivel: "Adm",
+      status: "Ativo",
+      lgpdAccepted: true,
+      lgpdDate: "2025-05-01",
+      lgpdVersion: "1.0",
+    },
+    {
+      id: 2,
+      nome: "Carlos Santos",
+      email: "carlos.santos@empresa.com",
+      departamento: "RH",
+      cargo: "Supervisor",
+      senha: "",
+      nivel: "Supervisor",
+      status: "Ativo",
+      lgpdAccepted: true,
+      lgpdDate: "2025-05-02",
+      lgpdVersion: "1.0",
+    },
+    {
+      id: 3,
+      nome: "Paula Oliveira",
+      email: "paula.oliveira@empresa.com",
+      departamento: "Vendas",
+      cargo: "Telefonista",
+      senha: "",
+      nivel: "Telefonista",
+      status: "Ativo",
+      lgpdAccepted: false,
+      lgpdDate: null,
+      lgpdVersion: null,
+    },
+    {
+      id: 4,
+      nome: "João Costa",
+      email: "joao.costa@empresa.com",
+      departamento: "TI",
+      cargo: "Administrador",
+      senha: "",
+      nivel: "Adm",
+      status: "Inativo",
+      lgpdAccepted: true,
+      lgpdDate: "2025-05-03",
+      lgpdVersion: "1.0",
+    },
+    {
+      id: 5,
+      nome: "Mariana Souza",
+      email: "mariana.souza@empresa.com",
+      departamento: "RH",
+      cargo: "Supervisor",
+      senha: "",
+      nivel: "Supervisor",
+      status: "Ativo",
+      lgpdAccepted: true,
+      lgpdDate: "2025-05-04",
+      lgpdVersion: "1.0",
+    },
   ]);
 
   // Estado para o formulário
@@ -146,13 +206,13 @@ const Users = () => {
     } else {
       setUsers((prev) => [
         ...prev,
-        { 
-          ...formData, 
-          id: prev.length + 1, 
-          status: "Ativo", 
-          lgpdAccepted: false, 
-          lgpdDate: null, 
-          lgpdVersion: null 
+        {
+          ...formData,
+          id: prev.length + 1,
+          status: "Ativo",
+          lgpdAccepted: false,
+          lgpdDate: null,
+          lgpdVersion: null,
         },
       ]);
       toast({
@@ -178,15 +238,15 @@ const Users = () => {
   return (
     <div className="flex min-h-screen w-full">
       {/* Conteúdo principal */}
-      <main className="flex-1 flex flex-col items-center justify-start py-8 px-8 max-w-5xl mx-auto">
-        <div className="flex justify-between items-center mb-6 w-full max-w-5xl">
+      <main className="flex-1 flex flex-col items-center justify-start p-8 mx-auto">
+        <div className="flex justify-between items-center mb-6 w-full">
           <h1 className="text-2xl font-bold">Usuários</h1>
           <Button onClick={handleAdd}>
             <UserPlus className="h-4 w-4 mr-2" />
             Novo Usuário
           </Button>
         </div>
-        <div className="mb-4 w-full max-w-5xl">
+        <div className="mb-4 w-full">
           <Input
             placeholder="Pesquisar usuários..."
             value={searchTerm}
@@ -194,9 +254,9 @@ const Users = () => {
             className="max-w-md"
           />
         </div>
-        <Card className="w-full max-w-5xl">
+        <Card className="w-full">
           <CardContent className="p-0">
-            <Table>
+            <Table className="whitespace-nowrap">
               <TableHeader>
                 <TableRow>
                   <TableHead>Nome</TableHead>
@@ -205,9 +265,7 @@ const Users = () => {
                   <TableHead>Cargo</TableHead>
                   <TableHead>Nível</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>LGPD Aceito</TableHead>
                   <TableHead>Data de Aceite</TableHead>
-                  <TableHead>Versão LGPD</TableHead>
                   <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
@@ -220,22 +278,34 @@ const Users = () => {
                     <TableCell>{user.cargo}</TableCell>
                     <TableCell>{user.nivel}</TableCell>
                     <TableCell>
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        user.status === "Ativo"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs ${
+                          user.status === "Ativo"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
                         {user.status}
                       </span>
                     </TableCell>
-                    <TableCell>{user.lgpdAccepted ? "Sim" : "Não"}</TableCell>
                     <TableCell>{user.lgpdDate || "-"}</TableCell>
-                    <TableCell>{user.lgpdVersion || "-"}</TableCell>
                     <TableCell className="text-right space-x-2">
-                      <Button variant="outline" size="sm" onClick={() => handleEdit(user)}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEdit(user)}
+                      >
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button variant="outline" size="sm" className="text-red-500" onClick={() => { setUserToDelete(user); setDeleteDialogOpen(true); }}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-red-500"
+                        onClick={() => {
+                          setUserToDelete(user);
+                          setDeleteDialogOpen(true);
+                        }}
+                      >
                         <Trash className="h-4 w-4" />
                       </Button>
                     </TableCell>
@@ -248,7 +318,9 @@ const Users = () => {
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{currentUser ? "Editar Usuário" : "Novo Usuário"}</DialogTitle>
+              <DialogTitle>
+                {currentUser ? "Editar Usuário" : "Novo Usuário"}
+              </DialogTitle>
               <DialogDescription>
                 {currentUser
                   ? "Atualize as informações do usuário."
@@ -257,7 +329,9 @@ const Users = () => {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="nome" className="text-right">Nome</Label>
+                <Label htmlFor="nome" className="text-right">
+                  Nome
+                </Label>
                 <Input
                   id="nome"
                   name="nome"
@@ -268,7 +342,9 @@ const Users = () => {
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="email" className="text-right">Email</Label>
+                <Label htmlFor="email" className="text-right">
+                  Email
+                </Label>
                 <Input
                   id="email"
                   name="email"
@@ -279,20 +355,31 @@ const Users = () => {
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="departamento" className="text-right">Departamento</Label>
-                <Select value={formData.departamento} onValueChange={value => setFormData(prev => ({ ...prev, departamento: value }))}>
+                <Label htmlFor="departamento" className="text-right">
+                  Departamento
+                </Label>
+                <Select
+                  value={formData.departamento}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, departamento: value }))
+                  }
+                >
                   <SelectTrigger className="col-span-3">
                     <SelectValue placeholder="Selecione o departamento" />
                   </SelectTrigger>
                   <SelectContent>
-                    {departmentOptions.map(opt => (
-                      <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                    {departmentOptions.map((opt) => (
+                      <SelectItem key={opt} value={opt}>
+                        {opt}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="cargo" className="text-right">Cargo</Label>
+                <Label htmlFor="cargo" className="text-right">
+                  Cargo
+                </Label>
                 <Input
                   id="cargo"
                   name="cargo"
@@ -303,7 +390,9 @@ const Users = () => {
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="senha" className="text-right">Nova senha</Label>
+                <Label htmlFor="senha" className="text-right">
+                  Nova senha
+                </Label>
                 <Input
                   id="senha"
                   name="senha"
@@ -316,30 +405,43 @@ const Users = () => {
               </div>
               {currentUser && (
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="oldPassword" className="text-right">Senha anterior</Label>
+                  <Label htmlFor="oldPassword" className="text-right">
+                    Senha anterior
+                  </Label>
                   <Input
                     id="oldPassword"
                     name="oldPassword"
                     type="password"
                     placeholder="Digite a senha antiga para alterar"
                     value={oldPassword}
-                    onChange={e => setOldPassword(e.target.value)}
+                    onChange={(e) => setOldPassword(e.target.value)}
                     className="col-span-3"
                   />
                 </div>
               )}
               {passwordError && (
-                <div className="col-span-4 text-red-500 text-sm text-center">{passwordError}</div>
+                <div className="col-span-4 text-red-500 text-sm text-center">
+                  {passwordError}
+                </div>
               )}
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="nivel" className="text-right">Nível de Acesso</Label>
-                <Select value={formData.nivel} onValueChange={(value) => setFormData((prev) => ({ ...prev, nivel: value }))}>
+                <Label htmlFor="nivel" className="text-right">
+                  Nível de Acesso
+                </Label>
+                <Select
+                  value={formData.nivel}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, nivel: value }))
+                  }
+                >
                   <SelectTrigger className="col-span-3">
                     <SelectValue placeholder="Selecione o nível" />
                   </SelectTrigger>
                   <SelectContent>
                     {accessLevels.map((level) => (
-                      <SelectItem key={level.value} value={level.value}>{level.label}</SelectItem>
+                      <SelectItem key={level.value} value={level.value}>
+                        {level.label}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -360,10 +462,23 @@ const Users = () => {
             <DialogHeader>
               <DialogTitle>Confirmar exclusão</DialogTitle>
             </DialogHeader>
-            <p>Tem certeza que deseja apagar o usuário <b>{userToDelete?.nome}</b>?</p>
+            <p>
+              Tem certeza que deseja apagar o usuário{" "}
+              <b>{userToDelete?.nome}</b>?
+            </p>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>Cancelar</Button>
-              <Button variant="destructive" onClick={() => handleDelete(userToDelete!.id)}>Apagar</Button>
+              <Button
+                variant="outline"
+                onClick={() => setDeleteDialogOpen(false)}
+              >
+                Cancelar
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => handleDelete(userToDelete!.id)}
+              >
+                Apagar
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

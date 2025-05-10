@@ -28,7 +28,7 @@ const Backup = () => {
 
   return (
     <div className="flex min-h-screen w-full">
-      <main className="flex-1 flex flex-col items-center justify-start py-8 px-8 max-w-5xl mx-auto">
+      <main className="flex-1 flex flex-col items-center justify-start p-8 max-w-5xl mx-auto">
         <h1 className="text-2xl font-bold mb-6">Backup do Sistema</h1>
         <div className="w-full max-w-5xl">
           <Card>

@@ -74,10 +74,9 @@ const PaginationControls: React.FC = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 gap-4">
         <div className="text-sm text-muted-foreground">
           Mostrando os registros {(currentPage - 1) * entriesPerPage + 1} a{" "}
-          {Math.min(currentPage * entriesPerPage, totalEntries)}
-          num total de {totalEntries.toLocaleString()}
-          (filtrado num total de {totalFilteredEntries.toLocaleString()}{" "}
-          registros)
+          {Math.min(currentPage * entriesPerPage, totalEntries)} num total de{" "}
+          {totalEntries.toLocaleString()} (filtrado num total de{" "}
+          {totalFilteredEntries.toLocaleString()} registros)
         </div>
 
         <div className="flex items-center gap-2">

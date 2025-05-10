@@ -21,7 +21,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 // Tipo para extensões (ramais)
 type Extension = {
@@ -33,13 +39,7 @@ type Extension = {
   colaborador: string;
 };
 
-const departmentOptions = [
-  "Financeiro",
-  "RH",
-  "Comercial",
-  "TI",
-  "Saúde"
-];
+const departmentOptions = ["Financeiro", "RH", "Comercial", "TI", "Saúde"];
 
 const Extensions = () => {
   const { toast } = useToast();
@@ -49,7 +49,9 @@ const Extensions = () => {
     null
   );
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [extensionToDelete, setExtensionToDelete] = useState<Extension | null>(null);
+  const [extensionToDelete, setExtensionToDelete] = useState<Extension | null>(
+    null
+  );
 
   // Mock de dados para extensões
   const [extensions, setExtensions] = useState<Extension[]>([
@@ -183,7 +185,7 @@ const Extensions = () => {
   return (
     <div className="flex min-h-screen w-full">
       {/* Conteúdo principal */}
-      <main className="flex-1 flex flex-col items-center justify-start py-8 px-8 max-w-5xl mx-auto">
+      <main className="flex-1 flex flex-col items-center justify-start p-8 max-w-5xl mx-auto">
         <div className="flex justify-between items-center mb-6 w-full">
           <h1 className="text-2xl font-bold">Ramais</h1>
           <Button onClick={handleAdd}>
@@ -232,7 +234,10 @@ const Extensions = () => {
                         variant="outline"
                         size="sm"
                         className="text-red-500"
-                        onClick={() => { setExtensionToDelete(extension); setDeleteDialogOpen(true); }}
+                        onClick={() => {
+                          setExtensionToDelete(extension);
+                          setDeleteDialogOpen(true);
+                        }}
                       >
                         <Trash className="h-4 w-4" />
                       </Button>
@@ -338,10 +343,23 @@ const Extensions = () => {
             <DialogHeader>
               <DialogTitle>Confirmar exclusão</DialogTitle>
             </DialogHeader>
-            <p>Tem certeza que deseja apagar o ramal <b>{extensionToDelete?.numero}</b>?</p>
+            <p>
+              Tem certeza que deseja apagar o ramal{" "}
+              <b>{extensionToDelete?.numero}</b>?
+            </p>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>Cancelar</Button>
-              <Button variant="destructive" onClick={() => handleDelete(extensionToDelete!.id)}>Apagar</Button>
+              <Button
+                variant="outline"
+                onClick={() => setDeleteDialogOpen(false)}
+              >
+                Cancelar
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => handleDelete(extensionToDelete!.id)}
+              >
+                Apagar
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
