@@ -32,6 +32,9 @@ export function Layout() {
       page.charAt(0).toUpperCase() + page.slice(1) || "Dashboard";
   };
 
+  // TODO: Implement a function to check if the Central Grandstream is active
+  const isActiveGrandstream = true;
+
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex flex-1">
@@ -114,10 +117,23 @@ export function Layout() {
             <SidebarGroup>
               <SidebarGroupLabel>Status</SidebarGroupLabel>
               <SidebarGroupContent>
-                <div className="px-3 py-2">
+                <div className="px-2 py-2">
                   <div className="flex items-center mt-1">
-                    <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
-                    <span className="text-sm">Central Grandstream Ativa</span>
+                    {isActiveGrandstream ? (
+                      <>
+                        <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
+                        <span className="text-sm">
+                          Central Grandstream Ativa
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <div className="h-2 w-2 rounded-full bg-red-500 mr-2"></div>
+                        <span className="text-sm">
+                          Central Grandstream Inativa
+                        </span>
+                      </>
+                    )}
                   </div>
                 </div>
               </SidebarGroupContent>

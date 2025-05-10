@@ -16,6 +16,14 @@ import {
 } from "@/components/ui/dialog";
 import { callData, extensionInfo } from "@/data/callsData";
 import CallStatusBadge from "@/components/calls/CallStatusBadge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -149,20 +157,20 @@ const Index = () => {
           </CardHeader>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left">
-                <thead className="text-xs uppercase bg-muted">
-                  <tr>
-                    <th className="px-4 py-2 text-center">Origem</th>
-                    <th className="px-4 py-2 text-center">Destino</th>
-                    <th className="px-4 py-2 text-center">Data/Hora</th>
-                    <th className="px-4 py-2 text-center">Desfecho</th>
-                    <th className="px-4 py-2 text-center">Duração</th>
-                  </tr>
-                </thead>
-                <tbody>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-center">Origem</TableHead>
+                    <TableHead className="text-center">Destino</TableHead>
+                    <TableHead className="text-center">Data/Hora</TableHead>
+                    <TableHead className="text-center">Desfecho</TableHead>
+                    <TableHead className="text-center">Duração</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody className="last:border-b">
                   {recentCalls.map((call, idx) => (
-                    <tr key={idx} className="border-b">
-                      <td className="px-4 py-3 text-center">
+                    <TableRow key={idx}>
+                      <TableCell className="text-center">
                         <HoverCard>
                           <HoverCardTrigger className="underline cursor-help text-blue-500">
                             {call.origem}
@@ -189,8 +197,8 @@ const Index = () => {
                             </div>
                           </HoverCardContent>
                         </HoverCard>
-                      </td>
-                      <td className="px-4 py-3 text-center">
+                      </TableCell>
+                      <TableCell className="text-center">
                         <HoverCard>
                           <HoverCardTrigger className="underline cursor-help text-blue-500">
                             {call.destino}
@@ -218,16 +226,18 @@ const Index = () => {
                             </div>
                           </HoverCardContent>
                         </HoverCard>
-                      </td>
-                      <td className="px-4 py-3 text-center">{call.data}</td>
-                      <td className="px-4 py-3 text-center">
+                      </TableCell>
+                      <TableCell className="text-center">{call.data}</TableCell>
+                      <TableCell className="text-center">
                         <CallStatusBadge status={call.desfecho} />
-                      </td>
-                      <td className="px-4 py-3 text-center">{call.duracao}</td>
-                    </tr>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {call.duracao}
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
             <div className="my-4 mr-4 flex justify-end">
               <Button

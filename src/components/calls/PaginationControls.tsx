@@ -112,7 +112,6 @@ const PaginationControls: React.FC = () => {
               }`}
             >
               <ChevronsLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">Primeira</span>
             </PaginationLink>
           </PaginationItem>
 
@@ -162,7 +161,6 @@ const PaginationControls: React.FC = () => {
                   : ""
               }`}
             >
-              <span className="hidden sm:inline">Última</span>
               <ChevronsRight className="h-4 w-4" />
             </PaginationLink>
           </PaginationItem>
