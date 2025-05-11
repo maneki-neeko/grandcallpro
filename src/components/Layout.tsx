@@ -20,6 +20,15 @@ import {
 } from "lucide-react";
 import Footer from "./Footer";
 
+const titles = {
+  dashboard: "Dashboard",
+  calls: "Chamadas",
+  extensions: "Ramais",
+  users: "Usuários",
+  reports: "Relatórios",
+  backup: "Backup",
+};
+
 export function Layout() {
   const [activePage, setActivePage] = useState("");
   const navigate = useNavigate();
@@ -28,8 +37,7 @@ export function Layout() {
     setActivePage(page);
     navigate(`/${page}`);
 
-    window.document.title =
-      page.charAt(0).toUpperCase() + page.slice(1) || "Dashboard";
+    window.document.title = titles[page] || "Dashboard";
   };
 
   // TODO: Implement a function to check if the Central Grandstream is active
