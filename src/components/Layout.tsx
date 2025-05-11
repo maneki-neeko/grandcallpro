@@ -20,24 +20,26 @@ import {
 } from "lucide-react";
 import Footer from "./Footer";
 
-const titles = {
-  dashboard: "Dashboard",
-  calls: "Chamadas",
-  extensions: "Ramais",
-  users: "Usuários",
-  reports: "Relatórios",
-  backup: "Backup",
-};
+const menuItems = [
+  { title: "Dashboard", icon: BarChart3, route: "" },
+  { title: "Chamadas", icon: Phone, route: "calls" },
+  { title: "Ramais", icon: PhoneIncoming, route: "extensions" },
+  { title: "Usuários", icon: Users, route: "users" },
+  { title: "Relatórios", icon: FileChartColumn, route: "reports" },
+  { title: "Backup", icon: DatabaseBackup, route: "backup" },
+];
 
 export function Layout() {
   const [activePage, setActivePage] = useState("");
   const navigate = useNavigate();
 
-  const handleMenuClick = (page: string) => {
-    setActivePage(page);
-    navigate(`/${page}`);
+  const handleMenuClick = (route: string) => {
+    setActivePage(route);
+    navigate(`/${route}`);
 
-    window.document.title = titles[page] || "Dashboard";
+    const title = menuItems.find((item) => item.route === route)?.title;
+
+    window.document.title = `GrandCallPro - ${title || "Dashboard"}`;
   };
 
   // TODO: Implement a function to check if the Central Grandstream is active
@@ -55,70 +57,22 @@ export function Layout() {
               <SidebarGroupLabel>Menu</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      className={!activePage ? "bg-sidebar-accent" : ""}
-                      onClick={() => handleMenuClick("")}
-                    >
-                      <BarChart3 className="h-4 w-4 mr-2" />
-                      <span>Dashboard</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      className={
-                        activePage === "calls" ? "bg-sidebar-accent" : ""
-                      }
-                      onClick={() => handleMenuClick("calls")}
-                    >
-                      <Phone className="h-4 w-4 mr-2" />
-                      <span>Chamadas</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      className={
-                        activePage === "extensions" ? "bg-sidebar-accent" : ""
-                      }
-                      onClick={() => handleMenuClick("extensions")}
-                    >
-                      <PhoneIncoming className="h-4 w-4 mr-2" />
-                      <span>Ramais</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      className={
-                        activePage === "users" ? "bg-sidebar-accent" : ""
-                      }
-                      onClick={() => handleMenuClick("users")}
-                    >
-                      <Users className="h-4 w-4 mr-2" />
-                      <span>Usuários</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      className={
-                        activePage === "reports" ? "bg-sidebar-accent" : ""
-                      }
-                      onClick={() => handleMenuClick("reports")}
-                    >
-                      <FileChartColumn className="h-4 w-4 mr-2" />
-                      <span>Relatórios</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      className={
-                        activePage === "backup" ? "bg-sidebar-accent" : ""
-                      }
-                      onClick={() => handleMenuClick("backup")}
-                    >
-                      <DatabaseBackup className="h-4 w-4 mr-2" />
-                      <span>Backup</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
+                  {menuItems.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          onClick={() => handleMenuClick(item.route)}
+                          className={
+                            activePage === item.route ? "bg-sidebar-accent" : ""
+                          }
+                        >
+                          <Icon className="h-4 w-4 mr-2" />
+                          <span>{item.title}</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+                  })}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
