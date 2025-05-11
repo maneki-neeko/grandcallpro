@@ -10,7 +10,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Pencil, Trash, Plus } from "lucide-react";
+import { Pencil, Trash, Plus, PhoneIncoming } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   Dialog,
@@ -187,7 +187,10 @@ const Extensions = () => {
       {/* Conteúdo principal */}
       <main className="flex-1 flex flex-col items-center justify-start p-8 max-w-5xl mx-auto">
         <div className="flex justify-between items-center mb-6 w-full">
-          <h1 className="text-2xl font-bold">Ramais</h1>
+          <div className="flex gap-3 items-center">
+            <h1 className="text-2xl font-bold">Ramais</h1>
+            <PhoneIncoming className="text-primary h-5 w-5" />
+          </div>
           <Button onClick={handleAdd}>
             <Plus className="h-4 w-4 mr-2" />
             Novo Ramal

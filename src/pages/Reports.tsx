@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, FileChartColumn } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
@@ -95,7 +95,10 @@ const Reports = () => {
       {/* Main content */}
       <div className="flex-1 p-8 w-full">
         <header className="flex justify-between items-center mb-6 py-1">
-          <h1 className="text-2xl font-bold">Relatórios</h1>
+          <div className="flex gap-3 items-center">
+            <h1 className="text-2xl font-bold">Relatórios</h1>
+            <FileChartColumn className="text-primary h-6 w-6" />
+          </div>
         </header>
 
         <div className="grid gap-4 mb-6">

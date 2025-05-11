@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
+import { DatabaseBackup } from "lucide-react";
 
 const Backup = () => {
   const { toast } = useToast();
@@ -29,7 +30,10 @@ const Backup = () => {
   return (
     <div className="flex min-h-screen w-full">
       <main className="flex-1 flex flex-col justify-start p-8 max-w-5xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6 py-1">Backup do Sistema</h1>
+        <div className="flex gap-3 mb-6 py-1 items-center">
+          <h1 className="text-2xl font-bold">Backup do Sistema</h1>
+          <DatabaseBackup className="text-primary h-6 w-6" />
+        </div>
         <div className="w-full max-w-5xl">
           <Card>
             <CardHeader>

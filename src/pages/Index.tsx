@@ -24,6 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { BarChart3 } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -56,7 +57,10 @@ const Index = () => {
       {/* Main content */}
       <main className="flex-1 flex flex-col items-center justify-start p-8 max-w-5xl mx-auto">
         <header className="flex justify-between items-center mb-6 w-full">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <div className="flex gap-3 items-center">
+            <h1 className="text-2xl font-bold">Dashboard</h1>
+            <BarChart3 className="text-primary h-6 w-6" />
+          </div>
           <Button onClick={() => setNotificationModalOpen(true)}>
             Notificações
           </Button>

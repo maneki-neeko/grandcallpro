@@ -10,7 +10,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { UserPlus, Pencil, Trash } from "lucide-react";
+import { UserPlus, Pencil, Trash, Users as UsersIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -240,7 +240,10 @@ const Users = () => {
       {/* Conteúdo principal */}
       <main className="flex-1 flex flex-col items-center justify-start p-8 mx-auto">
         <div className="flex justify-between items-center mb-6 w-full">
-          <h1 className="text-2xl font-bold">Usuários</h1>
+          <div className="flex gap-3 py-1 items-center">
+            <h1 className="text-2xl font-bold">Usuários</h1>
+            <UsersIcon className="text-primary h-6 w-6" />
+          </div>
           <Button onClick={handleAdd}>
             <UserPlus className="h-4 w-4 mr-2" />
             Novo Usuário
