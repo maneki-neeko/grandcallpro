@@ -30,7 +30,7 @@ const Calls = () => {
       if (filterStatus === "not-answered" && call.desfecho === "ATENDIDA")
         return false;
     }
-    // Filtro por data (apenas data, sem hora)
+    // Filtro por data
     if (date) {
       const callDate = call.data.split(" ")[0];
       const filterDate = date.toISOString().slice(2, 10).replace(/-/g, "-");

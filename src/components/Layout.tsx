@@ -52,55 +52,55 @@ export function Layout() {
           <div className="p-4">
             <h1 className="text-xl font-bold">GrandCallPro</h1>
           </div>
-          <SidebarContent>
+            <SidebarContent className="bg-gray-50">
             <SidebarGroup>
               <SidebarGroupLabel>Menu</SidebarGroupLabel>
               <SidebarGroupContent>
-                <SidebarMenu>
-                  {menuItems.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <SidebarMenuItem>
-                        <SidebarMenuButton
-                          onClick={() => handleMenuClick(item.route)}
-                          className={
-                            activePage === item.route ? "bg-sidebar-accent" : ""
-                          }
-                        >
-                          <Icon className="h-4 w-4 mr-2" />
-                          <span>{item.title}</span>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    );
-                  })}
-                </SidebarMenu>
+              <SidebarMenu>
+              {menuItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <SidebarMenuItem>
+                <SidebarMenuButton
+                onClick={() => handleMenuClick(item.route)}
+                className={
+                activePage === item.route ? "bg-sidebar-accent" : ""
+                }
+                >
+                <Icon className="h-4 w-4 mr-2 bac" />
+                <span>{item.title}</span>
+                </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+              })}
+              </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
             <SidebarGroup>
               <SidebarGroupLabel>Status</SidebarGroupLabel>
               <SidebarGroupContent>
-                <div className="px-2 py-2">
-                  <div className="flex items-center mt-1">
-                    {isActiveGrandstream ? (
-                      <>
-                        <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
-                        <span className="text-sm">
-                          Central Grandstream Ativa
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <div className="h-2 w-2 rounded-full bg-red-500 mr-2"></div>
-                        <span className="text-sm">
-                          Central Grandstream Inativa
-                        </span>
-                      </>
-                    )}
-                  </div>
-                </div>
+              <div className="px-2 py-2">
+              <div className="flex items-center mt-1">
+              {isActiveGrandstream ? (
+                <>
+                <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
+                <span className="text-sm">
+                Central Grandstream Ativa
+                </span>
+                </>
+              ) : (
+                <>
+                <div className="h-2 w-2 rounded-full bg-red-500 mr-2"></div>
+                <span className="text-sm">
+                Central Grandstream Inativa
+                </span>
+                </>
+              )}
+              </div>
+              </div>
               </SidebarGroupContent>
             </SidebarGroup>
-          </SidebarContent>
+            </SidebarContent>
         </Sidebar>
         <Outlet />
       </div>
