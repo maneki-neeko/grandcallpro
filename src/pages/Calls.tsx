@@ -40,9 +40,9 @@ const Calls = () => {
   });
 
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="flex w-full">
       {/* Conteúdo principal */}
-      <main className="flex-1 flex flex-col justify-start p-8 max-w-5xl mx-auto">
+      <main className="flex-1 flex flex-col justify-start p-8 max-w-5xl">
         <div className="flex gap-3 mb-6 py-1 items-center">
           <h1 className="text-2xl font-bold">Registros de ligação</h1>
           <Phone className="text-primary h-6 w-6" />

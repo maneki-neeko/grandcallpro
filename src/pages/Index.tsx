@@ -53,9 +53,9 @@ const Index = () => {
   ];
 
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="flex w-full">
       {/* Main content */}
-      <main className="flex-1 flex flex-col items-center justify-start p-8 max-w-5xl mx-auto">
+      <main className="flex-1 flex flex-col items-center justify-start p-8 max-w-5xl">
         <header className="flex justify-between items-center mb-6 w-full">
           <div className="flex gap-3 items-center">
             <h1 className="text-2xl font-bold">Dashboard</h1>
@@ -96,7 +96,7 @@ const Index = () => {
         </Dialog>
 
         {/* Stats overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 w-full">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">
@@ -136,7 +136,7 @@ const Index = () => {
               </p>
             </CardContent>
           </Card>
-          <Card>
+          {/* <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">
                 Chamadas Ativas
@@ -151,7 +151,7 @@ const Index = () => {
                 ></div>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
 
         {/* Recent calls */}

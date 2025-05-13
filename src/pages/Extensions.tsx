@@ -183,9 +183,9 @@ const Extensions = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="flex w-full max-w-5xl">
       {/* Conteúdo principal */}
-      <main className="flex-1 flex flex-col items-center justify-start p-8 max-w-5xl mx-auto">
+      <main className="flex-1 flex flex-col items-center justify-start p-8 w-full">
         <div className="flex justify-between items-center mb-6 w-full">
           <div className="flex gap-3 items-center">
             <h1 className="text-2xl font-bold">Ramais</h1>

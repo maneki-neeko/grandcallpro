@@ -28,8 +28,8 @@ const Backup = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-full">
-      <main className="flex-1 flex flex-col justify-start p-8 max-w-5xl mx-auto">
+    <div className="flex w-full">
+      <main className="flex-1 flex flex-col justify-start p-8 max-w-5xl">
         <div className="flex gap-3 mb-6 py-1 items-center">
           <h1 className="text-2xl font-bold">Backup do Sistema</h1>
           <DatabaseBackup className="text-primary h-6 w-6" />

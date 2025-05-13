@@ -91,7 +91,7 @@ const Reports = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="flex w-full max-w-5xl">
       {/* Main content */}
       <div className="flex-1 p-8 w-full">
         <header className="flex justify-between items-center mb-6 py-1">

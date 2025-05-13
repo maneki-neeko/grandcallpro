@@ -35,7 +35,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-[#1bb5da] to-[#004a80] font-sora">
+    <div className="w-full flex items-center justify-center bg-gradient-to-br from-[#1bb5da] to-[#004a80] font-sora">
       <div className="flex-1 flex justify-center items-center">
         <Card className="border-none shadow-xl w-full max-w-md">
           <CardHeader className="space-y-1 text-center">
