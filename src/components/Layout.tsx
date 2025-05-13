@@ -9,7 +9,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useState } from "react";
 import {
   BarChart3,
   Phone,
@@ -17,11 +16,14 @@ import {
   DatabaseBackup,
   Users,
   FileChartColumn,
+  ScrollText,
 } from "lucide-react";
 import { Footer } from "./Footer";
+import { useContextApp } from "@/contexts";
 
 const menuItems = [
   { title: "Dashboard", icon: BarChart3, route: "" },
+  { title: "Notificações", icon: ScrollText, route: "notifications-history" },
   { title: "Chamadas", icon: Phone, route: "calls" },
   { title: "Ramais", icon: PhoneIncoming, route: "extensions" },
   { title: "Usuários", icon: Users, route: "users" },
@@ -30,7 +32,7 @@ const menuItems = [
 ];
 
 export function Layout() {
-  const [activePage, setActivePage] = useState("");
+  const { activePage, setActivePage } = useContextApp();
   const navigate = useNavigate();
 
   const handleMenuClick = (route: string) => {

@@ -25,9 +25,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { BarChart3 } from "lucide-react";
+import { useContextApp } from "@/contexts";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { setActivePage } = useContextApp();
   const [notificationModalOpen, setNotificationModalOpen] = useState(false);
 
   // Mock data for recent calls
@@ -92,6 +94,18 @@ const Index = () => {
                 ))
               )}
             </div>
+            <div className="mt-4 flex justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  navigate("/notifications-history");
+                  setActivePage("notifications-history");
+                }}
+              >
+                Ver todas as notificações
+              </Button>
+            </div>
           </DialogContent>
         </Dialog>
 
@@ -136,22 +150,6 @@ const Index = () => {
               </p>
             </CardContent>
           </Card>
-          {/* <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                Chamadas Ativas
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">5</div>
-              <div className="w-full bg-secondary rounded-full h-1.5 mt-2">
-                <div
-                  className="bg-primary h-1.5 rounded-full"
-                  style={{ width: "40%" }}
-                ></div>
-              </div>
-            </CardContent>
-          </Card> */}
         </div>
 
         {/* Recent calls */}

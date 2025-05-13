@@ -17,6 +17,8 @@ import { AuthProvider, useAuth } from "./lib/auth";
 import { Layout } from "./components/Layout";
 import Backup from "./pages/Backup";
 import ConsentForm from "./components/lgpd/ConsentForm";
+import { NotificationHistory } from "./pages/NotificationHistory";
+import { AppProvider } from "./contexts";
 
 const queryClient = new QueryClient();
 
@@ -32,31 +34,89 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 const App = () => (
   <AuthProvider>
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <SidebarProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/lgpd-consent" element={<ConsentForm />} />
+      <AppProvider>
+        <TooltipProvider>
+          <SidebarProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/lgpd-consent" element={<ConsentForm />} />
 
-              <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-                <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-                <Route path="/calls" element={<ProtectedRoute><Calls /></ProtectedRoute>} />
-                <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
-                <Route path="/extensions" element={<ProtectedRoute><Extensions /></ProtectedRoute>} />
-                <Route path="/backup" element={<ProtectedRoute><Backup /></ProtectedRoute>} />
-                <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
-              </Route>
+                <Route
+                  element={
+                    <ProtectedRoute>
+                      <Layout />
+                    </ProtectedRoute>
+                  }
+                >
+                  <Route
+                    path="/"
+                    element={
+                      <ProtectedRoute>
+                        <Index />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/calls"
+                    element={
+                      <ProtectedRoute>
+                        <Calls />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/users"
+                    element={
+                      <ProtectedRoute>
+                        <Users />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/extensions"
+                    element={
+                      <ProtectedRoute>
+                        <Extensions />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/backup"
+                    element={
+                      <ProtectedRoute>
+                        <Backup />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/reports"
+                    element={
+                      <ProtectedRoute>
+                        <Reports />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/notifications-history"
+                    element={
+                      <ProtectedRoute>
+                        <NotificationHistory />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Route>
 
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </SidebarProvider>
-      </TooltipProvider>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </SidebarProvider>
+        </TooltipProvider>
+      </AppProvider>
     </QueryClientProvider>
   </AuthProvider>
 );
