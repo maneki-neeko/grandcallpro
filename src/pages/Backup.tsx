@@ -1,16 +1,10 @@
-import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/hooks/use-toast";
-import { DatabaseBackup } from "lucide-react";
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { useToast } from '@/hooks/use-toast';
+import { DatabaseBackup } from 'lucide-react';
 
 const Backup = () => {
   const { toast } = useToast();
@@ -21,8 +15,8 @@ const Backup = () => {
     setTimeout(() => {
       setSaving(false);
       toast({
-        title: "Backup realizado",
-        description: "O backup foi realizado com sucesso.",
+        title: 'Backup realizado',
+        description: 'O backup foi realizado com sucesso.',
       });
     }, 1000);
   };
@@ -39,8 +33,7 @@ const Backup = () => {
             <CardHeader>
               <CardTitle>Backup</CardTitle>
               <CardDescription>
-                Realize o backup dos dados do sistema manualmente ou configure o
-                backup automático.
+                Realize o backup dos dados do sistema manualmente ou configure o backup automático.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -49,12 +42,8 @@ const Backup = () => {
                 <Label htmlFor="auto-backup">Backup Automático</Label>
               </div>
               <div className="pt-4">
-                <Button
-                  variant="default"
-                  onClick={handleSave}
-                  disabled={saving}
-                >
-                  {saving ? "Realizando backup..." : "Iniciar Backup Manual"}
+                <Button variant="default" onClick={handleSave} disabled={saving}>
+                  {saving ? 'Realizando backup...' : 'Iniciar Backup Manual'}
                 </Button>
               </div>
             </CardContent>

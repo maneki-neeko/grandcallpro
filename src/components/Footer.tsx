@@ -1,15 +1,11 @@
-import logo from "./assets/0dbe7a59-0897-42ad-9da1-d11ff6821012.png";
-import { Heart } from "lucide-react";
+import logo from './assets/0dbe7a59-0897-42ad-9da1-d11ff6821012.png';
+import { Heart } from 'lucide-react';
 
 export function Footer() {
   return (
     <footer className="flex items-center justify-center p-4">
       <div className="flex items-center justify-center space-x-2">
-        <a
-          href="https://github.com/maneki-neeko"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="https://github.com/maneki-neeko" target="_blank" rel="noopener noreferrer">
           <img src={logo} alt="Maneki Neeko Logo" className="h-8 w-8" />
         </a>
         <a

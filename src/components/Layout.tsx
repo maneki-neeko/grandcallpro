@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from 'react-router-dom';
 import {
   Sidebar,
   SidebarContent,
@@ -8,7 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from '@/components/ui/sidebar';
 import {
   BarChart3,
   Phone,
@@ -17,18 +17,18 @@ import {
   Users,
   FileChartColumn,
   ScrollText,
-} from "lucide-react";
-import { Footer } from "./Footer";
-import { useContextApp } from "@/contexts";
+} from 'lucide-react';
+import { Footer } from './Footer';
+import { useContextApp } from '@/contexts';
 
 const menuItems = [
-  { title: "Dashboard", icon: BarChart3, route: "" },
-  { title: "Notificações", icon: ScrollText, route: "notifications-history" },
-  { title: "Chamadas", icon: Phone, route: "calls" },
-  { title: "Ramais", icon: PhoneIncoming, route: "extensions" },
-  { title: "Usuários", icon: Users, route: "users" },
-  { title: "Relatórios", icon: FileChartColumn, route: "reports" },
-  { title: "Backup", icon: DatabaseBackup, route: "backup" },
+  { title: 'Dashboard', icon: BarChart3, route: '' },
+  { title: 'Notificações', icon: ScrollText, route: 'notifications-history' },
+  { title: 'Chamadas', icon: Phone, route: 'calls' },
+  { title: 'Ramais', icon: PhoneIncoming, route: 'extensions' },
+  { title: 'Usuários', icon: Users, route: 'users' },
+  { title: 'Relatórios', icon: FileChartColumn, route: 'reports' },
+  { title: 'Backup', icon: DatabaseBackup, route: 'backup' },
 ];
 
 export function Layout() {
@@ -39,9 +39,9 @@ export function Layout() {
     setActivePage(route);
     navigate(`/${route}`);
 
-    const title = menuItems.find((item) => item.route === route)?.title;
+    const title = menuItems.find(item => item.route === route)?.title;
 
-    window.document.title = `GrandCallPro - ${title || "Dashboard"}`;
+    window.document.title = `GrandCallPro - ${title || 'Dashboard'}`;
   };
 
   // TODO: Implement a function to check if the Central Grandstream is active
@@ -59,15 +59,13 @@ export function Layout() {
               <SidebarGroupLabel>Menu</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {menuItems.map((item) => {
+                  {menuItems.map(item => {
                     const Icon = item.icon;
                     return (
                       <SidebarMenuItem>
                         <SidebarMenuButton
                           onClick={() => handleMenuClick(item.route)}
-                          className={
-                            activePage === item.route ? "bg-sidebar-accent" : ""
-                          }
+                          className={activePage === item.route ? 'bg-sidebar-accent' : ''}
                         >
                           <Icon className="h-4 w-4 mr-2 bac" />
                           <span>{item.title}</span>
@@ -86,16 +84,12 @@ export function Layout() {
                     {isActiveGrandstream ? (
                       <>
                         <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
-                        <span className="text-sm">
-                          Central Grandstream Ativa
-                        </span>
+                        <span className="text-sm">Central Grandstream Ativa</span>
                       </>
                     ) : (
                       <>
                         <div className="h-2 w-2 rounded-full bg-red-500 mr-2"></div>
-                        <span className="text-sm">
-                          Central Grandstream Inativa
-                        </span>
+                        <span className="text-sm">Central Grandstream Inativa</span>
                       </>
                     )}
                   </div>

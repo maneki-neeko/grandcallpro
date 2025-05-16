@@ -1,23 +1,19 @@
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+import React, { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Search, Filter, X } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+} from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Search, Filter, X } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 interface CallFiltersProps {
   searchTerm: string;
@@ -55,11 +51,11 @@ const CallFilters: React.FC<CallFiltersProps> = ({
             className="pl-8 w-full"
             placeholder="Procurar por número..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
           />
           {searchTerm && (
             <button
-              onClick={() => setSearchTerm("")}
+              onClick={() => setSearchTerm('')}
               className="absolute right-2.5 h-4 w-4 text-muted-foreground hover:text-foreground"
             >
               <X className="h-4 w-4" />
@@ -76,17 +72,12 @@ const CallFilters: React.FC<CallFiltersProps> = ({
           Filtros
           {(filterOrigin || filterDestination || date) && (
             <span className="ml-1 bg-primary text-primary-foreground rounded-full w-5 h-5 flex items-center justify-center text-xs">
-              {(filterOrigin ? 1 : 0) +
-                (filterDestination ? 1 : 0) +
-                (date ? 1 : 0)}
+              {(filterOrigin ? 1 : 0) + (filterDestination ? 1 : 0) + (date ? 1 : 0)}
             </span>
           )}
         </Button>
 
-        <Select
-          defaultValue={filterStatus}
-          onValueChange={(value) => setFilterStatus(value)}
-        >
+        <Select defaultValue={filterStatus} onValueChange={value => setFilterStatus(value)}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Desfecho" />
           </SelectTrigger>
@@ -106,9 +97,7 @@ const CallFilters: React.FC<CallFiltersProps> = ({
               <Checkbox
                 id="filter-origin"
                 checked={filterOrigin}
-                onCheckedChange={(checked) =>
-                  setFilterOrigin(checked as boolean)
-                }
+                onCheckedChange={checked => setFilterOrigin(checked as boolean)}
               />
               <label htmlFor="filter-origin" className="text-sm">
                 Filtrar por Origem
@@ -119,9 +108,7 @@ const CallFilters: React.FC<CallFiltersProps> = ({
               <Checkbox
                 id="filter-destination"
                 checked={filterDestination}
-                onCheckedChange={(checked) =>
-                  setFilterDestination(checked as boolean)
-                }
+                onCheckedChange={checked => setFilterDestination(checked as boolean)}
               />
               <label htmlFor="filter-destination" className="text-sm">
                 Filtrar por Destino
@@ -149,13 +136,10 @@ const CallFilters: React.FC<CallFiltersProps> = ({
             <h3 className="text-sm font-medium">Data</h3>
             <Popover>
               <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="justify-start text-left font-normal"
-                >
+                <Button variant="outline" className="justify-start text-left font-normal">
                   {date
                     ? format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
-                    : "Selecionar data..."}
+                    : 'Selecionar data...'}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">

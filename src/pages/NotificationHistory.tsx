@@ -1,65 +1,65 @@
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { ScrollText } from "lucide-react";
+import { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { ScrollText } from 'lucide-react';
 
 export function NotificationHistory() {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
   const notifications = [
     {
       id: 1,
-      title: "Nova chamada recebida",
-      description: "Você recebeu uma chamada de (11) 98765-4321.",
+      title: 'Nova chamada recebida',
+      description: 'Você recebeu uma chamada de (11) 98765-4321.',
     },
     {
       id: 2,
-      title: "Chamada perdida",
-      description: "Você perdeu uma chamada de (11) 91234-5678.",
+      title: 'Chamada perdida',
+      description: 'Você perdeu uma chamada de (11) 91234-5678.',
     },
     {
       id: 3,
-      title: "Usuário adicionado",
-      description: "Novo usuário Paulo foi adicionado ao sistema.",
+      title: 'Usuário adicionado',
+      description: 'Novo usuário Paulo foi adicionado ao sistema.',
     },
     {
       id: 4,
-      title: "Nova mensagem",
-      description: "Você recebeu uma nova mensagem de João.",
+      title: 'Nova mensagem',
+      description: 'Você recebeu uma nova mensagem de João.',
     },
     {
       id: 5,
-      title: "Atualização de sistema",
-      description: "O sistema foi atualizado para a versão 2.0.",
+      title: 'Atualização de sistema',
+      description: 'O sistema foi atualizado para a versão 2.0.',
     },
     {
       id: 6,
-      title: "Novo recurso disponível",
-      description: "Um novo recurso foi adicionado ao sistema.",
+      title: 'Novo recurso disponível',
+      description: 'Um novo recurso foi adicionado ao sistema.',
     },
     {
       id: 7,
-      title: "Erro no sistema",
-      description: "Ocorreu um erro no sistema. Por favor, verifique.",
+      title: 'Erro no sistema',
+      description: 'Ocorreu um erro no sistema. Por favor, verifique.',
     },
     {
       id: 8,
-      title: "Novo usuário registrado",
-      description: "Um novo usuário se registrou no sistema.",
+      title: 'Novo usuário registrado',
+      description: 'Um novo usuário se registrou no sistema.',
     },
     {
       id: 9,
-      title: "Relatório gerado",
-      description: "Um novo relatório foi gerado com sucesso.",
+      title: 'Relatório gerado',
+      description: 'Um novo relatório foi gerado com sucesso.',
     },
     {
       id: 10,
-      title: "Backup concluído",
-      description: "O backup do sistema foi concluído com sucesso.",
+      title: 'Backup concluído',
+      description: 'O backup do sistema foi concluído com sucesso.',
     },
   ];
 
   const filteredNotifications = notifications.filter(
-    (ext) =>
+    ext =>
       ext.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       ext.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -77,22 +77,18 @@ export function NotificationHistory() {
           <Input
             placeholder="Pesquisar notificações..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
             className="max-w-md"
           />
         </div>
         <div className="space-y-4 mt-4 max-w-2xl">
           {filteredNotifications.length === 0 ? (
-            <div className="text-center text-muted-foreground">
-              Nenhuma notificação.
-            </div>
+            <div className="text-center text-muted-foreground">Nenhuma notificação.</div>
           ) : (
-            filteredNotifications.map((n) => (
+            filteredNotifications.map(n => (
               <div key={n.id} className="border rounded p-3 bg-muted">
                 <div className="font-semibold">{n.title}</div>
-                <div className="text-sm text-muted-foreground">
-                  {n.description}
-                </div>
+                <div className="text-sm text-muted-foreground">{n.description}</div>
               </div>
             ))
           )}

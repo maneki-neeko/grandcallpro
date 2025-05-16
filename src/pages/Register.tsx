@@ -1,19 +1,8 @@
-import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Link } from "react-router-dom";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "../components/ui/dialog";
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Button } from '../components/ui/button';
+import { Link } from 'react-router-dom';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
 
 const Register: React.FC = () => {
   const [lgpdAccepted, setLgpdAccepted] = useState(false);
@@ -21,11 +10,11 @@ const Register: React.FC = () => {
 
   const handleRegister = () => {
     if (!lgpdAccepted) {
-      alert("Você precisa aceitar os termos da LGPD para continuar.");
+      alert('Você precisa aceitar os termos da LGPD para continuar.');
       return;
     }
     // Simula o registro do usuário
-    alert("Usuário registrado com sucesso!");
+    alert('Usuário registrado com sucesso!');
   };
 
   return (
@@ -36,9 +25,7 @@ const Register: React.FC = () => {
             <CardTitle className="text-2xl font-bold tracking-tight text-[#004a80]">
               Criar Conta
             </CardTitle>
-            <CardDescription>
-              Preencha os campos para registrar uma nova conta.
-            </CardDescription>
+            <CardDescription>Preencha os campos para registrar uma nova conta.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-4">
@@ -62,10 +49,10 @@ const Register: React.FC = () => {
                   type="checkbox"
                   id="lgpd"
                   checked={lgpdAccepted}
-                  onChange={(e) => setLgpdAccepted(e.target.checked)}
+                  onChange={e => setLgpdAccepted(e.target.checked)}
                 />
                 <label htmlFor="lgpd" className="text-sm">
-                  Eu aceito os{" "}
+                  Eu aceito os{' '}
                   <button
                     type="button"
                     className="text-primary hover:underline"
@@ -86,7 +73,7 @@ const Register: React.FC = () => {
               Registrar
             </Button>
             <div className="text-center text-xs mt-1">
-              Já tem uma conta?{" "}
+              Já tem uma conta?{' '}
               <Link to="/login" className="text-primary hover:underline">
                 Entrar
               </Link>
@@ -102,14 +89,10 @@ const Register: React.FC = () => {
           </DialogHeader>
           <div className="modal-content">
             <p>
-              Este é o termo de aceite conforme exigido pela Lei Geral de
-              Proteção de Dados (LGPD). Ao aceitar, você concorda com o uso de
-              seus dados conforme descrito neste documento.
+              Este é o termo de aceite conforme exigido pela Lei Geral de Proteção de Dados (LGPD).
+              Ao aceitar, você concorda com o uso de seus dados conforme descrito neste documento.
             </p>
-            <p>
-              [Insira aqui o texto completo do termo de uso e política de
-              privacidade.]
-            </p>
+            <p>[Insira aqui o texto completo do termo de uso e política de privacidade.]</p>
           </div>
         </DialogContent>
       </Dialog>
