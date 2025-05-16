@@ -1,4 +1,4 @@
-import logo from './assets/0dbe7a59-0897-42ad-9da1-d11ff6821012.png';
+import logo from '../assets/logo.png';
 import { Heart } from 'lucide-react';
 
 export function Footer() {
