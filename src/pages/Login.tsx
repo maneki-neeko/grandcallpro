@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useAuth } from '../lib/auth';
 import { useNavigate, Link } from 'react-router-dom';
+import authService from '../services/auth';
+import { toast } from 'sonner';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -13,6 +14,7 @@ import {
   CardTitle,
 } from '../components/ui/card';
 import { LockKeyhole, Mail } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -25,10 +27,13 @@ const Login: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      // Simulação de login (substitua pela lógica real)
-      await new Promise(res => setTimeout(res, 800));
-      login();
+      await authService.login({ email, password });
+      login({ email, password }); // atualiza o contexto de autenticação
+      toast.success('Login realizado com sucesso!');
       navigate('/');
+    } catch (error) {
+      console.error('Erro no login:', error);
+      toast.error('Falha ao realizar login. Verifique suas credenciais.');
     } finally {
       setIsSubmitting(false);
     }

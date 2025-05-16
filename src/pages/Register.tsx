@@ -1,20 +1,46 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import authService from '../services/auth';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
 
 const Register: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [lgpdAccepted, setLgpdAccepted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const handleRegister = () => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!lgpdAccepted) {
-      alert('Você precisa aceitar os termos da LGPD para continuar.');
+      toast.error('Você precisa aceitar os termos da LGPD para continuar.');
       return;
     }
-    // Simula o registro do usuário
-    alert('Usuário registrado com sucesso!');
+
+    setIsSubmitting(true);
+    try {
+      await authService.register(formData);
+      toast.success('Conta criada com sucesso!');
+      navigate('/login');
+    } catch (error) {
+      console.error('Erro no registro:', error);
+      toast.error('Falha ao criar conta. Verifique os dados e tente novamente.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -27,58 +53,73 @@ const Register: React.FC = () => {
             </CardTitle>
             <CardDescription>Preencha os campos para registrar uma nova conta.</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-4">
-              <input
-                className="input font-sora p-2 border rounded"
-                type="text"
-                placeholder="Nome"
-              />
-              <input
-                className="input font-sora p-2 border rounded"
-                type="email"
-                placeholder="Email"
-              />
-              <input
-                className="input font-sora p-2 border rounded"
-                type="password"
-                placeholder="Senha"
-              />
-              <div className="flex items-center gap-2">
+          <form onSubmit={handleRegister}>
+            <CardContent>
+              <div className="flex flex-col gap-4">
                 <input
-                  type="checkbox"
-                  id="lgpd"
-                  checked={lgpdAccepted}
-                  onChange={e => setLgpdAccepted(e.target.checked)}
+                  className="input font-sora p-2 border rounded"
+                  type="text"
+                  name="name"
+                  placeholder="Nome"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
                 />
-                <label htmlFor="lgpd" className="text-sm">
-                  Eu aceito os{' '}
-                  <button
-                    type="button"
-                    className="text-primary hover:underline"
-                    onClick={() => setIsModalOpen(true)}
-                  >
-                    termos da LGPD
-                  </button>
-                  .
-                </label>
+                <input
+                  className="input font-sora p-2 border rounded"
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+                <input
+                  className="input font-sora p-2 border rounded"
+                  type="password"
+                  name="password"
+                  placeholder="Senha"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="lgpd"
+                    checked={lgpdAccepted}
+                    onChange={e => setLgpdAccepted(e.target.checked)}
+                  />
+                  <label htmlFor="lgpd" className="text-sm">
+                    Eu aceito os{' '}
+                    <button
+                      type="button"
+                      className="text-primary hover:underline"
+                      onClick={() => setIsModalOpen(true)}
+                    >
+                      termos da LGPD
+                    </button>
+                    .
+                  </label>
+                </div>
+              </div>
+            </CardContent>
+            <div className="flex flex-col gap-2 p-4">
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-[#1bb5da] hover:bg-[#004a80] text-white font-bold font-sora"
+              >
+                {isSubmitting ? 'Registrando...' : 'Registrar'}
+              </Button>
+              <div className="text-center text-xs mt-1">
+                Já tem uma conta?{' '}
+                <Link to="/login" className="text-primary hover:underline">
+                  Entrar
+                </Link>
               </div>
             </div>
-          </CardContent>
-          <div className="flex flex-col gap-2 p-4">
-            <Button
-              onClick={handleRegister}
-              className="w-full bg-[#1bb5da] hover:bg-[#004a80] text-white font-bold font-sora"
-            >
-              Registrar
-            </Button>
-            <div className="text-center text-xs mt-1">
-              Já tem uma conta?{' '}
-              <Link to="/login" className="text-primary hover:underline">
-                Entrar
-              </Link>
-            </div>
-          </div>
+          </form>
         </Card>
       </div>
 
