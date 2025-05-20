@@ -3,12 +3,22 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background-color: black !important;
+}
+
+body {
+  background-color: black !important;
+}
+
+.w-full {
+  background-color: black !important;
 }
 
 .logo {
-  height: 6em;
+  height: 10000em;
   padding: 1.5em;
   will-change: filter;
+  background-color: black;
   transition: filter 300ms;
 }
 .logo:hover {

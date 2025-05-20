@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { ThemeProvider } from "@/lib/theme-provider";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Calls from "./pages/Calls";
@@ -30,13 +31,14 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 };
 
 const App = () => (
-  <AuthProvider>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <SidebarProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
+  <ThemeProvider defaultTheme="system" storageKey="grandcallpro-theme">
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <SidebarProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
@@ -59,6 +61,7 @@ const App = () => (
       </TooltipProvider>
     </QueryClientProvider>
   </AuthProvider>
+  </ThemeProvider>
 );
 
 export default App;

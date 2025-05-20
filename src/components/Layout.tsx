@@ -19,6 +19,7 @@ import {
   FileChartColumn,
 } from "lucide-react";
 import { Footer } from "./Footer";
+import { ThemeToggle } from "./ui/theme-toggle";
 
 const menuItems = [
   { title: "Dashboard", icon: BarChart3, route: "" },
@@ -49,10 +50,11 @@ export function Layout() {
     <div className="flex justify-start flex-col w-full">
       <div className="flex flex-1">
         <Sidebar>
-          <div className="p-4">
+          <div className="p-4 flex justify-between items-center">
             <h1 className="text-xl font-bold">GrandCallPro</h1>
+            <ThemeToggle />
           </div>
-          <SidebarContent className="bg-gray-50">
+          <SidebarContent className="bg-sidebar-background">
             <SidebarGroup>
               <SidebarGroupLabel>Menu</SidebarGroupLabel>
               <SidebarGroupContent>
