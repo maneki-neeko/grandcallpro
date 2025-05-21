@@ -126,4 +126,8 @@
   .bg-card-custom {
     background-color: var(--card-custom) !important;
   }
+
+  .bg-background {
+    background-color: #0a0a0a;
+  }
 }
