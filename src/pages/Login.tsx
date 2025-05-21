@@ -86,7 +86,7 @@ const Login: React.FC = () => {
             <CardFooter className="flex flex-col gap-2">
               <Button
                 type="submit"
-                className="w-full bg-[#1bb5da] hover:bg-[#004a80] text-white font-bold font-sora shadow-md bg-card-custom"
+                className="w-full bg-[#1bb5da] hover:bg-[#004a80] text-white font-bold font-sora shadow-md"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Entrando..." : "Entrar"}
