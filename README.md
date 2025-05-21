@@ -1,68 +1,84 @@
 # Voxline Call Manager
 
-Este projeto foi desenvolvido como parte do Projeto de Extensão III do curso de Engenharia de Software pelo Centro Universitário UniAmérica Descomplica. O PEX tem como objetivo conectar os conhecimentos acadêmicos com as necessidades reais de instituições, ONGs e comunidades, por meio da análise crítica de problemas, identificação de fatores-chave e proposição de soluções tecnológicas aplicáveis.
-
-Neste contexto, foi realizado um diagnóstico detalhado em parceria com a Prefeitura de Palmital, resultando no desenvolvimento de um protótipo funcional para gestão de chamadas telefônicas, com foco na melhoria do atendimento à população na área da saúde.
-
-Este projeto também é desenvolvido pelo PEX em parceria com a Prefeitura Municipal de Palmital.
+O Voxline Call Manager é uma solução web completa para gestão de chamadas telefônicas, desenvolvida para atender instituições públicas e privadas que necessitam de controle, auditoria e análise de ligações em centrais telefônicas. O sistema foi idealizado no contexto do Projeto de Extensão III do curso de Engenharia de Software do Centro Universitário UniAmérica Descomplica, em parceria com a Prefeitura Municipal de Palmital.
 
 ## Finalidade do Projeto
 
-Desenvolver um sistema capaz de interagir com a central telefônica, permitindo a gestão das chamadas, geração de relatórios, integração com outros sistemas e acompanhamento das operações em tempo real.
+O objetivo do Voxline Call Manager é proporcionar uma plataforma robusta para:
+- Coletar e armazenar registros de chamadas (CDR) de centrais Grandstream via API.
+- Gerenciar usuários, ramais e permissões de acesso.
+- Auditar operações e manter logs detalhados.
+- Gerar relatórios customizados e dashboards interativos.
+- Integrar com outros sistemas e realizar backup seguro dos dados.
 
-### Objetivos Detalhados
+## Funcionalidades Principais
 
-- Coletar ligações telefônicas da central telefônica via API CDR Output da Grandstream.
-- Processar e armazenar esses dados pelo máximo de período possível.
-- Sistema com acesso a telefonistas e usuários para verificar seus registros telefônicos, com auditoria, logs, permissão de acesso por nível, segurança, agenda telefônica integrada e todos os CRUD necessários.
-- Geração de relatórios personalizados e completos (detalhes adicionais estarão nos próximos cards).
+- **Dashboard**: Visão geral de métricas, notificações e estatísticas de chamadas.
+- **Gestão de Chamadas**: Consulta, filtro e análise de todas as ligações recebidas, realizadas e perdidas.
+- **Relatórios Avançados**: Relatórios por período, departamento, ramal, tempo de atendimento, horários de pico, chamadas perdidas, entre outros.
+- **Gestão de Ramais**: Cadastro, edição, exclusão e busca de ramais, setores e responsáveis.
+- **Gestão de Usuários**: Controle de acesso por níveis (Telefonista, Supervisor, Administrador), cadastro, edição, exclusão e auditoria de usuários.
+- **Notificações**: Histórico e painel de notificações do sistema.
+- **Backup**: Backup manual e automático dos dados do sistema.
+- **Autenticação e Segurança**: Login, registro, recuperação de senha, aceite de LGPD, controle de sessão e logs de acesso.
+- **Interface Responsiva**: Layout moderno, responsivo e acessível.
+
+## Estrutura de Navegação
+
+- **/ (Dashboard)**: Visão geral do sistema.
+- **/calls**: Listagem e filtros de chamadas.
+- **/reports**: Relatórios e exportação de dados.
+- **/extensions**: Gerenciamento de ramais.
+- **/users**: Gerenciamento de usuários.
+- **/notifications-history**: Histórico de notificações.
+- **/backup**: Gerenciamento de backups.
+- **/login, /register, /forgot-password**: Fluxos de autenticação.
+
+## Tecnologias Utilizadas
+
+- [Vite](https://vitejs.dev/) + [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- [shadcn/ui](https://ui.shadcn.com/) e [Tailwind CSS](https://tailwindcss.com/)
+- [React Router](https://reactrouter.com/) para navegação
+- [React Query](https://tanstack.com/query/latest) para gerenciamento de dados
+- [Lucide Icons](https://lucide.dev/) para ícones
+- [Zod](https://zod.dev/) para validação
+
+## Como Executar Localmente
+
+1. **Clone o repositório:**
+   ```powershell
+   git clone <URL_DO_REPOSITORIO>
+   cd <NOME_DA_PASTA>
+   ```
+2. **Instale as dependências:**
+   ```powershell
+   npm install
+   ```
+3. **Inicie o servidor de desenvolvimento:**
+   ```powershell
+   npm run dev
+   ```
+4. **Acesse:**
+   Abra [http://localhost:8080](http://localhost:8080) no navegador.
+
+## Build e Deploy
+
+- Para gerar a versão de produção:
+  ```powershell
+  npm run build
+  ```
+- Os arquivos finais estarão na pasta `dist/`.
+- O deploy pode ser feito em qualquer serviço de hospedagem de aplicações estáticas (Vercel, Netlify, etc).
+
+## Requisitos
+
+- Node.js 18+
+- npm 9+
+
+## Licença
+
+Este projeto é de uso acadêmico e institucional, podendo ser adaptado conforme a necessidade da instituição parceira.
 
 ---
 
-## How can I edit this code?
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Desenvolvido por alunos do Centro Universitário UniAmérica Descomplica em parceria com a Prefeitura Municipal de Palmital.

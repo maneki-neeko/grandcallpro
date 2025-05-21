@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
@@ -25,7 +24,7 @@ const ExtensionHoverCard: React.FC<ExtensionHoverCardProps> = ({ extension, info
       <HoverCardTrigger className="underline cursor-help text-blue-500">
         {extension}
       </HoverCardTrigger>
-      <HoverCardContent className="bg-blue-500 text-white p-4 w-72">
+      <HoverCardContent className="bg-card-custom p-4 w-72">
         <div className="space-y-1">
           <p><strong>Departamento:</strong> {info.departamento}</p>
           <p><strong>Setor:</strong> {info.setor}</p>

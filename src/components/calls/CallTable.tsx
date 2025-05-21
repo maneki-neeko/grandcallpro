@@ -27,7 +27,7 @@ interface CallTableProps {
 
 const CallTable: React.FC<CallTableProps> = ({ calls, extensionInfo }) => {
   return (
-    <Card className="w-full max-w-5xl">
+    <Card className="w-full max-w-5xl bg-card-custom">
       <CardContent className="p-0 overflow-x-auto">
         <Table>
           <TableHeader>
