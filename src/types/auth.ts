@@ -2,13 +2,11 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  department: string;
-  role: string;
   level: string;
 }
 
 export interface LoginCredentials {
-  email: string;
+  login: string;
   password: string;
 }
 
@@ -22,3 +20,5 @@ export interface AuthResponse {
   user: User;
   accessToken: string;
 }
+
+export type UserLevel = 'admin' | 'user' | 'supervisor';

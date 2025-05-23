@@ -14,6 +14,7 @@ const authService = {
       );
       const { accessToken } = response.data;
       localStorage.setItem(STORAGE_KEYS.TOKEN, accessToken);
+      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(response.data.user));
       return response.data;
     } catch (error) {
       console.error('Erro ao fazer login:', error);
@@ -23,10 +24,7 @@ const authService = {
 
   async register(data: RegisterData): Promise<AuthResponse> {
     try {
-      const response = await axios.post<AuthResponse>(
-        `${API_URL}${AUTH_ENDPOINTS.REGISTER}`,
-        data
-      );
+      const response = await axios.post<AuthResponse>(`${API_URL}${AUTH_ENDPOINTS.REGISTER}`, data);
       const { accessToken, user } = response.data;
       localStorage.setItem(STORAGE_KEYS.TOKEN, accessToken);
       localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));

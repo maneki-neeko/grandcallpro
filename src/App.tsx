@@ -9,7 +9,7 @@ import NotFound from './pages/NotFound';
 import Calls from './pages/Calls';
 import Users from './pages/Users';
 import Extensions from './pages/Extensions';
-import Login from './pages/Login';
+import { Login } from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import Reports from './pages/Reports';

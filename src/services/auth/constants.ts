@@ -1,6 +1,6 @@
 export const STORAGE_KEYS = {
   TOKEN: 'auth_token',
-  USER: 'auth_user'
+  USER: 'auth_user',
 };
 
 export const AUTH_ENDPOINTS = {

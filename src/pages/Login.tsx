@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import authService from '../services/auth';
+import { z } from 'zod';
 import { toast } from 'sonner';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -13,31 +13,47 @@ import {
   CardHeader,
   CardTitle,
 } from '../components/ui/card';
-import { LockKeyhole, Mail } from 'lucide-react';
+import { LockKeyhole, Mail, User } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const loginSchema = z.object({
+  login: z.string(),
+  password: z.string(),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
+
+export function Login() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit: SubmitHandler<LoginFormData> = async data => {
+    const { login: loginData, password } = data;
     setIsSubmitting(true);
     try {
-      await authService.login({ email, password });
-      login({ email, password }); // atualiza o contexto de autenticação
+      await login({ login: loginData, password });
       toast.success('Login realizado com sucesso!');
       navigate('/');
-    } catch (error) {
-      console.error('Erro no login:', error);
-      toast.error('Falha ao realizar login. Verifique suas credenciais.');
+    } catch {
+      toast.error('Erro ao realizar login. Verifique suas credenciais.');
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const Icon = watch('login')?.includes('@') ? Mail : User;
 
   return (
     <div className="w-full flex items-center justify-center bg-gradient-to-br from-[#1bb5da] to-[#004a80] font-sora">
@@ -49,41 +65,41 @@ const Login: React.FC = () => {
             </CardTitle>
             <CardDescription>Entre com suas credenciais para acessar o sistema</CardDescription>
           </CardHeader>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="login">Email ou Nome de usuário:</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Icon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground border" />
                   <Input
-                    id="email"
-                    placeholder="seu.email@exemplo.com"
-                    type="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    className="pl-10 font-sora"
-                    required
-                    autoComplete="email"
+                    id="login"
+                    placeholder="Ex: joao@gmail.com ou joaodasilva"
+                    type="text"
+                    className={`pl-10 font-sora ${errors.login ? 'border-red-500' : ''}`}
+                    {...register('login', { required: 'Campo obrigatório' })}
                   />
                 </div>
+                {errors.login && (
+                  <span className="text-xs text-red-500">{errors.login.message}</span>
+                )}
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <Label htmlFor="password">Senha</Label>
+                  <Label htmlFor="password">Senha:</Label>
                 </div>
                 <div className="relative">
-                  <LockKeyhole className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <LockKeyhole className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="password"
                     placeholder="••••••••"
                     type="password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    className="pl-10 font-sora"
-                    required
-                    autoComplete="current-password"
+                    className={`pl-10 font-sora ${errors.password ? 'border-red-500' : ''}`}
+                    {...register('password', { required: 'Campo obrigatório' })}
                   />
                 </div>
+                {errors.password && (
+                  <span className="text-xs text-red-500">{errors.password.message}</span>
+                )}
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-2">
@@ -111,6 +127,4 @@ const Login: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default Login;
+}
