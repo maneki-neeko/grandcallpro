@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { z } from 'zod';
 import { toast } from 'sonner';
@@ -19,8 +19,8 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const loginSchema = z.object({
-  login: z.string(),
-  password: z.string(),
+  login: z.string().min(1, 'Campo obrigatório'),
+  password: z.string().min(1, 'Campo obrigatório'),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -34,7 +34,7 @@ export function Login() {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
@@ -76,7 +76,7 @@ export function Login() {
                     placeholder="Ex: joao@gmail.com ou joaodasilva"
                     type="text"
                     className={`pl-10 font-sora ${errors.login ? 'border-red-500' : ''}`}
-                    {...register('login', { required: 'Campo obrigatório' })}
+                    {...register('login')}
                   />
                 </div>
                 {errors.login && (
@@ -94,7 +94,7 @@ export function Login() {
                     placeholder="••••••••"
                     type="password"
                     className={`pl-10 font-sora ${errors.password ? 'border-red-500' : ''}`}
-                    {...register('password', { required: 'Campo obrigatório' })}
+                    {...register('password')}
                   />
                 </div>
                 {errors.password && (
@@ -105,8 +105,8 @@ export function Login() {
             <CardFooter className="flex flex-col gap-2">
               <Button
                 type="submit"
-                className="w-full bg-[#1bb5da] hover:bg-[#004a80] text-white font-bold font-sora shadow-md"
-                disabled={isSubmitting}
+                className="w-full bg-[#1bb5da] hover:bg-[#004a80] text-white font-bold font-sora shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isSubmitting || !isValid}
               >
                 {isSubmitting ? 'Entrando...' : 'Entrar'}
               </Button>
