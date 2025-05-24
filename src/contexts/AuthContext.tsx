@@ -10,6 +10,7 @@ interface AuthContextType {
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   logout: () => void;
+  forgotPassword: (email: string) => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -21,6 +22,7 @@ const defaultAuthContext: AuthContextType = {
   login: async () => {},
   register: async () => {},
   logout: () => {},
+  forgotPassword: async () => {},
   isAuthenticated: false,
 };
 
@@ -38,41 +40,39 @@ interface AuthProviderProps {
 // Provedor de contexto
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  // Efeito para verificar a autenticação ao carregar
-  useEffect(() => {
-    const checkAuth = async () => {
-      setIsLoading(true);
-      try {
-        const token = authService.getToken();
+  const checkAuth = async () => {
+    setIsLoading(true);
+    try {
+      const token = authService.getToken();
 
-        if (!token) {
-          authService.logout();
-          setIsAuthenticated(false);
-          setUser(null);
-          return;
-        }
-
-        const currentUser = authService.getCurrentUser();
-        setUser(currentUser);
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error('Erro na validação:', error);
+      if (!token) {
         authService.logout();
         setIsAuthenticated(false);
         setUser(null);
-      } finally {
-        setIsLoading(false);
+        return;
       }
-    };
 
+      const currentUser = authService.getCurrentUser();
+      setUser(currentUser);
+      setIsAuthenticated(true);
+    } catch (error) {
+      console.error('Erro na validação:', error);
+      authService.logout();
+      setIsAuthenticated(false);
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     checkAuth();
   }, []);
 
-  // Função de login
   const login = async (credentials: LoginCredentials) => {
     setIsLoading(true);
     setError(null);
@@ -89,7 +89,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  // Função de registro
   const register = async (data: RegisterData) => {
     setIsLoading(true);
     setError(null);
@@ -106,11 +105,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  // Função de logout
   const logout = () => {
     authService.logout();
     setUser(null);
     setIsAuthenticated(false);
+  };
+
+  const forgotPassword = async (email: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await authService.forgotPassword(email);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao enviar email de recuperação');
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Valor do contexto
@@ -121,6 +133,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     register,
     logout,
+    forgotPassword,
     isAuthenticated,
   };
 
