@@ -16,10 +16,15 @@ import { LockKeyhole, Mail, User } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { regex } from '@/consts/regex';
 
 const loginSchema = z.object({
-  login: z.string().min(1, 'Campo obrigatório'),
-  password: z.string().min(1, 'Campo obrigatório'),
+  login: z
+    .string()
+    .min(3, 'Campo obrigatório')
+    .regex(regex.email, 'Email inválido')
+    .or(z.string().min(3, 'Campo obrigatório').regex(regex.username, 'Nome de usuário inválido')),
+  password: z.string().min(6, 'Campo obrigatório'),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -35,6 +40,7 @@ export function Login() {
     formState: { errors, isValid, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
+    mode: 'onTouched',
   });
 
   const onSubmit: SubmitHandler<LoginFormData> = async data => {
