@@ -11,14 +11,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { regex } from '@/consts/regex';
 
 const forgotPasswordSchema = z.object({
   login: z
     .string()
     .min(3, 'Campo obrigatório')
-    .regex(regex.email, 'Email inválido')
-    .or(z.string().min(3, 'Campo obrigatório').regex(regex.username, 'Nome de usuário inválido')),
+    .email('Email inválido')
+    .or(z.string().min(3, 'Campo obrigatório')),
 });
 
 const ForgotPassword: React.FC = () => {
