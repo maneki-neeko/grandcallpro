@@ -20,21 +20,25 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import authService from '../services/auth';
 import { RegisterData } from '@/types';
 
-const registerSchema = z.object({
-  name: z.string().min(1, 'Nome é obrigatório').min(2, 'Nome deve ter pelo menos 2 caracteres'),
-  username: z
-    .string()
-    .min(1, 'Nome de usuário é obrigatório')
-    .min(3, 'Nome de usuário deve ter pelo menos 3 caracteres')
-    .regex(/^[a-zA-Z0-9_]+$/, 'Nome de usuário pode conter apenas letras, números e underscore')
-    .regex(/.*[a-zA-Z].*/, 'Nome de usuário deve conter pelo menos 1 letra'),
-  email: z.string().min(1, 'Email é obrigatório').email('Formato de email inválido'),
-  password: z
-    .string()
-    .min(1, 'Senha é obrigatória')
-    .min(6, 'Senha deve ter pelo menos 6 caracteres'),
-  confirmPassword: z.string().min(1, 'Confirmação de senha é obrigatória'),
-});
+const registerSchema = z
+  .object({
+    name: z.string().min(1, 'Nome é obrigatório').min(2, 'Nome deve ter pelo menos 2 caracteres'),
+    username: z
+      .string()
+      .min(1, 'Nome de usuário é obrigatório')
+      .min(3, 'Nome de usuário deve ter pelo menos 3 caracteres')
+      .regex(/^[a-zA-Z0-9_]+$/, 'Nome de usuário pode conter apenas letras, números e underscore')
+      .regex(/.*[a-zA-Z].*/, 'Nome de usuário deve conter pelo menos 1 letra'),
+    email: z.string().min(1, 'Email é obrigatório').email('Formato de email inválido'),
+    password: z
+      .string()
+      .min(1, 'Senha é obrigatória')
+      .min(6, 'Senha deve ter pelo menos 6 caracteres'),
+    confirmPassword: z.string().min(1, 'Confirmação de senha é obrigatória'),
+  })
+  .refine(data => data.password === data.confirmPassword, {
+    path: ['confirmPassword'],
+  });
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
