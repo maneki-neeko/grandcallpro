@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Button } from '../components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import { Label } from '@/components/ui/label';
-import { Mail, Clock } from 'lucide-react';
+import { Mail, Clock, User } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { useForm } from 'react-hook-form';
@@ -11,9 +11,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { regex } from '@/consts/regex';
 
 const forgotPasswordSchema = z.object({
-  email: z.string().email('Email inválido').nonempty('Campo obrigatório'),
+  login: z
+    .string()
+    .min(3, 'Campo obrigatório')
+    .regex(regex.email, 'Email inválido')
+    .or(z.string().min(3, 'Campo obrigatório').regex(regex.username, 'Nome de usuário inválido')),
 });
 
 const ForgotPassword: React.FC = () => {
@@ -24,17 +29,19 @@ const ForgotPassword: React.FC = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting, isValid },
   } = useForm({
     resolver: zodResolver(forgotPasswordSchema),
+    mode: 'onTouched',
   });
 
   type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
-    const { email } = data;
+    const { login } = data;
     try {
-      await forgotPassword(email);
+      await forgotPassword(login);
       setIsConfirmationModalOpen(true);
     } catch (error) {
       console.error('Erro ao enviar email de recuperação:', error);
@@ -47,6 +54,8 @@ const ForgotPassword: React.FC = () => {
     navigate('/login');
   };
 
+  const Icon = watch('login')?.includes('@') ? Mail : User;
+
   return (
     <div className="w-full flex items-center justify-center p-4 bg-gradient-to-br from-[#1bb5da] to-[#004a80] font-sora">
       <div className="w-full max-w-md">
@@ -56,25 +65,25 @@ const ForgotPassword: React.FC = () => {
               Recuperar Senha
             </CardTitle>
             <CardDescription>
-              Informe seu email para receber instruções de recuperação.
+              Informe seu email ou nome de usuário para receber instruções de recuperação.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email:</Label>
+                <Label htmlFor="login">Email ou Nome de usuário:</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Icon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
-                    id="email"
-                    placeholder="Ex: joao@gmail.com"
-                    type="email"
-                    className={`pl-10 font-sora ${errors.email ? 'border-red-500' : ''}`}
-                    {...register('email')}
+                    id="login"
+                    placeholder="Ex: joao@gmail.com ou joaodasilva"
+                    type="text"
+                    className={`pl-10 font-sora ${errors.login ? 'border-red-500' : ''}`}
+                    {...register('login')}
                   />
                 </div>
-                {errors.email && (
-                  <span className="text-xs text-red-500">{errors.email.message.toString()}</span>
+                {errors.login && (
+                  <span className="text-xs text-red-500">{errors.login.message.toString()}</span>
                 )}
               </div>
             </form>
