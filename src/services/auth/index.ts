@@ -35,6 +35,15 @@ const authService = {
     }
   },
 
+  async forgotPassword(email: string): Promise<void> {
+    try {
+      await axios.post(`${API_URL}${AUTH_ENDPOINTS.FORGOT_PASSWORD}`, { email });
+    } catch (error) {
+      console.error('Erro ao enviar email de recuperação:', error);
+      throw error;
+    }
+  },
+
   logout(): void {
     Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
   },
