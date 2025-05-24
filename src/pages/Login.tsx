@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { z } from 'zod';
 import { toast } from 'sonner';
@@ -26,7 +25,6 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export function Login() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -34,22 +32,19 @@ export function Login() {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
   const onSubmit: SubmitHandler<LoginFormData> = async data => {
     const { login: loginData, password } = data;
-    setIsSubmitting(true);
     try {
       await login({ login: loginData, password });
       toast.success('Login realizado com sucesso!');
       navigate('/');
     } catch {
       toast.error('Erro ao realizar login. Verifique suas credenciais.');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -70,7 +65,7 @@ export function Login() {
               <div className="space-y-2">
                 <Label htmlFor="login">Email ou Nome de usuário:</Label>
                 <div className="relative">
-                  <Icon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground border" />
+                  <Icon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="login"
                     placeholder="Ex: joao@gmail.com ou joaodasilva"
