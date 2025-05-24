@@ -10,7 +10,7 @@ interface AuthContextType {
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   logout: () => void;
-  forgotPassword: (email: string) => Promise<void>;
+  forgotPassword: (login: string) => Promise<void>;
   isAuthenticated: boolean;
 }
 
