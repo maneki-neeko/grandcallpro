@@ -14,11 +14,12 @@ import {
   CardTitle,
 } from '../components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
-import { User, Mail, LockKeyhole, UserCheck } from 'lucide-react';
+import { User, Mail, LockKeyhole, UserCheck, Clock, CheckCircle } from 'lucide-react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import authService from '../services/auth';
 import { RegisterData } from '@/types';
+import { Checkbox } from '@/components/ui/checkbox';
+import { useAuth } from '@/contexts/AuthContext';
 
 const registerSchema = z
   .object({
@@ -43,16 +44,17 @@ const registerSchema = z
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 const Register: React.FC = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { register: authRegister } = useAuth();
   const [lgpdAccepted, setLgpdAccepted] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLgpdModalOpen, setIsLgpdModalOpen] = useState(false);
+  const [isApprovalModalOpen, setIsApprovalModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     mode: 'onChange',
@@ -61,19 +63,21 @@ const Register: React.FC = () => {
   const isEqualPasswords = watch('password') === watch('confirmPassword');
 
   const onSubmit: SubmitHandler<RegisterFormData> = async data => {
-    setIsSubmitting(true);
     try {
       const { name, username, email, password } = data;
       const registerData: RegisterData = { name, username, email, password };
-      await authService.register(registerData);
-      toast.success('Conta criada com sucesso!');
-      navigate('/login');
+      await authRegister(registerData);
+      toast.success('Dados enviados com sucesso!');
+      setIsApprovalModalOpen(true);
     } catch (error) {
       console.error('Erro no registro:', error);
-      toast.error('Falha ao criar conta. Verifique os dados e tente novamente.');
-    } finally {
-      setIsSubmitting(false);
+      toast.error('Falha ao enviar dados. Verifique os dados e tente novamente.');
     }
+  };
+
+  const handleApprovalModalClose = () => {
+    setIsApprovalModalOpen(false);
+    navigate('/login');
   };
 
   return (
@@ -172,19 +176,21 @@ const Register: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-2 pt-2">
-                <input
-                  type="checkbox"
+                <Checkbox
                   id="lgpd"
                   checked={lgpdAccepted}
-                  onChange={e => setLgpdAccepted(e.target.checked)}
+                  onCheckedChange={checked => setLgpdAccepted(checked === true)}
                   className="w-4 h-4"
                 />
-                <label htmlFor="lgpd" className="text-sm text-muted-foreground">
+                <label
+                  htmlFor="lgpd"
+                  className="text-sm text-muted-foreground cursor-pointer select-none"
+                >
                   Eu aceito os{' '}
                   <button
                     type="button"
                     className="text-primary hover:underline font-medium"
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => setIsLgpdModalOpen(true)}
                   >
                     termos da LGPD
                   </button>
@@ -198,7 +204,7 @@ const Register: React.FC = () => {
                 className="w-full bg-[#1bb5da] hover:bg-[#004a80] text-white font-bold font-sora shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={isSubmitting || !isValid || !lgpdAccepted}
               >
-                {isSubmitting ? 'Registrando...' : 'Registrar'}
+                {isSubmitting ? 'Enviando...' : 'Registrar'}
               </Button>
               <div className="text-center text-sm text-muted-foreground mt-2">
                 Já tem uma conta?{' '}
@@ -211,7 +217,8 @@ const Register: React.FC = () => {
         </Card>
       </div>
 
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      {/* Modal LGPD */}
+      <Dialog open={isLgpdModalOpen} onOpenChange={setIsLgpdModalOpen}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-[#004a80]">
@@ -261,6 +268,47 @@ const Register: React.FC = () => {
               Ao aceitar estes termos, você concorda com o tratamento de seus dados conforme
               descrito neste documento.
             </p>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de Aprovação */}
+      <Dialog open={isApprovalModalOpen} onOpenChange={setIsApprovalModalOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <div className="flex items-center justify-center mb-4">
+              <div className="bg-blue-100 p-3 rounded-full">
+                <Clock className="h-8 w-8 text-blue-600" />
+              </div>
+            </div>
+            <DialogTitle className="text-xl font-bold text-center text-[#004a80]">
+              Registro Enviado com Sucesso!
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 text-center">
+            <div className="flex items-center justify-center gap-2 text-green-600">
+              <CheckCircle className="h-5 w-5" />
+              <span className="font-medium">Dados recebidos</span>
+            </div>
+
+            <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+              <p className="text-sm text-gray-700 leading-relaxed">
+                Seu registro foi enviado e será <strong>analisado por um administrador</strong>.
+                Você receberá um email de confirmação assim que sua conta for aprovada.
+              </p>
+            </div>
+
+            <div className="text-xs text-gray-500">
+              <p>⏱️ Tempo médio de aprovação: 24-48 horas</p>
+              <p>📧 Verifique sua caixa de entrada regularmente</p>
+            </div>
+
+            <Button
+              onClick={handleApprovalModalClose}
+              className="w-full bg-[#1bb5da] hover:bg-[#004a80] text-white font-semibold"
+            >
+              Entendi
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
