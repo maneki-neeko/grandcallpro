@@ -57,7 +57,7 @@ const Register: React.FC = () => {
     formState: { errors, isValid, isSubmitting },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
-    mode: 'onChange',
+    mode: 'onTouched',
   });
 
   const isEqualPasswords = watch('password') === watch('confirmPassword');
