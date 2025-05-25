@@ -15,6 +15,8 @@ export interface RegisterData {
   username: string;
   email: string;
   password: string;
+  department: string;
+  role: string;
 }
 
 export interface AuthResponse {

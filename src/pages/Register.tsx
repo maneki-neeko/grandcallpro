@@ -14,7 +14,7 @@ import {
   CardTitle,
 } from '../components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
-import { User, Mail, LockKeyhole, UserCheck, Clock, CheckCircle } from 'lucide-react';
+import { User, Mail, LockKeyhole, UserCheck, Clock, CheckCircle, Clock2 } from 'lucide-react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RegisterData } from '@/types';
@@ -65,7 +65,9 @@ const Register: React.FC = () => {
   const onSubmit: SubmitHandler<RegisterFormData> = async data => {
     try {
       const { name, username, email, password } = data;
-      const registerData: RegisterData = { name, username, email, password };
+      const department = 'Desenvolvimento';
+      const role = 'Telefonista';
+      const registerData: RegisterData = { name, username, email, password, department, role };
       await authRegister(registerData);
       toast.success('Dados enviados com sucesso!');
       setIsApprovalModalOpen(true);
@@ -294,13 +296,13 @@ const Register: React.FC = () => {
             <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
               <p className="text-sm text-gray-700 leading-relaxed">
                 Seu registro foi enviado e será <strong>analisado por um administrador</strong>.
-                Você receberá um email de confirmação assim que sua conta for aprovada.
+                Você receberá uma confirmação do administrador assim que sua conta for aprovada.
               </p>
             </div>
 
-            <div className="text-xs text-gray-500">
-              <p>⏱️ Tempo médio de aprovação: 24-48 horas</p>
-              <p>📧 Verifique sua caixa de entrada regularmente</p>
+            <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
+              <Clock2 className="" size={16} />
+              <p>Tempo médio de aprovação: 24-48 horas</p>
             </div>
 
             <Button
