@@ -43,7 +43,7 @@ const CallFilters: React.FC<CallFiltersProps> = ({
   const [showFilters, setShowFilters] = useState(false);
 
   return (
-    <div className="space-y-4 mb-6 w-full">
+    <div className="space-y-4 mb-6 w-full bg-card-custom rounded-lg p-4">
       <div className="flex flex-wrap items-center gap-4">
         <div className="flex-1 flex items-center relative">
           <Search className="absolute left-2.5 h-4 w-4 text-muted-foreground" />

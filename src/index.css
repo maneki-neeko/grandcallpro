@@ -54,6 +54,8 @@
 
     --color-primary: #1bb5da;
     --color-secondary: #004a80;
+
+    --card-custom: #fff;
   }
 
   .dark {
@@ -92,6 +94,19 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --card-custom: #141413;
+  }
+
+  .dark .bg-sidebar {
+    background-color: #0a0a0a !important;
+  }
+  .dark .text-sidebar-foreground,
+  .dark .text-sidebar-primary,
+  .dark .text-sidebar-accent-foreground {
+    color: #fff !important;
+  }
+  .dark body {
+    background-color: #141413 !important;
   }
 }
 
