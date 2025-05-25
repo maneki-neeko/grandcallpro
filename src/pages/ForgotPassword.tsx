@@ -122,8 +122,8 @@ const ForgotPassword: React.FC = () => {
             <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
               <p className="text-sm text-gray-700 leading-relaxed mb-2">
                 Sua solicitação de recuperação de senha foi enviada para análise. Um{' '}
-                <strong>administrador analisará sua solicitação</strong> e enviará as instruções de
-                recuperação de senha após a aprovação.
+                <strong>administrador irá analisar sua solicitação</strong> e enviará as instruções
+                de recuperação de senha após a aprovação.
               </p>
             </div>
 
