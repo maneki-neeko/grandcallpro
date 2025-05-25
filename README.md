@@ -5,6 +5,7 @@ O Voxline Call Manager é uma solução web completa para gestão de chamadas te
 ## Finalidade do Projeto
 
 O objetivo do Voxline Call Manager é proporcionar uma plataforma robusta para:
+
 - Coletar e armazenar registros de chamadas (CDR) de centrais Grandstream via API.
 - Gerenciar usuários, ramais e permissões de acesso.
 - Auditar operações e manter logs detalhados.

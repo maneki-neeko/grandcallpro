@@ -1,5 +1,5 @@
 import React from 'react';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 
 // Type for department info
 export type DepartmentInfo = {
@@ -26,10 +26,18 @@ const ExtensionHoverCard: React.FC<ExtensionHoverCardProps> = ({ extension, info
       </HoverCardTrigger>
       <HoverCardContent className="bg-card-custom p-4 w-72">
         <div className="space-y-1">
-          <p><strong>Departamento:</strong> {info.departamento}</p>
-          <p><strong>Setor:</strong> {info.setor}</p>
-          <p><strong>Subsetor:</strong> {info.subsetor}</p>
-          <p><strong>Colaborador:</strong> {info.colaborador}</p>
+          <p>
+            <strong>Departamento:</strong> {info.departamento}
+          </p>
+          <p>
+            <strong>Setor:</strong> {info.setor}
+          </p>
+          <p>
+            <strong>Subsetor:</strong> {info.subsetor}
+          </p>
+          <p>
+            <strong>Colaborador:</strong> {info.colaborador}
+          </p>
         </div>
       </HoverCardContent>
     </HoverCard>

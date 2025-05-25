@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactNode, useState } from "react";
+import { createContext, useContext, ReactNode, useState } from 'react';
 
 interface AppContextData {
   activePage: string;
@@ -12,7 +12,7 @@ interface AppProviderProps {
 }
 
 export function AppProvider({ children }: AppProviderProps) {
-  const [activePage, setActivePage] = useState("");
+  const [activePage, setActivePage] = useState('');
 
   const value = {
     activePage,
@@ -26,7 +26,7 @@ export function useContextApp(): AppContextData {
   const context = useContext(AppContext);
 
   if (!context) {
-    throw new Error("useApp must be used within an AppProvider");
+    throw new Error('useApp must be used within an AppProvider');
   }
 
   return context;

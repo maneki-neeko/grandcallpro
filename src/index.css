@@ -115,19 +115,13 @@
     @apply border-border;
   }
 
-  body, html, #root {
+  body,
+  html,
+  #root {
     font-family: 'Sora', sans-serif;
   }
 
   body {
     @apply bg-background text-foreground;
-  }
-
-  .bg-card-custom {
-    background-color: var(--card-custom) !important;
-  }
-
-  .bg-background {
-    background-color: #0a0a0a;
   }
 }
