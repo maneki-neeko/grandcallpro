@@ -71,7 +71,7 @@ const PaginationControls: React.FC = () => {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 gap-4 bg-card-custom rounded-lg p-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 gap-4">
         <div className="text-sm text-muted-foreground">
           Mostrando os registros {(currentPage - 1) * entriesPerPage + 1} a{" "}
           {Math.min(currentPage * entriesPerPage, totalEntries)} num total de{" "}

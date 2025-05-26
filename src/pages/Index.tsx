@@ -85,7 +85,7 @@ const Index = () => {
                 </div>
               ) : (
                 notifications.map((n) => (
-                  <div key={n.id} className="border rounded p-3 bg-card-custom">
+                  <div key={n.id} className="border rounded p-3 bg-muted">
                     <div className="font-semibold">{n.title}</div>
                     <div className="text-sm text-muted-foreground">
                       {n.description}
@@ -245,7 +245,6 @@ const Index = () => {
               <Button
                 variant="outline"
                 size="sm"
-                className="dark:bg-[#141413] dark:text-white dark:border dark:border-border dark:hover:bg-[#222] border border-border"
                 onClick={() => navigate("/calls")}
               >
                 Ver todas as chamadas

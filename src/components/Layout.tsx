@@ -20,7 +20,6 @@ import {
 } from "lucide-react";
 import { Footer } from "./Footer";
 import { useContextApp } from "@/contexts";
-import { DarkModeToggle } from "@/components/DarkModeToggle";
 
 const menuItems = [
   { title: "Dashboard", icon: BarChart3, route: "" },
@@ -52,13 +51,10 @@ export function Layout() {
     <div className="flex justify-start flex-col w-full">
       <div className="flex flex-1">
         <Sidebar>
-          <div className="p-4 flex items-center gap-3 justify-between">
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold">GrandCallPro</h1>
-            </div>
-            <DarkModeToggle />
+          <div className="p-4">
+            <h1 className="text-xl font-bold">GrandCallPro</h1>
           </div>
-          <SidebarContent className="bg-sidebar">
+          <SidebarContent className="bg-gray-50">
             <SidebarGroup>
               <SidebarGroupLabel>Menu</SidebarGroupLabel>
               <SidebarGroupContent>

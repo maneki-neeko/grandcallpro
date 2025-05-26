@@ -88,7 +88,7 @@ export function NotificationHistory() {
             </div>
           ) : (
             filteredNotifications.map((n) => (
-              <div key={n.id} className="border rounded p-3 bg-card-custom">
+              <div key={n.id} className="border rounded p-3 bg-muted">
                 <div className="font-semibold">{n.title}</div>
                 <div className="text-sm text-muted-foreground">
                   {n.description}

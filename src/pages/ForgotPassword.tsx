@@ -30,7 +30,7 @@ const ForgotPassword: React.FC = () => {
             />
           </CardContent>
           <div className="flex flex-col gap-2 p-4">
-            <Button className="w-full bg-[#1bb5da] hover:bg-[#004a80] text-white font-bold font-sora bg-card-custom">
+            <Button className="w-full bg-[#1bb5da] hover:bg-[#004a80] text-white font-bold font-sora">
               Enviar
             </Button>
             <div className="text-center text-xs mt-1">
