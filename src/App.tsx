@@ -23,29 +23,34 @@ import { AppProvider } from './contexts';
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const location = useLocation();
 
+  console.log('ProtectedRoute - Estado de autenticação:', { isAuthenticated, isLoading, hasUser: !!user });
+
   if (isLoading) {
+    console.log('ProtectedRoute - Carregando...');
     return <div>Carregando...</div>; // Ou um componente de loading adequado
   }
 
   if (!isAuthenticated) {
+    console.log('ProtectedRoute - Não autenticado, redirecionando para login');
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  console.log('ProtectedRoute - Autenticado, renderizando componente protegido');
   return children;
 };
 
 const App = () => (
-  <AuthProvider>
+  <BrowserRouter>
     <QueryClientProvider client={queryClient}>
-      <AppProvider>
-        <TooltipProvider>
-          <SidebarProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
+      <AuthProvider>
+        <AppProvider>
+          <TooltipProvider>
+            <SidebarProvider>
+              <Toaster />
+              <Sonner />
               <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
@@ -119,12 +124,12 @@ const App = () => (
 
                 <Route path="*" element={<NotFound />} />
               </Routes>
-            </BrowserRouter>
-          </SidebarProvider>
-        </TooltipProvider>
-      </AppProvider>
+            </SidebarProvider>
+          </TooltipProvider>
+        </AppProvider>
+      </AuthProvider>
     </QueryClientProvider>
-  </AuthProvider>
+  </BrowserRouter>
 );
 
 export default App;

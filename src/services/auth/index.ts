@@ -39,8 +39,8 @@ const authService = {
   },
 
   logout(): void {
+    console.log('authService - logout - Removendo dados de autenticação do localStorage');
     Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
-    window.location.href = '/login';
   },
 
   isAuthenticated(): boolean {

@@ -37,11 +37,16 @@ api.interceptors.response.use(
   (error: AxiosError) => {
     // Tratamento para erro 401 (Unauthorized)
     if (error.response && error.response.status === 401) {
+      console.log('API - Interceptor - Erro 401 detectado, limpando dados de autenticação');
       // Limpar dados de autenticação
       Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
       
-      // Redirecionar para login
-      window.location.href = '/login';
+      // Emitir um evento personalizado para o AuthContext ouvir e lidar com o logout
+      const event = new CustomEvent('auth:unauthorized');
+      window.dispatchEvent(event);
+      
+      // Não redirecionar automaticamente, deixar o React Router lidar com isso
+      // window.location.href = '/login';
     }
     
     return Promise.reject(error);
