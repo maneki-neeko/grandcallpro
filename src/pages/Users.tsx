@@ -192,7 +192,39 @@ const Users = () => {
       setSubmitting(true);
       
       if (currentUser) {
-        // Lógica para editar usuário seria implementada aqui com a API
+        // Preparar dados para atualização
+        const updateData = {
+          name: formData.name,
+          email: formData.email,
+          username: formData.username,
+          department: formData.department,
+          role: formData.role
+        };
+        
+        // Adicionar o level apenas se for um valor válido
+        if (formData.level === 'admin' || formData.level === 'supervisor' || formData.level === 'user') {
+          (updateData as any).level = formData.level;
+        }
+        
+        // Se a senha foi alterada e não está vazia, incluí-la na atualização
+        if (formData.password.trim()) {
+          // Nota: O backend provavelmente não permite atualização de senha via este endpoint
+          // Este código seria apenas para caso a API suporte isso
+          toast({
+            title: 'Aviso',
+            description: 'A alteração de senha não é suportada nesta operação.',
+            variant: 'default',
+          });
+        }
+        
+        // Atualizar o usuário
+        const updatedUser = await usersService.updateUser(currentUser.id, updateData);
+        
+        // Atualizar a lista local de usuários
+        setUsers(prev => 
+          prev.map(user => (user.id === currentUser.id ? updatedUser : user))
+        );
+        
         toast({
           title: 'Usuário atualizado',
           description: 'O usuário foi atualizado com sucesso.',

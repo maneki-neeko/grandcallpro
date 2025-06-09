@@ -14,6 +14,16 @@ export interface CreateUserData {
   level?: 'admin' | 'supervisor' | 'user';
 }
 
+// Interface para os dados de atualização de usuário
+export interface UpdateUserData {
+  name?: string;
+  email?: string;
+  username?: string;
+  department?: string;
+  role?: string;
+  level?: 'admin' | 'supervisor' | 'user';
+}
+
 // Interface para erro da API
 interface ApiError {
   message: string;
@@ -48,6 +58,26 @@ const usersService = {
         }
       }
       console.error('Erro ao criar usuário:', error);
+      throw error;
+    }
+  },
+  
+  async updateUser(id: number, userData: UpdateUserData): Promise<UserModel> {
+    try {
+      const response = await api.put<UserModel>(`${USERS_ENDPOINTS.UPDATE}/${id}`, userData);
+      return response.data;
+    } catch (error) {
+      // Verificar se é um erro de conflito (ex: email/username já existe)
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ApiError>;
+        if (axiosError.response?.status === 409) {
+          throw {
+            message: axiosError.response.data.message || 'Conflito de dados',
+            status: 409,
+          };
+        }
+      }
+      console.error('Erro ao atualizar usuário:', error);
       throw error;
     }
   },
