@@ -42,6 +42,7 @@ const Extensions = () => {
   const [extensionToDelete, setExtensionToDelete] = useState<Extension | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   // Estado para extensões
   const [extensions, setExtensions] = useState<Extension[]>([]);
@@ -109,14 +110,32 @@ const Extensions = () => {
   };
 
   // Manipular exclusão de ramal
-  const handleDelete = (id: number) => {
-    setExtensions(extensions.filter(ext => ext.id !== id));
-    setDeleteDialogOpen(false);
-    setExtensionToDelete(null);
-    toast({
-      title: 'Ramal removido',
-      description: 'O ramal foi removido com sucesso.',
-    });
+  const handleDelete = async (id: number) => {
+    try {
+      setDeleting(true);
+      await extensionsService.deleteExtension(id);
+      
+      // Atualiza o estado local removendo o ramal excluído
+      setExtensions(prev => prev.filter(ext => ext.id !== id));
+      
+      // Fecha o diálogo e limpa o estado
+      setDeleteDialogOpen(false);
+      setExtensionToDelete(null);
+      
+      toast({
+        title: 'Ramal removido',
+        description: 'O ramal foi removido com sucesso.',
+      });
+    } catch (error) {
+      console.error('Erro ao excluir ramal:', error);
+      toast({
+        title: 'Erro',
+        description: 'Não foi possível remover o ramal. Tente novamente.',
+        variant: 'destructive',
+      });
+    } finally {
+      setDeleting(false);
+    }
   };
 
   // Manipular mudanças no formulário
@@ -358,11 +377,19 @@ const Extensions = () => {
               Tem certeza que deseja apagar o ramal <b>{extensionToDelete?.number}</b>?
             </p>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+              <Button 
+                variant="outline" 
+                onClick={() => setDeleteDialogOpen(false)}
+                disabled={deleting}
+              >
                 Cancelar
               </Button>
-              <Button variant="destructive" onClick={() => handleDelete(extensionToDelete!.id)}>
-                Apagar
+              <Button 
+                variant="destructive" 
+                onClick={() => extensionToDelete && handleDelete(extensionToDelete.id)}
+                disabled={deleting}
+              >
+                {deleting ? 'Removendo...' : 'Apagar'}
               </Button>
             </DialogFooter>
           </DialogContent>

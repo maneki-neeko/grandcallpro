@@ -63,6 +63,15 @@ const extensionsService = {
       throw error;
     }
   },
+
+  async deleteExtension(id: number): Promise<void> {
+    try {
+      await api.delete(`${EXTENSIONS_ENDPOINTS.GET_ALL}/${id}`);
+    } catch (error) {
+      console.error('Erro ao excluir ramal:', error);
+      throw error;
+    }
+  },
 };
 
 export default extensionsService; 
