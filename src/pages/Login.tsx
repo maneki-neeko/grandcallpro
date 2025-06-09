@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { useAuth } from "../lib/auth";
-import { useNavigate, Link } from "react-router-dom";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
+import { useNavigate, Link } from 'react-router-dom';
+import { z } from 'zod';
+import { toast } from 'sonner';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
 import {
   Card,
   CardContent,
@@ -11,28 +11,49 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
-import { LockKeyhole, Mail } from "lucide-react";
+} from '../components/ui/card';
+import { LockKeyhole, Mail, User } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-const Login: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+const loginSchema = z.object({
+  login: z
+    .string()
+    .min(3, 'Campo obrigatório')
+    .email('Email inválido')
+    .or(z.string().min(3, 'Campo obrigatório')),
+  password: z.string().min(6, 'Campo obrigatório'),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
+
+export function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isValid, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    mode: 'onTouched',
+  });
+
+  const onSubmit: SubmitHandler<LoginFormData> = async data => {
+    const { login: loginData, password } = data;
     try {
-      // Simulação de login (substitua pela lógica real)
-      await new Promise((res) => setTimeout(res, 800));
-      login();
-      navigate("/");
-    } finally {
-      setIsSubmitting(false);
+      await login({ login: loginData, password });
+      toast.success('Login realizado com sucesso!');
+      navigate('/');
+    } catch {
+      toast.error('Erro ao realizar login. Verifique suas credenciais.');
     }
   };
+
+  const Icon = watch('login')?.includes('@') ? Mail : User;
 
   return (
     <div className="w-full flex items-center justify-center bg-gradient-to-br from-[#1bb5da] to-[#004a80] font-sora">
@@ -42,66 +63,61 @@ const Login: React.FC = () => {
             <CardTitle className="text-3xl font-extrabold tracking-tight text-[#004a80]">
               Voxline Call Manager
             </CardTitle>
-            <CardDescription>
-              Entre com suas credenciais para acessar o sistema
-            </CardDescription>
+            <CardDescription>Entre com suas credenciais para acessar o sistema</CardDescription>
           </CardHeader>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="login">Email ou Nome de usuário:</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Icon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
-                    id="email"
-                    placeholder="seu.email@exemplo.com"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 font-sora"
-                    required
-                    autoComplete="email"
+                    id="login"
+                    placeholder="Ex: joao@gmail.com ou joaodasilva"
+                    type="text"
+                    className={`pl-10 font-sora ${errors.login ? 'border-red-500' : ''}`}
+                    {...register('login')}
                   />
                 </div>
+                {errors.login && (
+                  <span className="text-xs text-red-500">{errors.login.message}</span>
+                )}
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <Label htmlFor="password">Senha</Label>
+                  <Label htmlFor="password">Senha:</Label>
                 </div>
                 <div className="relative">
-                  <LockKeyhole className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <LockKeyhole className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="password"
                     placeholder="••••••••"
                     type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 font-sora"
-                    required
-                    autoComplete="current-password"
+                    className={`pl-10 font-sora ${errors.password ? 'border-red-500' : ''}`}
+                    {...register('password')}
                   />
                 </div>
+                {errors.password && (
+                  <span className="text-xs text-red-500">{errors.password.message}</span>
+                )}
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-2">
               <Button
                 type="submit"
-                className="w-full bg-[#1bb5da] hover:bg-[#004a80] text-white font-bold font-sora shadow-md"
-                disabled={isSubmitting}
+                className="w-full bg-[#1bb5da] hover:bg-[#004a80] text-white font-bold font-sora shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isSubmitting || !isValid}
               >
-                {isSubmitting ? "Entrando..." : "Entrar"}
+                {isSubmitting ? 'Entrando...' : 'Entrar'}
               </Button>
               <div className="text-center text-sm text-muted-foreground mt-2">
-                Não tem uma conta?{" "}
+                Não tem uma conta?{' '}
                 <Link to="/register" className="text-primary hover:underline">
                   Registre-se
                 </Link>
               </div>
               <div className="text-center text-xs mt-1">
-                <Link
-                  to="/forgot-password"
-                  className="text-primary hover:underline"
-                >
+                <Link to="/forgot-password" className="text-primary hover:underline">
                   Esqueceu a senha?
                 </Link>
               </div>
@@ -111,6 +127,4 @@ const Login: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default Login;
+}

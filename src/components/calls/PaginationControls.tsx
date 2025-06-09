@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Pagination,
   PaginationContent,
@@ -6,15 +6,15 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from '@/components/ui/pagination';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { ChevronsLeft, ChevronsRight } from "lucide-react";
+} from '@/components/ui/select';
+import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 
 const PaginationControls: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -46,7 +46,7 @@ const PaginationControls: React.FC = () => {
 
     // Adiciona elipses se necessário
     if (startPage > 2) {
-      pageNumbers.push("ellipsis-start");
+      pageNumbers.push('ellipsis-start');
     }
 
     // Adiciona páginas ao redor da página atual
@@ -56,7 +56,7 @@ const PaginationControls: React.FC = () => {
 
     // Adiciona elipses se necessário
     if (endPage < totalPages - 1) {
-      pageNumbers.push("ellipsis-end");
+      pageNumbers.push('ellipsis-end');
     }
 
     // Sempre mostra a última página
@@ -73,9 +73,9 @@ const PaginationControls: React.FC = () => {
     <>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 gap-4 bg-card-custom rounded-lg p-4">
         <div className="text-sm text-muted-foreground">
-          Mostrando os registros {(currentPage - 1) * entriesPerPage + 1} a{" "}
-          {Math.min(currentPage * entriesPerPage, totalEntries)} num total de{" "}
-          {totalEntries.toLocaleString()} (filtrado num total de{" "}
+          Mostrando os registros {(currentPage - 1) * entriesPerPage + 1} a{' '}
+          {Math.min(currentPage * entriesPerPage, totalEntries)} num total de{' '}
+          {totalEntries.toLocaleString()} (filtrado num total de{' '}
           {totalFilteredEntries.toLocaleString()} registros)
         </div>
 
@@ -83,7 +83,7 @@ const PaginationControls: React.FC = () => {
           <span className="text-sm">Mostrar:</span>
           <Select
             value={entriesPerPage.toString()}
-            onValueChange={(value) => {
+            onValueChange={value => {
               setEntriesPerPage(parseInt(value));
               setCurrentPage(1);
             }}
@@ -108,7 +108,7 @@ const PaginationControls: React.FC = () => {
             <PaginationLink
               onClick={() => handlePageChange(1)}
               className={`flex items-center gap-1 ${
-                currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                currentPage === 1 ? 'pointer-events-none opacity-50' : ''
               }`}
             >
               <ChevronsLeft className="h-4 w-4" />
@@ -118,14 +118,12 @@ const PaginationControls: React.FC = () => {
           <PaginationItem>
             <PaginationPrevious
               onClick={() => handlePageChange(currentPage - 1)}
-              className={
-                currentPage === 1 ? "pointer-events-none opacity-50" : ""
-              }
+              className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
             />
           </PaginationItem>
 
           {pageNumbers.map((page, index) =>
-            page === "ellipsis-start" || page === "ellipsis-end" ? (
+            page === 'ellipsis-start' || page === 'ellipsis-end' ? (
               <PaginationItem key={`ellipsis-${index}`}>
                 <span className="px-2">...</span>
               </PaginationItem>
@@ -144,11 +142,7 @@ const PaginationControls: React.FC = () => {
           <PaginationItem>
             <PaginationNext
               onClick={() => handlePageChange(currentPage + 1)}
-              className={
-                currentPage === totalPages
-                  ? "pointer-events-none opacity-50"
-                  : ""
-              }
+              className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
             />
           </PaginationItem>
 
@@ -156,9 +150,7 @@ const PaginationControls: React.FC = () => {
             <PaginationLink
               onClick={() => handlePageChange(totalPages)}
               className={`flex items-center gap-1 ${
-                currentPage === totalPages
-                  ? "pointer-events-none opacity-50"
-                  : ""
+                currentPage === totalPages ? 'pointer-events-none opacity-50' : ''
               }`}
             >
               <ChevronsRight className="h-4 w-4" />

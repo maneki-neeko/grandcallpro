@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Table,
   TableBody,
@@ -6,10 +6,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Card, CardContent } from "@/components/ui/card";
-import CallStatusBadge from "./CallStatusBadge";
-import ExtensionHoverCard, { DepartmentInfo } from "./ExtensionHoverCard";
+} from '@/components/ui/table';
+import { Card, CardContent } from '@/components/ui/card';
+import CallStatusBadge from './CallStatusBadge';
+import ExtensionHoverCard, { DepartmentInfo } from './ExtensionHoverCard';
 
 // Type for call data
 export interface CallRecord {
@@ -53,16 +53,10 @@ const CallTable: React.FC<CallTableProps> = ({ calls, extensionInfo }) => {
             {calls.map((call, idx) => (
               <TableRow key={idx}>
                 <TableCell className="text-center">
-                  <ExtensionHoverCard
-                    extension={call.origem}
-                    info={extensionInfo[call.origem]}
-                  />
+                  <ExtensionHoverCard extension={call.origem} info={extensionInfo[call.origem]} />
                 </TableCell>
                 <TableCell className="text-center">
-                  <ExtensionHoverCard
-                    extension={call.destino}
-                    info={extensionInfo[call.destino]}
-                  />
+                  <ExtensionHoverCard extension={call.destino} info={extensionInfo[call.destino]} />
                 </TableCell>
                 <TableCell className="text-center">{call.data}</TableCell>
                 <TableCell className="text-center">
