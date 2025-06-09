@@ -2,7 +2,6 @@ import { userLevels } from '@/consts/user';
 import { useAuth } from '@/contexts/AuthContext';
 import { LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { DarkModeToggle } from './DarkModeToggle';
 
 export function UserProfile() {
   const { user, logout } = useAuth();
@@ -26,17 +25,13 @@ export function UserProfile() {
           <span className="font-bold">{user.name}</span>
           <span className="text-xs text-muted-foreground">{userLevels[user.level]}</span>
         </div>
-        {/* Barra inferior com toggle de tema e botão de logout */}
-        <div className="flex items-center justify-between py-2">
-          <DarkModeToggle />
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 text-sm text-red-500 hover:text-red-600 transition-colors hover:bg-gray-100 rounded-md p-2"
-          >
-            <LogOut size={16} />
-            Sair
-          </button>
-        </div>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 text-sm text-red-500 hover:text-red-600 transition-colors hover:bg-sidebar-accent rounded-md p-2 mt-2"
+        >
+          <LogOut size={16} />
+          Sair
+        </button>
       </div>
     </div>
   );
