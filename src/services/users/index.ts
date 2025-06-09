@@ -51,6 +51,15 @@ const usersService = {
       throw error;
     }
   },
+  
+  async deleteUser(id: number): Promise<void> {
+    try {
+      await api.delete(`${USERS_ENDPOINTS.DELETE}/${id}`);
+    } catch (error) {
+      console.error('Erro ao excluir usuário:', error);
+      throw error;
+    }
+  },
 };
 
 export default usersService; 

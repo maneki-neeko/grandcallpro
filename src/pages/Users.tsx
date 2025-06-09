@@ -58,6 +58,7 @@ const Users = () => {
   const [userToDelete, setUserToDelete] = useState<UserModel | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const { toast } = useToast();
 
   // Estado para armazenar os usuários
@@ -257,14 +258,32 @@ const Users = () => {
     }
   };
 
-  const handleDelete = (id: number) => {
-    // Lógica para excluir usuário seria implementada aqui com a API
-    setDeleteDialogOpen(false);
-    setUserToDelete(null);
-    toast({
-      title: 'Usuário removido',
-      description: 'O usuário foi removido com sucesso.',
-    });
+  const handleDelete = async (id: number) => {
+    try {
+      setDeleting(true);
+      await usersService.deleteUser(id);
+      
+      // Remover o usuário da lista local
+      setUsers(prev => prev.filter(user => user.id !== id));
+      
+      // Fechar o diálogo e limpar o estado
+      setDeleteDialogOpen(false);
+      setUserToDelete(null);
+      
+      toast({
+        title: 'Usuário removido',
+        description: 'O usuário foi removido com sucesso.',
+      });
+    } catch (error) {
+      console.error('Erro ao excluir usuário:', error);
+      toast({
+        title: 'Erro',
+        description: 'Não foi possível remover o usuário. Tente novamente.',
+        variant: 'destructive',
+      });
+    } finally {
+      setDeleting(false);
+    }
   };
 
   // Formatar data para exibição
@@ -535,11 +554,19 @@ const Users = () => {
               Tem certeza que deseja apagar o usuário <b>{userToDelete?.name}</b>?
             </p>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+              <Button 
+                variant="outline" 
+                onClick={() => setDeleteDialogOpen(false)}
+                disabled={deleting}
+              >
                 Cancelar
               </Button>
-              <Button variant="destructive" onClick={() => userToDelete && handleDelete(userToDelete.id)}>
-                Apagar
+              <Button 
+                variant="destructive" 
+                onClick={() => userToDelete && handleDelete(userToDelete.id)}
+                disabled={deleting}
+              >
+                {deleting ? 'Removendo...' : 'Apagar'}
               </Button>
             </DialogFooter>
           </DialogContent>
