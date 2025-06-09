@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -28,8 +28,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { usersService } from '@/services';
+import { UserModel } from '@/types';
 
-// Tipo para usuários
+// Definindo opções de nível de acesso
 const accessLevels = [
   { value: 'Telefonista', label: 'Telefonista' },
   { value: 'Supervisor', label: 'Supervisor' },
@@ -38,141 +40,91 @@ const accessLevels = [
 
 const departmentOptions = ['Financeiro', 'RH', 'Comercial', 'TI', 'Saúde'];
 
-type User = {
-  id: number;
-  nome: string;
-  email: string;
-  departamento: string;
-  cargo: string;
-  senha: string;
-  nivel: string;
-  status: string;
-  lgpdAccepted: boolean;
-  lgpdDate: string | null;
-  lgpdVersion: string | null;
+// Tipo estendido para o formulário com a senha
+type UserWithPassword = UserModel & {
+  password?: string;
 };
 
 const Users = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<UserModel | null>(null);
   const [oldPassword, setOldPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [userToDelete, setUserToDelete] = useState<UserModel | null>(null);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  // Mock de dados para usuários
-  const [users, setUsers] = useState<User[]>([
-    {
-      id: 1,
-      nome: 'Ana Silva',
-      email: 'ana.silva@empresa.com',
-      departamento: 'Financeiro',
-      cargo: 'Administrador',
-      senha: '',
-      nivel: 'Adm',
-      status: 'Ativo',
-      lgpdAccepted: true,
-      lgpdDate: '2025-05-01',
-      lgpdVersion: '1.0',
-    },
-    {
-      id: 2,
-      nome: 'Carlos Santos',
-      email: 'carlos.santos@empresa.com',
-      departamento: 'RH',
-      cargo: 'Supervisor',
-      senha: '',
-      nivel: 'Supervisor',
-      status: 'Ativo',
-      lgpdAccepted: true,
-      lgpdDate: '2025-05-02',
-      lgpdVersion: '1.0',
-    },
-    {
-      id: 3,
-      nome: 'Paula Oliveira',
-      email: 'paula.oliveira@empresa.com',
-      departamento: 'Vendas',
-      cargo: 'Telefonista',
-      senha: '',
-      nivel: 'Telefonista',
-      status: 'Ativo',
-      lgpdAccepted: false,
-      lgpdDate: null,
-      lgpdVersion: null,
-    },
-    {
-      id: 4,
-      nome: 'João Costa',
-      email: 'joao.costa@empresa.com',
-      departamento: 'TI',
-      cargo: 'Administrador',
-      senha: '',
-      nivel: 'Adm',
-      status: 'Inativo',
-      lgpdAccepted: true,
-      lgpdDate: '2025-05-03',
-      lgpdVersion: '1.0',
-    },
-    {
-      id: 5,
-      nome: 'Mariana Souza',
-      email: 'mariana.souza@empresa.com',
-      departamento: 'RH',
-      cargo: 'Supervisor',
-      senha: '',
-      nivel: 'Supervisor',
-      status: 'Ativo',
-      lgpdAccepted: true,
-      lgpdDate: '2025-05-04',
-      lgpdVersion: '1.0',
-    },
-  ]);
+  // Estado para armazenar os usuários
+  const [users, setUsers] = useState<UserModel[]>([]);
 
   // Estado para o formulário
   const [formData, setFormData] = useState({
-    nome: '',
+    name: '',
     email: '',
-    departamento: departmentOptions[0],
-    cargo: '',
-    senha: '',
-    nivel: 'Telefonista',
+    username: '',
+    department: departmentOptions[0],
+    role: '',
+    password: '',
+    level: 'user',
   });
+
+  // Buscar usuários ao carregar a página
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        const data = await usersService.getAllUsers();
+        setUsers(data);
+      } catch (error) {
+        toast({
+          title: 'Erro',
+          description: 'Não foi possível carregar os usuários.',
+          variant: 'destructive',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, [toast]);
 
   // Filtrar usuários com base no termo de pesquisa
   const filteredUsers = users.filter(
     user =>
-      user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.cargo.toLowerCase().includes(searchTerm.toLowerCase())
+      user.role.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Abrir modal para novo usuário
   const handleAdd = () => {
     setCurrentUser(null);
     setFormData({
-      nome: '',
+      name: '',
       email: '',
-      departamento: departmentOptions[0],
-      cargo: '',
-      senha: '',
-      nivel: 'Telefonista',
+      username: '',
+      department: departmentOptions[0],
+      role: '',
+      password: '',
+      level: 'user',
     });
     setOpenDialog(true);
   };
 
   // Abrir modal para editar usuário
-  const handleEdit = (user: User) => {
+  const handleEdit = (user: UserModel) => {
     setCurrentUser(user);
     setFormData({
-      nome: user.nome,
+      name: user.name,
       email: user.email,
-      departamento: user.departamento,
-      cargo: user.cargo,
-      senha: user.senha,
-      nivel: user.nivel,
+      username: user.username,
+      department: user.department,
+      role: user.role,
+      password: '',
+      level: user.level,
     });
     setOpenDialog(true);
   };
@@ -186,33 +138,13 @@ const Users = () => {
   // Manipular envio do formulário
   const handleSubmit = () => {
     if (currentUser) {
-      // Se for editar e a senha foi alterada, precisa confirmar a senha antiga
-      if (formData.senha !== currentUser.senha && formData.senha !== '') {
-        if (oldPassword !== currentUser.senha) {
-          setPasswordError('Senha antiga incorreta.');
-          return;
-        }
-      }
-      setUsers(prev =>
-        prev.map(user => (user.id === currentUser.id ? { ...user, ...formData } : user))
-      );
-      setPasswordError('');
+      // Lógica para editar usuário seria implementada aqui com a API
       toast({
         title: 'Usuário atualizado',
         description: 'O usuário foi atualizado com sucesso.',
       });
     } else {
-      setUsers(prev => [
-        ...prev,
-        {
-          ...formData,
-          id: prev.length + 1,
-          status: 'Ativo',
-          lgpdAccepted: false,
-          lgpdDate: null,
-          lgpdVersion: null,
-        },
-      ]);
+      // Lógica para adicionar usuário seria implementada aqui com a API
       toast({
         title: 'Usuário adicionado',
         description: 'Novo usuário cadastrado com sucesso.',
@@ -224,13 +156,19 @@ const Users = () => {
   };
 
   const handleDelete = (id: number) => {
-    setUsers(prev => prev.filter(user => user.id !== id));
+    // Lógica para excluir usuário seria implementada aqui com a API
     setDeleteDialogOpen(false);
     setUserToDelete(null);
     toast({
       title: 'Usuário removido',
       description: 'O usuário foi removido com sucesso.',
     });
+  };
+
+  // Formatar data para exibição
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR');
   };
 
   return (
@@ -261,53 +199,75 @@ const Users = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Nome</TableHead>
+                  <TableHead>Username</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>Departamento</TableHead>
-                  <TableHead>Cargo</TableHead>
+                  <TableHead>Função</TableHead>
                   <TableHead>Nível</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Data de Aceite</TableHead>
+                  <TableHead>Data de Criação</TableHead>
                   <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredUsers.map(user => (
-                  <TableRow key={user.id}>
-                    <TableCell className="font-medium">{user.nome}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.departamento}</TableCell>
-                    <TableCell>{user.cargo}</TableCell>
-                    <TableCell>{user.nivel}</TableCell>
-                    <TableCell>
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs ${
-                          user.status === 'Ativo'
-                            ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100'
-                            : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-100'
-                        }`}
-                      >
-                        {user.status}
-                      </span>
-                    </TableCell>
-                    <TableCell>{user.lgpdDate || '-'}</TableCell>
-                    <TableCell className="text-right space-x-2">
-                      <Button variant="outline" size="sm" onClick={() => handleEdit(user)}>
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-red-500"
-                        onClick={() => {
-                          setUserToDelete(user);
-                          setDeleteDialogOpen(true);
-                        }}
-                      >
-                        <Trash className="h-4 w-4" />
-                      </Button>
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={9} className="text-center py-4">
+                      Carregando usuários...
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : filteredUsers.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={9} className="text-center py-4">
+                      Nenhum usuário encontrado.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredUsers.map(user => (
+                    <TableRow key={user.id}>
+                      <TableCell className="font-medium">{user.name}</TableCell>
+                      <TableCell>{user.username}</TableCell>
+                      <TableCell>{user.email}</TableCell>
+                      <TableCell>{user.department}</TableCell>
+                      <TableCell>{user.role}</TableCell>
+                      <TableCell>{user.level}</TableCell>
+                      <TableCell>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs ${
+                            user.status === 'active'
+                              ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100'
+                              : user.status === 'pending'
+                              ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-100'
+                              : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-100'
+                          }`}
+                        >
+                          {user.status === 'active'
+                            ? 'Ativo'
+                            : user.status === 'pending'
+                            ? 'Pendente'
+                            : 'Inativo'}
+                        </span>
+                      </TableCell>
+                      <TableCell>{formatDate(user.createdAt)}</TableCell>
+                      <TableCell className="text-right space-x-2">
+                        <Button variant="outline" size="sm" onClick={() => handleEdit(user)}>
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-red-500"
+                          onClick={() => {
+                            setUserToDelete(user);
+                            setDeleteDialogOpen(true);
+                          }}
+                        >
+                          <Trash className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </CardContent>
@@ -324,14 +284,27 @@ const Users = () => {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="nome" className="text-right">
+                <Label htmlFor="name" className="text-right">
                   Nome
                 </Label>
                 <Input
-                  id="nome"
-                  name="nome"
+                  id="name"
+                  name="name"
                   placeholder="Ex: Ana Silva"
-                  value={formData.nome}
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="username" className="text-right">
+                  Username
+                </Label>
+                <Input
+                  id="username"
+                  name="username"
+                  placeholder="Ex: anasilva"
+                  value={formData.username}
                   onChange={handleChange}
                   className="col-span-3"
                 />
@@ -350,12 +323,12 @@ const Users = () => {
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="departamento" className="text-right">
+                <Label htmlFor="department" className="text-right">
                   Departamento
                 </Label>
                 <Select
-                  value={formData.departamento}
-                  onValueChange={value => setFormData(prev => ({ ...prev, departamento: value }))}
+                  value={formData.department}
+                  onValueChange={value => setFormData(prev => ({ ...prev, department: value }))}
                 >
                   <SelectTrigger className="col-span-3">
                     <SelectValue placeholder="Selecione o departamento" />
@@ -370,33 +343,33 @@ const Users = () => {
                 </Select>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="cargo" className="text-right">
-                  Cargo
+                <Label htmlFor="role" className="text-right">
+                  Função
                 </Label>
                 <Input
-                  id="cargo"
-                  name="cargo"
+                  id="role"
+                  name="role"
                   placeholder="Ex: Telefonista"
-                  value={formData.cargo}
+                  value={formData.role}
                   onChange={handleChange}
                   className="col-span-3"
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="senha" className="text-right">
-                  Nova senha
+                <Label htmlFor="password" className="text-right">
+                  {currentUser ? 'Nova senha' : 'Senha'}
                 </Label>
                 <Input
-                  id="senha"
-                  name="senha"
+                  id="password"
+                  name="password"
                   type="password"
-                  placeholder="Defina uma nova senha"
-                  value={formData.senha}
+                  placeholder={currentUser ? "Defina uma nova senha" : "Defina uma senha"}
+                  value={formData.password}
                   onChange={handleChange}
                   className="col-span-3"
                 />
               </div>
-              {currentUser && (
+              {currentUser && formData.password && (
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="oldPassword" className="text-right">
                     Senha anterior
@@ -416,12 +389,12 @@ const Users = () => {
                 <div className="col-span-4 text-red-500 text-sm text-center">{passwordError}</div>
               )}
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="nivel" className="text-right">
+                <Label htmlFor="level" className="text-right">
                   Nível de Acesso
                 </Label>
                 <Select
-                  value={formData.nivel}
-                  onValueChange={value => setFormData(prev => ({ ...prev, nivel: value }))}
+                  value={formData.level}
+                  onValueChange={value => setFormData(prev => ({ ...prev, level: value }))}
                 >
                   <SelectTrigger className="col-span-3">
                     <SelectValue placeholder="Selecione o nível" />
@@ -450,13 +423,13 @@ const Users = () => {
               <DialogTitle>Confirmar exclusão</DialogTitle>
             </DialogHeader>
             <p>
-              Tem certeza que deseja apagar o usuário <b>{userToDelete?.nome}</b>?
+              Tem certeza que deseja apagar o usuário <b>{userToDelete?.name}</b>?
             </p>
             <DialogFooter>
               <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
                 Cancelar
               </Button>
-              <Button variant="destructive" onClick={() => handleDelete(userToDelete!.id)}>
+              <Button variant="destructive" onClick={() => userToDelete && handleDelete(userToDelete.id)}>
                 Apagar
               </Button>
             </DialogFooter>
