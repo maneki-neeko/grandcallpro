@@ -41,6 +41,7 @@ const Extensions = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [extensionToDelete, setExtensionToDelete] = useState<Extension | null>(null);
   const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   // Estado para extensões
   const [extensions, setExtensions] = useState<Extension[]>([]);
@@ -128,25 +129,49 @@ const Extensions = () => {
   };
 
   // Manipular envio do formulário
-  const handleSubmit = () => {
-    if (currentExtension) {
-      // Edição
-      setExtensions(prev =>
-        prev.map(ext => (ext.id === currentExtension.id ? { ...ext, ...formData } : ext))
-      );
-      toast({
-        title: 'Ramal atualizado',
-        description: 'O ramal foi atualizado com sucesso.',
-      });
-    } else {
-      // Novo
-      setExtensions(prev => [...prev, { ...formData, id: prev.length + 1 }]);
-      toast({
-        title: 'Ramal adicionado',
-        description: 'Novo ramal cadastrado com sucesso.',
-      });
+  const handleSubmit = async () => {
+    try {
+      setSubmitting(true);
+
+      if (currentExtension) {
+        // Edição
+        setExtensions(prev =>
+          prev.map(ext => (ext.id === currentExtension.id ? { ...ext, ...formData } : ext))
+        );
+        toast({
+          title: 'Ramal atualizado',
+          description: 'O ramal foi atualizado com sucesso.',
+        });
+      } else {
+        // Novo ramal
+        const newExtension = await extensionsService.createExtension(formData);
+        setExtensions(prev => [...prev, newExtension]);
+        toast({
+          title: 'Ramal adicionado',
+          description: 'Novo ramal cadastrado com sucesso.',
+        });
+      }
+      setOpenDialog(false);
+    } catch (error: any) {
+      console.error('Erro ao salvar ramal:', error);
+      
+      // Verificar se é um erro de conflito (ramal já existente)
+      if (error.status === 409) {
+        toast({
+          title: 'Erro',
+          description: 'Este número de ramal já está cadastrado no sistema.',
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Erro',
+          description: 'Não foi possível salvar o ramal. Tente novamente.',
+          variant: 'destructive',
+        });
+      }
+    } finally {
+      setSubmitting(false);
     }
-    setOpenDialog(false);
   };
 
   return (
@@ -304,10 +329,17 @@ const Extensions = () => {
             </div>
 
             <DialogFooter>
-              <Button variant="outline" onClick={() => setOpenDialog(false)}>
+              <Button variant="outline" onClick={() => setOpenDialog(false)} disabled={submitting}>
                 Cancelar
               </Button>
-              <Button onClick={handleSubmit}>{currentExtension ? 'Salvar' : 'Adicionar'}</Button>
+              <Button onClick={handleSubmit} disabled={submitting}>
+                {submitting 
+                  ? 'Salvando...' 
+                  : currentExtension 
+                    ? 'Salvar' 
+                    : 'Adicionar'
+                }
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
