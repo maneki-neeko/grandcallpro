@@ -17,21 +17,21 @@ const api: AxiosInstance = axios.create({
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
-    
+
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
+
     return config;
   },
-  (error) => {
+  error => {
     return Promise.reject(error);
   }
 );
 
 // Interceptor para tratamento de erros
 api.interceptors.response.use(
-  (response) => {
+  response => {
     return response;
   },
   (error: AxiosError) => {
@@ -40,17 +40,17 @@ api.interceptors.response.use(
       console.log('API - Interceptor - Erro 401 detectado, limpando dados de autenticação');
       // Limpar dados de autenticação
       Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
-      
+
       // Emitir um evento personalizado para o AuthContext ouvir e lidar com o logout
       const event = new CustomEvent('auth:unauthorized');
       window.dispatchEvent(event);
-      
+
       // Não redirecionar automaticamente, deixar o React Router lidar com isso
       // window.location.href = '/login';
     }
-    
+
     return Promise.reject(error);
   }
 );
 
-export default api; 
+export default api;

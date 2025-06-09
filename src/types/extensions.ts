@@ -4,4 +4,4 @@ export interface Extension {
   department: string;
   sector: string;
   employee: string;
-} 
+}

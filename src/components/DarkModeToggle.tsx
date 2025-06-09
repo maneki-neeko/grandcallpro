@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { Switch } from "@/components/ui/switch";
-import { Moon, Sun } from "lucide-react";
+import { useEffect, useState } from 'react';
+import { Switch } from '@/components/ui/switch';
+import { Moon, Sun } from 'lucide-react';
 
 export function DarkModeToggle() {
   const [enabled, setEnabled] = useState(false);
@@ -8,9 +8,9 @@ export function DarkModeToggle() {
 
   useEffect(() => {
     if (enabled) {
-      document.documentElement.classList.add("dark");
+      document.documentElement.classList.add('dark');
     } else {
-      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.remove('dark');
     }
     setAnimating(true);
     const timeout = setTimeout(() => setAnimating(false), 300);

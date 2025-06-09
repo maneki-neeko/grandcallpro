@@ -26,7 +26,11 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const { isAuthenticated, isLoading, user } = useAuth();
   const location = useLocation();
 
-  console.log('ProtectedRoute - Estado de autenticação:', { isAuthenticated, isLoading, hasUser: !!user });
+  console.log('ProtectedRoute - Estado de autenticação:', {
+    isAuthenticated,
+    isLoading,
+    hasUser: !!user,
+  });
 
   if (isLoading) {
     console.log('ProtectedRoute - Carregando...');

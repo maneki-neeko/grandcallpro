@@ -114,14 +114,14 @@ const Extensions = () => {
     try {
       setDeleting(true);
       await extensionsService.deleteExtension(id);
-      
+
       // Atualiza o estado local removendo o ramal excluído
       setExtensions(prev => prev.filter(ext => ext.id !== id));
-      
+
       // Fecha o diálogo e limpa o estado
       setDeleteDialogOpen(false);
       setExtensionToDelete(null);
-      
+
       toast({
         title: 'Ramal removido',
         description: 'O ramal foi removido com sucesso.',
@@ -141,9 +141,9 @@ const Extensions = () => {
   // Manipular mudanças no formulário
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ 
-      ...prev, 
-      [name]: name === 'number' ? parseInt(value) || 0 : value 
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === 'number' ? parseInt(value) || 0 : value,
     }));
   };
 
@@ -156,13 +156,13 @@ const Extensions = () => {
         // Edição
         const updatedExtension = await extensionsService.updateExtension({
           ...formData,
-          id: currentExtension.id
+          id: currentExtension.id,
         });
-        
+
         setExtensions(prev =>
           prev.map(ext => (ext.id === currentExtension.id ? updatedExtension : ext))
         );
-        
+
         toast({
           title: 'Ramal atualizado',
           description: 'O ramal foi atualizado com sucesso.',
@@ -179,7 +179,7 @@ const Extensions = () => {
       setOpenDialog(false);
     } catch (error: any) {
       console.error('Erro ao salvar ramal:', error);
-      
+
       // Verificar se é um erro de conflito (ramal já existente)
       if (error.status === 409) {
         toast({
@@ -358,12 +358,7 @@ const Extensions = () => {
                 Cancelar
               </Button>
               <Button onClick={handleSubmit} disabled={submitting}>
-                {submitting 
-                  ? 'Salvando...' 
-                  : currentExtension 
-                    ? 'Salvar' 
-                    : 'Adicionar'
-                }
+                {submitting ? 'Salvando...' : currentExtension ? 'Salvar' : 'Adicionar'}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -377,15 +372,15 @@ const Extensions = () => {
               Tem certeza que deseja apagar o ramal <b>{extensionToDelete?.number}</b>?
             </p>
             <DialogFooter>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => setDeleteDialogOpen(false)}
                 disabled={deleting}
               >
                 Cancelar
               </Button>
-              <Button 
-                variant="destructive" 
+              <Button
+                variant="destructive"
                 onClick={() => extensionToDelete && handleDelete(extensionToDelete.id)}
                 disabled={deleting}
               >

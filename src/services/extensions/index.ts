@@ -35,7 +35,7 @@ const extensionsService = {
         if (axiosError.response?.status === 409) {
           throw {
             message: axiosError.response.data.message || 'Ramal já cadastrado',
-            status: 409
+            status: 409,
           };
         }
       }
@@ -55,7 +55,7 @@ const extensionsService = {
         if (axiosError.response?.status === 409) {
           throw {
             message: axiosError.response.data.message || 'Ramal já cadastrado',
-            status: 409
+            status: 409,
           };
         }
       }
@@ -74,4 +74,4 @@ const extensionsService = {
   },
 };
 
-export default extensionsService; 
+export default extensionsService;

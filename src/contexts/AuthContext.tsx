@@ -63,7 +63,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       const currentUser = authService.getCurrentUser();
       console.log('checkAuth - Usuário encontrado:', !!currentUser);
-      
+
       if (!currentUser) {
         console.error('checkAuth - Token existe mas usuário não encontrado no localStorage');
         setIsAuthenticated(false);
@@ -88,7 +88,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     console.log('AuthProvider - useEffect - Verificando autenticação');
     const token = authService.getToken();
     const currentUser = authService.getCurrentUser();
-    
+
     if (token && currentUser) {
       console.log('AuthProvider - useEffect - Token e usuário encontrados no início');
       setUser(currentUser);
@@ -98,7 +98,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsAuthenticated(false);
       setUser(null);
     }
-    
+
     checkAuth();
   }, []);
 
@@ -154,7 +154,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     window.addEventListener('auth:unauthorized', handleUnauthorized);
-    
+
     return () => {
       window.removeEventListener('auth:unauthorized', handleUnauthorized);
     };
