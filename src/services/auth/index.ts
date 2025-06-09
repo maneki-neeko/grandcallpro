@@ -1,17 +1,11 @@
-import axios from 'axios';
-import { config } from '@/config/env';
+import api from '../api';
 import { AUTH_ENDPOINTS, STORAGE_KEYS } from './constants';
 import type { User, LoginCredentials, RegisterData, AuthResponse } from '@/types';
-
-const { API_URL } = config;
 
 const authService = {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
-      const response = await axios.post<AuthResponse>(
-        `${API_URL}${AUTH_ENDPOINTS.LOGIN}`,
-        credentials
-      );
+      const response = await api.post<AuthResponse>(AUTH_ENDPOINTS.LOGIN, credentials);
       const { accessToken } = response.data;
       localStorage.setItem(STORAGE_KEYS.TOKEN, accessToken);
       localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(response.data.user));
@@ -24,7 +18,7 @@ const authService = {
 
   async register(data: RegisterData): Promise<AuthResponse> {
     try {
-      const response = await axios.post<AuthResponse>(`${API_URL}${AUTH_ENDPOINTS.REGISTER}`, data);
+      const response = await api.post<AuthResponse>(AUTH_ENDPOINTS.REGISTER, data);
       const { accessToken, user } = response.data;
       localStorage.setItem(STORAGE_KEYS.TOKEN, accessToken);
       localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
@@ -37,7 +31,7 @@ const authService = {
 
   async forgotPassword(email: string): Promise<void> {
     try {
-      await axios.post(`${API_URL}${AUTH_ENDPOINTS.FORGOT_PASSWORD}`, { email });
+      await api.post(AUTH_ENDPOINTS.FORGOT_PASSWORD, { email });
     } catch (error) {
       console.error('Erro ao enviar email de recuperação:', error);
       throw error;
@@ -46,6 +40,7 @@ const authService = {
 
   logout(): void {
     Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
+    window.location.href = '/login';
   },
 
   isAuthenticated(): boolean {
