@@ -135,9 +135,15 @@ const Extensions = () => {
 
       if (currentExtension) {
         // Edição
+        const updatedExtension = await extensionsService.updateExtension({
+          ...formData,
+          id: currentExtension.id
+        });
+        
         setExtensions(prev =>
-          prev.map(ext => (ext.id === currentExtension.id ? { ...ext, ...formData } : ext))
+          prev.map(ext => (ext.id === currentExtension.id ? updatedExtension : ext))
         );
+        
         toast({
           title: 'Ramal atualizado',
           description: 'O ramal foi atualizado com sucesso.',

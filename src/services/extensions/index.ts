@@ -43,6 +43,26 @@ const extensionsService = {
       throw error;
     }
   },
+
+  async updateExtension(data: Extension): Promise<Extension> {
+    try {
+      const response = await api.put<Extension>(EXTENSIONS_ENDPOINTS.GET_ALL, data);
+      return response.data;
+    } catch (error) {
+      // Verificar se é um erro de conflito (ramal já existe)
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ApiError>;
+        if (axiosError.response?.status === 409) {
+          throw {
+            message: axiosError.response.data.message || 'Ramal já cadastrado',
+            status: 409
+          };
+        }
+      }
+      console.error('Erro ao atualizar ramal:', error);
+      throw error;
+    }
+  },
 };
 
 export default extensionsService; 
