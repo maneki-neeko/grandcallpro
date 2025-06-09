@@ -72,7 +72,7 @@ const Index = () => {
                 <div className="text-center text-muted-foreground">Nenhuma notificação.</div>
               ) : (
                 notifications.map(n => (
-                  <div key={n.id} className="border rounded p-3 bg-muted">
+                  <div key={n.id} className="border rounded p-3 bg-card-custom">
                     <div className="font-semibold">{n.title}</div>
                     <div className="text-sm text-muted-foreground">{n.description}</div>
                   </div>
@@ -150,7 +150,7 @@ const Index = () => {
                           <HoverCardTrigger className="underline cursor-help text-blue-500">
                             {call.origem}
                           </HoverCardTrigger>
-                          <HoverCardContent className="bg-blue-500 text-white p-4 w-72">
+                          <HoverCardContent className="bg-card-custom p-4 w-72">
                             <div className="space-y-1">
                               <p>
                                 <strong>Departamento:</strong>{' '}
@@ -176,7 +176,7 @@ const Index = () => {
                           <HoverCardTrigger className="underline cursor-help text-blue-500">
                             {call.destino}
                           </HoverCardTrigger>
-                          <HoverCardContent className="bg-blue-500 text-white p-4 w-72">
+                          <HoverCardContent className="bg-card-custom p-4 w-72">
                             <div className="space-y-1">
                               <p>
                                 <strong>Departamento:</strong>{' '}
@@ -208,7 +208,12 @@ const Index = () => {
               </Table>
             </div>
             <div className="my-4 mr-4 flex justify-end">
-              <Button variant="outline" size="sm" onClick={() => navigate('/calls')}>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => navigate('/calls')}
+                className="dark:bg-[#141413] dark:text-white dark:border dark:border-border dark:hover:bg-[#222] border border-border"
+              >
                 Ver todas as chamadas
               </Button>
             </div>
