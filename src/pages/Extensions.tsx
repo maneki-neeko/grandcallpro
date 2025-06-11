@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -28,16 +28,8 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select';
-
-// Tipo para extensões (ramais)
-type Extension = {
-  id: number;
-  numero: string;
-  departamento: string;
-  setor: string;
-  subsetor: string;
-  colaborador: string;
-};
+import extensionsService from '@/services/extensions';
+import { Extension } from '@/types';
 
 const departmentOptions = ['Financeiro', 'RH', 'Comercial', 'TI', 'Saúde'];
 
@@ -48,78 +40,59 @@ const Extensions = () => {
   const [currentExtension, setCurrentExtension] = useState<Extension | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [extensionToDelete, setExtensionToDelete] = useState<Extension | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
-  // Mock de dados para extensões
-  const [extensions, setExtensions] = useState<Extension[]>([
-    {
-      id: 1,
-      numero: '270',
-      departamento: 'Depto. Financeiro',
-      setor: 'Contabilidade',
-      subsetor: 'Pagamentos',
-      colaborador: 'Ana Silva',
-    },
-    {
-      id: 2,
-      numero: '204',
-      departamento: 'Depto. Administrativo',
-      setor: 'RH',
-      subsetor: 'Admissão',
-      colaborador: 'Carlos Santos',
-    },
-    {
-      id: 3,
-      numero: '222',
-      departamento: 'Depto. Comercial',
-      setor: 'Vendas',
-      subsetor: 'Negociação',
-      colaborador: 'Paula Oliveira',
-    },
-    {
-      id: 4,
-      numero: '311',
-      departamento: 'Depto. TI',
-      setor: 'Suporte',
-      subsetor: 'Atendimento',
-      colaborador: 'João Costa',
-    },
-    {
-      id: 5,
-      numero: '348',
-      departamento: 'Depto. Saúde',
-      setor: 'PSF2',
-      subsetor: 'Recepção',
-      colaborador: 'Glenda',
-    },
-  ]);
+  // Estado para extensões
+  const [extensions, setExtensions] = useState<Extension[]>([]);
 
   // Estado para o formulário
   const [formData, setFormData] = useState({
-    numero: '',
-    departamento: departmentOptions[0],
-    setor: '',
-    subsetor: '',
-    colaborador: '',
+    number: 0,
+    department: departmentOptions[0],
+    sector: '',
+    employee: '',
   });
+
+  // Buscar ramais ao carregar a página
+  useEffect(() => {
+    const fetchExtensions = async () => {
+      try {
+        setLoading(true);
+        const data = await extensionsService.getAllExtensions();
+        setExtensions(data);
+      } catch (error) {
+        toast({
+          title: 'Erro',
+          description: 'Não foi possível carregar os ramais.',
+          variant: 'destructive',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchExtensions();
+  }, [toast]);
 
   // Filtrar extensões com base no termo de pesquisa
   const filteredExtensions = extensions.filter(
     ext =>
-      ext.numero.includes(searchTerm) ||
-      ext.departamento.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ext.setor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ext.colaborador.toLowerCase().includes(searchTerm.toLowerCase())
+      ext.number.toString().includes(searchTerm) ||
+      ext.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ext.sector.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ext.employee.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Manipular abertura do diálogo para edição
   const handleEdit = (extension: Extension) => {
     setCurrentExtension(extension);
     setFormData({
-      numero: extension.numero,
-      departamento: extension.departamento,
-      setor: extension.setor,
-      subsetor: extension.subsetor,
-      colaborador: extension.colaborador,
+      number: extension.number,
+      department: extension.department,
+      sector: extension.sector,
+      employee: extension.employee,
     });
     setOpenDialog(true);
   };
@@ -128,52 +101,102 @@ const Extensions = () => {
   const handleAdd = () => {
     setCurrentExtension(null);
     setFormData({
-      numero: '',
-      departamento: departmentOptions[0],
-      setor: '',
-      subsetor: '',
-      colaborador: '',
+      number: 0,
+      department: departmentOptions[0],
+      sector: '',
+      employee: '',
     });
     setOpenDialog(true);
   };
 
   // Manipular exclusão de ramal
-  const handleDelete = (id: number) => {
-    setExtensions(extensions.filter(ext => ext.id !== id));
-    setDeleteDialogOpen(false);
-    setExtensionToDelete(null);
-    toast({
-      title: 'Ramal removido',
-      description: 'O ramal foi removido com sucesso.',
-    });
+  const handleDelete = async (id: number) => {
+    try {
+      setDeleting(true);
+      await extensionsService.deleteExtension(id);
+
+      // Atualiza o estado local removendo o ramal excluído
+      setExtensions(prev => prev.filter(ext => ext.id !== id));
+
+      // Fecha o diálogo e limpa o estado
+      setDeleteDialogOpen(false);
+      setExtensionToDelete(null);
+
+      toast({
+        title: 'Ramal removido',
+        description: 'O ramal foi removido com sucesso.',
+      });
+    } catch (error) {
+      console.error('Erro ao excluir ramal:', error);
+      toast({
+        title: 'Erro',
+        description: 'Não foi possível remover o ramal. Tente novamente.',
+        variant: 'destructive',
+      });
+    } finally {
+      setDeleting(false);
+    }
   };
 
   // Manipular mudanças no formulário
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === 'number' ? parseInt(value) || 0 : value,
+    }));
   };
 
   // Manipular envio do formulário
-  const handleSubmit = () => {
-    if (currentExtension) {
-      // Edição
-      setExtensions(prev =>
-        prev.map(ext => (ext.id === currentExtension.id ? { ...ext, ...formData } : ext))
-      );
-      toast({
-        title: 'Ramal atualizado',
-        description: 'O ramal foi atualizado com sucesso.',
-      });
-    } else {
-      // Novo
-      setExtensions(prev => [...prev, { ...formData, id: prev.length + 1 }]);
-      toast({
-        title: 'Ramal adicionado',
-        description: 'Novo ramal cadastrado com sucesso.',
-      });
+  const handleSubmit = async () => {
+    try {
+      setSubmitting(true);
+
+      if (currentExtension) {
+        // Edição
+        const updatedExtension = await extensionsService.updateExtension({
+          ...formData,
+          id: currentExtension.id,
+        });
+
+        setExtensions(prev =>
+          prev.map(ext => (ext.id === currentExtension.id ? updatedExtension : ext))
+        );
+
+        toast({
+          title: 'Ramal atualizado',
+          description: 'O ramal foi atualizado com sucesso.',
+        });
+      } else {
+        // Novo ramal
+        const newExtension = await extensionsService.createExtension(formData);
+        setExtensions(prev => [...prev, newExtension]);
+        toast({
+          title: 'Ramal adicionado',
+          description: 'Novo ramal cadastrado com sucesso.',
+        });
+      }
+      setOpenDialog(false);
+    } catch (error: any) {
+      console.error('Erro ao salvar ramal:', error);
+
+      // Verificar se é um erro de conflito (ramal já existente)
+      if (error.status === 409) {
+        toast({
+          title: 'Erro',
+          description: 'Este número de ramal já está cadastrado no sistema.',
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Erro',
+          description: 'Não foi possível salvar o ramal. Tente novamente.',
+          variant: 'destructive',
+        });
+      }
+    } finally {
+      setSubmitting(false);
     }
-    setOpenDialog(false);
   };
 
   return (
@@ -211,30 +234,44 @@ const Extensions = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredExtensions.map(extension => (
-                  <TableRow key={extension.id}>
-                    <TableCell className="font-medium">{extension.numero}</TableCell>
-                    <TableCell>{extension.departamento}</TableCell>
-                    <TableCell>{extension.setor}</TableCell>
-                    <TableCell>{extension.colaborador}</TableCell>
-                    <TableCell className="text-right space-x-2">
-                      <Button variant="outline" size="sm" onClick={() => handleEdit(extension)}>
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-red-500"
-                        onClick={() => {
-                          setExtensionToDelete(extension);
-                          setDeleteDialogOpen(true);
-                        }}
-                      >
-                        <Trash className="h-4 w-4" />
-                      </Button>
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-4">
+                      Carregando ramais...
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : filteredExtensions.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-4">
+                      Nenhum ramal encontrado.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredExtensions.map(extension => (
+                    <TableRow key={extension.id}>
+                      <TableCell className="font-medium">{extension.number}</TableCell>
+                      <TableCell>{extension.department}</TableCell>
+                      <TableCell>{extension.sector}</TableCell>
+                      <TableCell>{extension.employee}</TableCell>
+                      <TableCell className="text-right space-x-2">
+                        <Button variant="outline" size="sm" onClick={() => handleEdit(extension)}>
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-red-500"
+                          onClick={() => {
+                            setExtensionToDelete(extension);
+                            setDeleteDialogOpen(true);
+                          }}
+                        >
+                          <Trash className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </CardContent>
@@ -252,26 +289,27 @@ const Extensions = () => {
 
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="numero" className="text-right">
+                <Label htmlFor="number" className="text-right">
                   Número
                 </Label>
                 <Input
-                  id="numero"
-                  name="numero"
+                  id="number"
+                  name="number"
+                  type="number"
                   placeholder="Ex: 270"
-                  value={formData.numero}
+                  value={formData.number}
                   onChange={handleChange}
                   className="col-span-3"
                 />
               </div>
 
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="departamento" className="text-right">
+                <Label htmlFor="department" className="text-right">
                   Departamento
                 </Label>
                 <Select
-                  value={formData.departamento}
-                  onValueChange={value => setFormData(prev => ({ ...prev, departamento: value }))}
+                  value={formData.department}
+                  onValueChange={value => setFormData(prev => ({ ...prev, department: value }))}
                 >
                   <SelectTrigger className="col-span-3">
                     <SelectValue placeholder="Selecione o departamento" />
@@ -287,28 +325,28 @@ const Extensions = () => {
               </div>
 
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="setor" className="text-right">
+                <Label htmlFor="sector" className="text-right">
                   Setor
                 </Label>
                 <Input
-                  id="setor"
-                  name="setor"
+                  id="sector"
+                  name="sector"
                   placeholder="Ex: Contabilidade"
-                  value={formData.setor}
+                  value={formData.sector}
                   onChange={handleChange}
                   className="col-span-3"
                 />
               </div>
 
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="colaborador" className="text-right">
+                <Label htmlFor="employee" className="text-right">
                   Colaborador
                 </Label>
                 <Input
-                  id="colaborador"
-                  name="colaborador"
+                  id="employee"
+                  name="employee"
                   placeholder="Ex: Ana Silva"
-                  value={formData.colaborador}
+                  value={formData.employee}
                   onChange={handleChange}
                   className="col-span-3"
                 />
@@ -316,10 +354,12 @@ const Extensions = () => {
             </div>
 
             <DialogFooter>
-              <Button variant="outline" onClick={() => setOpenDialog(false)}>
+              <Button variant="outline" onClick={() => setOpenDialog(false)} disabled={submitting}>
                 Cancelar
               </Button>
-              <Button onClick={handleSubmit}>{currentExtension ? 'Salvar' : 'Adicionar'}</Button>
+              <Button onClick={handleSubmit} disabled={submitting}>
+                {submitting ? 'Salvando...' : currentExtension ? 'Salvar' : 'Adicionar'}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -329,14 +369,22 @@ const Extensions = () => {
               <DialogTitle>Confirmar exclusão</DialogTitle>
             </DialogHeader>
             <p>
-              Tem certeza que deseja apagar o ramal <b>{extensionToDelete?.numero}</b>?
+              Tem certeza que deseja apagar o ramal <b>{extensionToDelete?.number}</b>?
             </p>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setDeleteDialogOpen(false)}
+                disabled={deleting}
+              >
                 Cancelar
               </Button>
-              <Button variant="destructive" onClick={() => handleDelete(extensionToDelete!.id)}>
-                Apagar
+              <Button
+                variant="destructive"
+                onClick={() => extensionToDelete && handleDelete(extensionToDelete.id)}
+                disabled={deleting}
+              >
+                {deleting ? 'Removendo...' : 'Apagar'}
               </Button>
             </DialogFooter>
           </DialogContent>

@@ -124,4 +124,12 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .bg-card-custom {
+    background-color: var(--card-custom) !important;
+  }
+
+  .bg-background {
+    background-color: var(--background);
+  }
 }

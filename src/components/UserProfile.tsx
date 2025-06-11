@@ -1,19 +1,22 @@
 import { userLevels } from '@/consts/user';
 import { useAuth } from '@/contexts/AuthContext';
-import authService from '@/services/auth';
 import { LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export function UserProfile() {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  const user = authService.getCurrentUser();
-
   const handleLogout = () => {
+    console.log('UserProfile - Iniciando logout');
     logout();
     navigate('/login');
   };
+
+  // Se o usuário não existe, não renderizar nada
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="p-4">
@@ -24,7 +27,7 @@ export function UserProfile() {
         </div>
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 text-sm text-red-500 hover:text-red-600 transition-colors hover:bg-gray-100 rounded-md p-2"
+          className="flex items-center gap-2 text-sm text-red-500 hover:text-red-600 transition-colors hover:bg-sidebar-accent rounded-md p-2 mt-2"
         >
           <LogOut size={16} />
           Sair

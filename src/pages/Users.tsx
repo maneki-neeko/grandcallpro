@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -28,151 +28,108 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { usersService } from '@/services';
+import { UserModel } from '@/types';
 
-// Tipo para usuários
-const accessLevels = [
-  { value: 'Telefonista', label: 'Telefonista' },
-  { value: 'Supervisor', label: 'Supervisor' },
-  { value: 'Adm', label: 'Administrador' },
+// Tipo para os níveis de usuário
+type UserLevel = 'admin' | 'supervisor' | 'user';
+
+// Definindo opções de nível de acesso baseado no enum UserLevel do backend
+const accessLevels: { value: UserLevel; label: string }[] = [
+  { value: 'admin', label: 'Administrador' },
+  { value: 'supervisor', label: 'Supervisor' },
+  { value: 'user', label: 'Usuário' },
 ];
 
 const departmentOptions = ['Financeiro', 'RH', 'Comercial', 'TI', 'Saúde'];
 
-type User = {
-  id: number;
-  nome: string;
-  email: string;
-  departamento: string;
-  cargo: string;
-  senha: string;
-  nivel: string;
-  status: string;
-  lgpdAccepted: boolean;
-  lgpdDate: string | null;
-  lgpdVersion: string | null;
+// Tipo estendido para o formulário com a senha
+type UserWithPassword = UserModel & {
+  password?: string;
 };
 
 const Users = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<UserModel | null>(null);
   const [oldPassword, setOldPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [userToDelete, setUserToDelete] = useState<UserModel | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const { toast } = useToast();
 
-  // Mock de dados para usuários
-  const [users, setUsers] = useState<User[]>([
-    {
-      id: 1,
-      nome: 'Ana Silva',
-      email: 'ana.silva@empresa.com',
-      departamento: 'Financeiro',
-      cargo: 'Administrador',
-      senha: '',
-      nivel: 'Adm',
-      status: 'Ativo',
-      lgpdAccepted: true,
-      lgpdDate: '2025-05-01',
-      lgpdVersion: '1.0',
-    },
-    {
-      id: 2,
-      nome: 'Carlos Santos',
-      email: 'carlos.santos@empresa.com',
-      departamento: 'RH',
-      cargo: 'Supervisor',
-      senha: '',
-      nivel: 'Supervisor',
-      status: 'Ativo',
-      lgpdAccepted: true,
-      lgpdDate: '2025-05-02',
-      lgpdVersion: '1.0',
-    },
-    {
-      id: 3,
-      nome: 'Paula Oliveira',
-      email: 'paula.oliveira@empresa.com',
-      departamento: 'Vendas',
-      cargo: 'Telefonista',
-      senha: '',
-      nivel: 'Telefonista',
-      status: 'Ativo',
-      lgpdAccepted: false,
-      lgpdDate: null,
-      lgpdVersion: null,
-    },
-    {
-      id: 4,
-      nome: 'João Costa',
-      email: 'joao.costa@empresa.com',
-      departamento: 'TI',
-      cargo: 'Administrador',
-      senha: '',
-      nivel: 'Adm',
-      status: 'Inativo',
-      lgpdAccepted: true,
-      lgpdDate: '2025-05-03',
-      lgpdVersion: '1.0',
-    },
-    {
-      id: 5,
-      nome: 'Mariana Souza',
-      email: 'mariana.souza@empresa.com',
-      departamento: 'RH',
-      cargo: 'Supervisor',
-      senha: '',
-      nivel: 'Supervisor',
-      status: 'Ativo',
-      lgpdAccepted: true,
-      lgpdDate: '2025-05-04',
-      lgpdVersion: '1.0',
-    },
-  ]);
+  // Estado para armazenar os usuários
+  const [users, setUsers] = useState<UserModel[]>([]);
 
   // Estado para o formulário
   const [formData, setFormData] = useState({
-    nome: '',
+    name: '',
     email: '',
-    departamento: departmentOptions[0],
-    cargo: '',
-    senha: '',
-    nivel: 'Telefonista',
+    username: '',
+    department: departmentOptions[0],
+    role: '',
+    password: '',
+    level: 'user',
   });
+
+  // Buscar usuários ao carregar a página
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        const data = await usersService.getAllUsers();
+        setUsers(data);
+      } catch (error) {
+        toast({
+          title: 'Erro',
+          description: 'Não foi possível carregar os usuários.',
+          variant: 'destructive',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, [toast]);
 
   // Filtrar usuários com base no termo de pesquisa
   const filteredUsers = users.filter(
     user =>
-      user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.cargo.toLowerCase().includes(searchTerm.toLowerCase())
+      user.role.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Abrir modal para novo usuário
   const handleAdd = () => {
     setCurrentUser(null);
     setFormData({
-      nome: '',
+      name: '',
       email: '',
-      departamento: departmentOptions[0],
-      cargo: '',
-      senha: '',
-      nivel: 'Telefonista',
+      username: '',
+      department: departmentOptions[0],
+      role: '',
+      password: '',
+      level: 'user',
     });
     setOpenDialog(true);
   };
 
   // Abrir modal para editar usuário
-  const handleEdit = (user: User) => {
+  const handleEdit = (user: UserModel) => {
     setCurrentUser(user);
     setFormData({
-      nome: user.nome,
+      name: user.name,
       email: user.email,
-      departamento: user.departamento,
-      cargo: user.cargo,
-      senha: user.senha,
-      nivel: user.nivel,
+      username: user.username,
+      department: user.department,
+      role: user.role,
+      password: '',
+      level: user.level,
     });
     setOpenDialog(true);
   };
@@ -184,53 +141,187 @@ const Users = () => {
   };
 
   // Manipular envio do formulário
-  const handleSubmit = () => {
-    if (currentUser) {
-      // Se for editar e a senha foi alterada, precisa confirmar a senha antiga
-      if (formData.senha !== currentUser.senha && formData.senha !== '') {
-        if (oldPassword !== currentUser.senha) {
-          setPasswordError('Senha antiga incorreta.');
-          return;
-        }
-      }
-      setUsers(prev =>
-        prev.map(user => (user.id === currentUser.id ? { ...user, ...formData } : user))
-      );
-      setPasswordError('');
+  const handleSubmit = async () => {
+    // Validação básica dos campos obrigatórios
+    if (!formData.name.trim()) {
       toast({
-        title: 'Usuário atualizado',
-        description: 'O usuário foi atualizado com sucesso.',
+        title: 'Campo obrigatório',
+        description: 'O nome do usuário é obrigatório.',
+        variant: 'destructive',
       });
-    } else {
-      setUsers(prev => [
-        ...prev,
-        {
-          ...formData,
-          id: prev.length + 1,
-          status: 'Ativo',
-          lgpdAccepted: false,
-          lgpdDate: null,
-          lgpdVersion: null,
-        },
-      ]);
-      toast({
-        title: 'Usuário adicionado',
-        description: 'Novo usuário cadastrado com sucesso.',
-      });
+      return;
     }
-    setOpenDialog(false);
-    setOldPassword('');
-    setPasswordError('');
+
+    if (!formData.email.trim()) {
+      toast({
+        title: 'Campo obrigatório',
+        description: 'O email do usuário é obrigatório.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!formData.username.trim()) {
+      toast({
+        title: 'Campo obrigatório',
+        description: 'O username do usuário é obrigatório.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!formData.role.trim()) {
+      toast({
+        title: 'Campo obrigatório',
+        description: 'A função do usuário é obrigatória.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!currentUser && !formData.password.trim()) {
+      toast({
+        title: 'Campo obrigatório',
+        description: 'A senha é obrigatória para novos usuários.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      
+      if (currentUser) {
+        // Preparar dados para atualização
+        const updateData = {
+          name: formData.name,
+          email: formData.email,
+          username: formData.username,
+          department: formData.department,
+          role: formData.role
+        };
+        
+        // Adicionar o level apenas se for um valor válido
+        if (formData.level === 'admin' || formData.level === 'supervisor' || formData.level === 'user') {
+          (updateData as any).level = formData.level;
+        }
+        
+        // Se a senha foi alterada e não está vazia, incluí-la na atualização
+        if (formData.password.trim()) {
+          // Nota: O backend provavelmente não permite atualização de senha via este endpoint
+          // Este código seria apenas para caso a API suporte isso
+          toast({
+            title: 'Aviso',
+            description: 'A alteração de senha não é suportada nesta operação.',
+            variant: 'default',
+          });
+        }
+        
+        // Atualizar o usuário
+        const updatedUser = await usersService.updateUser(currentUser.id, updateData);
+        
+        // Atualizar a lista local de usuários
+        setUsers(prev => 
+          prev.map(user => (user.id === currentUser.id ? updatedUser : user))
+        );
+        
+        toast({
+          title: 'Usuário atualizado',
+          description: 'O usuário foi atualizado com sucesso.',
+        });
+      } else {
+        // Criação de novo usuário
+        const userData = {
+          name: formData.name,
+          email: formData.email,
+          username: formData.username,
+          department: formData.department,
+          password: formData.password,
+          role: formData.role,
+          level: formData.level === 'admin' || formData.level === 'supervisor' || formData.level === 'user' 
+            ? formData.level 
+            : 'user'
+        } as const;
+        
+        const newUser = await usersService.createUser(userData);
+        
+        // Adicionar o novo usuário à lista
+        setUsers(prev => [...prev, newUser]);
+        
+        toast({
+          title: 'Usuário adicionado',
+          description: 'Novo usuário cadastrado com sucesso.',
+        });
+      }
+      
+      setOpenDialog(false);
+      setOldPassword('');
+      setPasswordError('');
+    } catch (error: any) {
+      console.error('Erro ao salvar usuário:', error);
+      
+      // Verificar se é um erro de conflito (usuário já existente)
+      if (error.status === 409) {
+        // Verificar qual o tipo de conflito baseado na mensagem do backend
+        let errorMessage = 'Este usuário já está cadastrado no sistema.';
+        
+        if (error.message) {
+          if (error.message.includes('email')) {
+            errorMessage = 'Este email já está cadastrado no sistema.';
+          } else if (error.message.includes('username')) {
+            errorMessage = 'Este nome de usuário já está cadastrado no sistema.';
+          }
+        }
+        
+        toast({
+          title: 'Erro de Cadastro',
+          description: errorMessage,
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Erro',
+          description: 'Não foi possível salvar o usuário. Tente novamente.',
+          variant: 'destructive',
+        });
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  const handleDelete = (id: number) => {
-    setUsers(prev => prev.filter(user => user.id !== id));
-    setDeleteDialogOpen(false);
-    setUserToDelete(null);
-    toast({
-      title: 'Usuário removido',
-      description: 'O usuário foi removido com sucesso.',
-    });
+  const handleDelete = async (id: number) => {
+    try {
+      setDeleting(true);
+      await usersService.deleteUser(id);
+      
+      // Remover o usuário da lista local
+      setUsers(prev => prev.filter(user => user.id !== id));
+      
+      // Fechar o diálogo e limpar o estado
+      setDeleteDialogOpen(false);
+      setUserToDelete(null);
+      
+      toast({
+        title: 'Usuário removido',
+        description: 'O usuário foi removido com sucesso.',
+      });
+    } catch (error) {
+      console.error('Erro ao excluir usuário:', error);
+      toast({
+        title: 'Erro',
+        description: 'Não foi possível remover o usuário. Tente novamente.',
+        variant: 'destructive',
+      });
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  // Formatar data para exibição
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR');
   };
 
   return (
@@ -261,53 +352,75 @@ const Users = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Nome</TableHead>
+                  <TableHead>Username</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>Departamento</TableHead>
-                  <TableHead>Cargo</TableHead>
+                  <TableHead>Função</TableHead>
                   <TableHead>Nível</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Data de Aceite</TableHead>
+                  <TableHead>Data de Criação</TableHead>
                   <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredUsers.map(user => (
-                  <TableRow key={user.id}>
-                    <TableCell className="font-medium">{user.nome}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.departamento}</TableCell>
-                    <TableCell>{user.cargo}</TableCell>
-                    <TableCell>{user.nivel}</TableCell>
-                    <TableCell>
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs ${
-                          user.status === 'Ativo'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}
-                      >
-                        {user.status}
-                      </span>
-                    </TableCell>
-                    <TableCell>{user.lgpdDate || '-'}</TableCell>
-                    <TableCell className="text-right space-x-2">
-                      <Button variant="outline" size="sm" onClick={() => handleEdit(user)}>
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-red-500"
-                        onClick={() => {
-                          setUserToDelete(user);
-                          setDeleteDialogOpen(true);
-                        }}
-                      >
-                        <Trash className="h-4 w-4" />
-                      </Button>
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={9} className="text-center py-4">
+                      Carregando usuários...
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : filteredUsers.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={9} className="text-center py-4">
+                      Nenhum usuário encontrado.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredUsers.map(user => (
+                    <TableRow key={user.id}>
+                      <TableCell className="font-medium">{user.name}</TableCell>
+                      <TableCell>{user.username}</TableCell>
+                      <TableCell>{user.email}</TableCell>
+                      <TableCell>{user.department}</TableCell>
+                      <TableCell>{user.role}</TableCell>
+                      <TableCell>{user.level}</TableCell>
+                      <TableCell>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs ${
+                            user.status === 'active'
+                              ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100'
+                              : user.status === 'pending'
+                              ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-100'
+                              : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-100'
+                          }`}
+                        >
+                          {user.status === 'active'
+                            ? 'Ativo'
+                            : user.status === 'pending'
+                            ? 'Pendente'
+                            : 'Inativo'}
+                        </span>
+                      </TableCell>
+                      <TableCell>{formatDate(user.createdAt)}</TableCell>
+                      <TableCell className="text-right space-x-2">
+                        <Button variant="outline" size="sm" onClick={() => handleEdit(user)}>
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-red-500"
+                          onClick={() => {
+                            setUserToDelete(user);
+                            setDeleteDialogOpen(true);
+                          }}
+                        >
+                          <Trash className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </CardContent>
@@ -324,14 +437,27 @@ const Users = () => {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="nome" className="text-right">
+                <Label htmlFor="name" className="text-right">
                   Nome
                 </Label>
                 <Input
-                  id="nome"
-                  name="nome"
+                  id="name"
+                  name="name"
                   placeholder="Ex: Ana Silva"
-                  value={formData.nome}
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="username" className="text-right">
+                  Username
+                </Label>
+                <Input
+                  id="username"
+                  name="username"
+                  placeholder="Ex: anasilva"
+                  value={formData.username}
                   onChange={handleChange}
                   className="col-span-3"
                 />
@@ -350,12 +476,12 @@ const Users = () => {
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="departamento" className="text-right">
+                <Label htmlFor="department" className="text-right">
                   Departamento
                 </Label>
                 <Select
-                  value={formData.departamento}
-                  onValueChange={value => setFormData(prev => ({ ...prev, departamento: value }))}
+                  value={formData.department}
+                  onValueChange={value => setFormData(prev => ({ ...prev, department: value }))}
                 >
                   <SelectTrigger className="col-span-3">
                     <SelectValue placeholder="Selecione o departamento" />
@@ -370,33 +496,33 @@ const Users = () => {
                 </Select>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="cargo" className="text-right">
-                  Cargo
+                <Label htmlFor="role" className="text-right">
+                  Função
                 </Label>
                 <Input
-                  id="cargo"
-                  name="cargo"
+                  id="role"
+                  name="role"
                   placeholder="Ex: Telefonista"
-                  value={formData.cargo}
+                  value={formData.role}
                   onChange={handleChange}
                   className="col-span-3"
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="senha" className="text-right">
-                  Nova senha
+                <Label htmlFor="password" className="text-right">
+                  {currentUser ? 'Nova senha' : 'Senha'}
                 </Label>
                 <Input
-                  id="senha"
-                  name="senha"
+                  id="password"
+                  name="password"
                   type="password"
-                  placeholder="Defina uma nova senha"
-                  value={formData.senha}
+                  placeholder={currentUser ? "Defina uma nova senha" : "Defina uma senha"}
+                  value={formData.password}
                   onChange={handleChange}
                   className="col-span-3"
                 />
               </div>
-              {currentUser && (
+              {currentUser && formData.password && (
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="oldPassword" className="text-right">
                     Senha anterior
@@ -416,31 +542,38 @@ const Users = () => {
                 <div className="col-span-4 text-red-500 text-sm text-center">{passwordError}</div>
               )}
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="nivel" className="text-right">
+                <Label htmlFor="level" className="text-right">
                   Nível de Acesso
                 </Label>
                 <Select
-                  value={formData.nivel}
-                  onValueChange={value => setFormData(prev => ({ ...prev, nivel: value }))}
+                  value={formData.level}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, level: value }))}
                 >
                   <SelectTrigger className="col-span-3">
                     <SelectValue placeholder="Selecione o nível" />
                   </SelectTrigger>
                   <SelectContent>
-                    {accessLevels.map(level => (
-                      <SelectItem key={level.value} value={level.value}>
-                        {level.label}
-                      </SelectItem>
-                    ))}
+                    <SelectItem value="admin">Administrador</SelectItem>
+                    <SelectItem value="supervisor">Supervisor</SelectItem>
+                    <SelectItem value="user">Usuário</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setOpenDialog(false)}>
+              <Button 
+                variant="outline" 
+                onClick={() => setOpenDialog(false)}
+                disabled={submitting}
+              >
                 Cancelar
               </Button>
-              <Button onClick={handleSubmit}>{currentUser ? 'Salvar' : 'Adicionar'}</Button>
+              <Button 
+                onClick={handleSubmit}
+                disabled={submitting}
+              >
+                {submitting ? 'Salvando...' : currentUser ? 'Salvar' : 'Adicionar'}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -450,14 +583,22 @@ const Users = () => {
               <DialogTitle>Confirmar exclusão</DialogTitle>
             </DialogHeader>
             <p>
-              Tem certeza que deseja apagar o usuário <b>{userToDelete?.nome}</b>?
+              Tem certeza que deseja apagar o usuário <b>{userToDelete?.name}</b>?
             </p>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+              <Button 
+                variant="outline" 
+                onClick={() => setDeleteDialogOpen(false)}
+                disabled={deleting}
+              >
                 Cancelar
               </Button>
-              <Button variant="destructive" onClick={() => handleDelete(userToDelete!.id)}>
-                Apagar
+              <Button 
+                variant="destructive" 
+                onClick={() => userToDelete && handleDelete(userToDelete.id)}
+                disabled={deleting}
+              >
+                {deleting ? 'Removendo...' : 'Apagar'}
               </Button>
             </DialogFooter>
           </DialogContent>

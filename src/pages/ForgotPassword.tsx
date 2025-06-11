@@ -89,7 +89,7 @@ const ForgotPassword: React.FC = () => {
           </CardContent>
           <div className="flex flex-col gap-2 p-4">
             <Button
-              className="w-full bg-[#1bb5da] hover:bg-[#004a80] text-white font-bold font-sora"
+              className="w-full bg-[#1bb5da] hover:bg-[#004a80] text-white font-bold font-sora bg-card-custom"
               type="submit"
               onClick={handleSubmit(onSubmit)}
               disabled={isSubmitting || !isValid}

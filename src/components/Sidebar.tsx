@@ -2,6 +2,7 @@ import { UserProfile } from './UserProfile';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useContextApp } from '@/contexts';
+import { DarkModeToggle } from './DarkModeToggle';
 
 import {
   Sidebar as SidebarUI,
@@ -35,7 +36,7 @@ const menuItems = [
 ];
 
 export function Sidebar() {
-  const { activePage, setActivePage } = useContextApp();
+  const { activePage, setActivePage, theme } = useContextApp();
   const navigate = useNavigate();
 
   const handleMenuClick = (route: string) => {
@@ -52,10 +53,11 @@ export function Sidebar() {
 
   return (
     <SidebarUI>
-      <div className="p-4">
+      <div className="p-4 flex items-center gap-3 justify-between">
         <h1 className="text-xl font-bold">GrandCallPro</h1>
+        <DarkModeToggle />
       </div>
-      <SidebarContent className="bg-gray-50">
+      <SidebarContent className="bg-sidebar">
         <SidebarGroup>
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -69,7 +71,7 @@ export function Sidebar() {
                         onClick={() => handleMenuClick(item.route)}
                         className={activePage === item.route ? 'bg-sidebar-accent' : ''}
                       >
-                        <Icon className="h-4 w-4 mr-2 bac" />
+                        <Icon className="h-4 w-4 mr-2" />
                         <span>{item.title}</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>

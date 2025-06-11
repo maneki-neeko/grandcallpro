@@ -40,28 +40,43 @@ interface AuthProviderProps {
 // Provedor de contexto
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
+  console.log('AuthProvider - Estado atual:', { isAuthenticated, isLoading, hasUser: !!user });
+
   const checkAuth = async () => {
+    console.log('checkAuth - Iniciando verificação de autenticação');
     setIsLoading(true);
     try {
       const token = authService.getToken();
+      console.log('checkAuth - Token encontrado:', !!token);
 
       if (!token) {
-        authService.logout();
+        console.log('checkAuth - Sem token, deslogando');
         setIsAuthenticated(false);
         setUser(null);
+        setIsLoading(false);
         return;
       }
 
       const currentUser = authService.getCurrentUser();
+      console.log('checkAuth - Usuário encontrado:', !!currentUser);
+
+      if (!currentUser) {
+        console.error('checkAuth - Token existe mas usuário não encontrado no localStorage');
+        setIsAuthenticated(false);
+        setUser(null);
+        setIsLoading(false);
+        return;
+      }
+
+      console.log('checkAuth - Autenticação bem-sucedida, atualizando estado');
       setUser(currentUser);
       setIsAuthenticated(true);
     } catch (error) {
-      console.error('Erro na validação:', error);
-      authService.logout();
+      console.error('checkAuth - Erro na validação:', error);
       setIsAuthenticated(false);
       setUser(null);
     } finally {
@@ -70,6 +85,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
+    console.log('AuthProvider - useEffect - Verificando autenticação');
+    const token = authService.getToken();
+    const currentUser = authService.getCurrentUser();
+
+    if (token && currentUser) {
+      console.log('AuthProvider - useEffect - Token e usuário encontrados no início');
+      setUser(currentUser);
+      setIsAuthenticated(true);
+    } else {
+      console.log('AuthProvider - useEffect - Token ou usuário não encontrados no início');
+      setIsAuthenticated(false);
+      setUser(null);
+    }
+
     checkAuth();
   }, []);
 
@@ -106,10 +135,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout = () => {
+    console.log('AuthContext - logout - Executando logout controlado');
+    // Limpar localStorage
     authService.logout();
+    // Atualizar o estado do contexto
     setUser(null);
     setIsAuthenticated(false);
+    // A navegação será feita pelo componente que chama logout
   };
+
+  // Ouvir o evento de logout não autorizado
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      console.log('AuthContext - Evento não autorizado detectado');
+      setUser(null);
+      setIsAuthenticated(false);
+      // Não usar navigate aqui, deixar o ProtectedRoute cuidar do redirecionamento
+    };
+
+    window.addEventListener('auth:unauthorized', handleUnauthorized);
+
+    return () => {
+      window.removeEventListener('auth:unauthorized', handleUnauthorized);
+    };
+  }, []);
 
   const forgotPassword = async (email: string) => {
     setIsLoading(true);

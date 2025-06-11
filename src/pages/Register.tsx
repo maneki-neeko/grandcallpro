@@ -203,7 +203,7 @@ const Register: React.FC = () => {
             <CardFooter className="flex flex-col gap-2">
               <Button
                 type="submit"
-                className="w-full bg-[#1bb5da] hover:bg-[#004a80] text-white font-bold font-sora shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-[#1bb5da] hover:bg-[#004a80] text-white font-bold font-sora shadow-md disabled:opacity-50 disabled:cursor-not-allowed bg-card-custom"
                 disabled={isSubmitting || !isValid || !lgpdAccepted}
               >
                 {isSubmitting ? 'Enviando...' : 'Registrar'}
