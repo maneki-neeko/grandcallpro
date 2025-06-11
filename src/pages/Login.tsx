@@ -48,8 +48,8 @@ export function Login() {
       await login({ login: loginData, password });
       toast.success('Login realizado com sucesso!');
       navigate('/');
-    } catch {
-      toast.error('Erro ao realizar login. Verifique suas credenciais.');
+    } catch (error) {
+      toast.error(`Erro ao fazer login: ${error.response.data.message}`);
     }
   };
 
