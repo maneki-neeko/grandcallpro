@@ -324,12 +324,6 @@ const Users = () => {
     return date.toLocaleDateString('pt-BR');
   };
 
-  // Formatar data para exibição
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('pt-BR');
-  };
-
   return (
     <div className="flex w-full max-w-5xl">
       {/* Conteúdo principal */}
