@@ -31,11 +31,14 @@ import { useToast } from '@/hooks/use-toast';
 import { usersService } from '@/services';
 import { UserModel } from '@/types';
 
-// Definindo opções de nível de acesso
-const accessLevels = [
-  { value: 'Telefonista', label: 'Telefonista' },
-  { value: 'Supervisor', label: 'Supervisor' },
-  { value: 'Adm', label: 'Administrador' },
+// Tipo para os níveis de usuário
+type UserLevel = 'admin' | 'supervisor' | 'user';
+
+// Definindo opções de nível de acesso baseado no enum UserLevel do backend
+const accessLevels: { value: UserLevel; label: string }[] = [
+  { value: 'admin', label: 'Administrador' },
+  { value: 'supervisor', label: 'Supervisor' },
+  { value: 'user', label: 'Usuário' },
 ];
 
 const departmentOptions = ['Financeiro', 'RH', 'Comercial', 'TI', 'Saúde'];
@@ -54,6 +57,8 @@ const Users = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<UserModel | null>(null);
   const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const { toast } = useToast();
 
   // Estado para armazenar os usuários
@@ -136,33 +141,187 @@ const Users = () => {
   };
 
   // Manipular envio do formulário
-  const handleSubmit = () => {
-    if (currentUser) {
-      // Lógica para editar usuário seria implementada aqui com a API
+  const handleSubmit = async () => {
+    // Validação básica dos campos obrigatórios
+    if (!formData.name.trim()) {
       toast({
-        title: 'Usuário atualizado',
-        description: 'O usuário foi atualizado com sucesso.',
+        title: 'Campo obrigatório',
+        description: 'O nome do usuário é obrigatório.',
+        variant: 'destructive',
       });
-    } else {
-      // Lógica para adicionar usuário seria implementada aqui com a API
-      toast({
-        title: 'Usuário adicionado',
-        description: 'Novo usuário cadastrado com sucesso.',
-      });
+      return;
     }
-    setOpenDialog(false);
-    setOldPassword('');
-    setPasswordError('');
+
+    if (!formData.email.trim()) {
+      toast({
+        title: 'Campo obrigatório',
+        description: 'O email do usuário é obrigatório.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!formData.username.trim()) {
+      toast({
+        title: 'Campo obrigatório',
+        description: 'O username do usuário é obrigatório.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!formData.role.trim()) {
+      toast({
+        title: 'Campo obrigatório',
+        description: 'A função do usuário é obrigatória.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!currentUser && !formData.password.trim()) {
+      toast({
+        title: 'Campo obrigatório',
+        description: 'A senha é obrigatória para novos usuários.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      
+      if (currentUser) {
+        // Preparar dados para atualização
+        const updateData = {
+          name: formData.name,
+          email: formData.email,
+          username: formData.username,
+          department: formData.department,
+          role: formData.role
+        };
+        
+        // Adicionar o level apenas se for um valor válido
+        if (formData.level === 'admin' || formData.level === 'supervisor' || formData.level === 'user') {
+          (updateData as any).level = formData.level;
+        }
+        
+        // Se a senha foi alterada e não está vazia, incluí-la na atualização
+        if (formData.password.trim()) {
+          // Nota: O backend provavelmente não permite atualização de senha via este endpoint
+          // Este código seria apenas para caso a API suporte isso
+          toast({
+            title: 'Aviso',
+            description: 'A alteração de senha não é suportada nesta operação.',
+            variant: 'default',
+          });
+        }
+        
+        // Atualizar o usuário
+        const updatedUser = await usersService.updateUser(currentUser.id, updateData);
+        
+        // Atualizar a lista local de usuários
+        setUsers(prev => 
+          prev.map(user => (user.id === currentUser.id ? updatedUser : user))
+        );
+        
+        toast({
+          title: 'Usuário atualizado',
+          description: 'O usuário foi atualizado com sucesso.',
+        });
+      } else {
+        // Criação de novo usuário
+        const userData = {
+          name: formData.name,
+          email: formData.email,
+          username: formData.username,
+          department: formData.department,
+          password: formData.password,
+          role: formData.role,
+          level: formData.level === 'admin' || formData.level === 'supervisor' || formData.level === 'user' 
+            ? formData.level 
+            : 'user'
+        } as const;
+        
+        const newUser = await usersService.createUser(userData);
+        
+        // Adicionar o novo usuário à lista
+        setUsers(prev => [...prev, newUser]);
+        
+        toast({
+          title: 'Usuário adicionado',
+          description: 'Novo usuário cadastrado com sucesso.',
+        });
+      }
+      
+      setOpenDialog(false);
+      setOldPassword('');
+      setPasswordError('');
+    } catch (error: any) {
+      console.error('Erro ao salvar usuário:', error);
+      
+      // Verificar se é um erro de conflito (usuário já existente)
+      if (error.status === 409) {
+        // Verificar qual o tipo de conflito baseado na mensagem do backend
+        let errorMessage = 'Este usuário já está cadastrado no sistema.';
+        
+        if (error.message) {
+          if (error.message.includes('email')) {
+            errorMessage = 'Este email já está cadastrado no sistema.';
+          } else if (error.message.includes('username')) {
+            errorMessage = 'Este nome de usuário já está cadastrado no sistema.';
+          }
+        }
+        
+        toast({
+          title: 'Erro de Cadastro',
+          description: errorMessage,
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Erro',
+          description: 'Não foi possível salvar o usuário. Tente novamente.',
+          variant: 'destructive',
+        });
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  const handleDelete = (id: number) => {
-    // Lógica para excluir usuário seria implementada aqui com a API
-    setDeleteDialogOpen(false);
-    setUserToDelete(null);
-    toast({
-      title: 'Usuário removido',
-      description: 'O usuário foi removido com sucesso.',
-    });
+  const handleDelete = async (id: number) => {
+    try {
+      setDeleting(true);
+      await usersService.deleteUser(id);
+      
+      // Remover o usuário da lista local
+      setUsers(prev => prev.filter(user => user.id !== id));
+      
+      // Fechar o diálogo e limpar o estado
+      setDeleteDialogOpen(false);
+      setUserToDelete(null);
+      
+      toast({
+        title: 'Usuário removido',
+        description: 'O usuário foi removido com sucesso.',
+      });
+    } catch (error) {
+      console.error('Erro ao excluir usuário:', error);
+      toast({
+        title: 'Erro',
+        description: 'Não foi possível remover o usuário. Tente novamente.',
+        variant: 'destructive',
+      });
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  // Formatar data para exibição
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR');
   };
 
   // Formatar data para exibição
@@ -394,26 +553,33 @@ const Users = () => {
                 </Label>
                 <Select
                   value={formData.level}
-                  onValueChange={value => setFormData(prev => ({ ...prev, level: value }))}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, level: value }))}
                 >
                   <SelectTrigger className="col-span-3">
                     <SelectValue placeholder="Selecione o nível" />
                   </SelectTrigger>
                   <SelectContent>
-                    {accessLevels.map(level => (
-                      <SelectItem key={level.value} value={level.value}>
-                        {level.label}
-                      </SelectItem>
-                    ))}
+                    <SelectItem value="admin">Administrador</SelectItem>
+                    <SelectItem value="supervisor">Supervisor</SelectItem>
+                    <SelectItem value="user">Usuário</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setOpenDialog(false)}>
+              <Button 
+                variant="outline" 
+                onClick={() => setOpenDialog(false)}
+                disabled={submitting}
+              >
                 Cancelar
               </Button>
-              <Button onClick={handleSubmit}>{currentUser ? 'Salvar' : 'Adicionar'}</Button>
+              <Button 
+                onClick={handleSubmit}
+                disabled={submitting}
+              >
+                {submitting ? 'Salvando...' : currentUser ? 'Salvar' : 'Adicionar'}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -426,11 +592,19 @@ const Users = () => {
               Tem certeza que deseja apagar o usuário <b>{userToDelete?.name}</b>?
             </p>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+              <Button 
+                variant="outline" 
+                onClick={() => setDeleteDialogOpen(false)}
+                disabled={deleting}
+              >
                 Cancelar
               </Button>
-              <Button variant="destructive" onClick={() => userToDelete && handleDelete(userToDelete.id)}>
-                Apagar
+              <Button 
+                variant="destructive" 
+                onClick={() => userToDelete && handleDelete(userToDelete.id)}
+                disabled={deleting}
+              >
+                {deleting ? 'Removendo...' : 'Apagar'}
               </Button>
             </DialogFooter>
           </DialogContent>
