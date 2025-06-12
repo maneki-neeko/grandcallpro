@@ -1,12 +1,11 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { FolderX } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
 
 const NotFound = () => {
   const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     console.error('404 Error: User attempted to access non-existent route:', location.pathname);
@@ -18,7 +17,7 @@ const NotFound = () => {
         <CardHeader className="text-center pb-2">
           <div className="flex justify-center mb-4">
             <div className="rounded-full bg-muted p-4">
-              <FolderX className="h-12 w-12 text-primary" />
+              <FolderX className="h-12 w-12 text-primary" aria-hidden="true" />
             </div>
           </div>
           <CardTitle className="text-4xl font-bold">404</CardTitle>
@@ -33,12 +32,12 @@ const NotFound = () => {
           <p className="text-sm text-muted-foreground">
             URL acessada: <code className="text-primary">{location.pathname}</code>
           </p>
-          <Button 
-            onClick={() => navigate('/')}
-            className="mt-4 bg-primary hover:bg-primary/90"
+          <Link
+            to="/"
+            className="mt-4 inline-block rounded-md bg-primary px-4 py-2 text-white hover:bg-primary/90 transition-colors"
           >
             Voltar para o início
-          </Button>
+          </Link>
         </CardContent>
       </Card>
     </div>
