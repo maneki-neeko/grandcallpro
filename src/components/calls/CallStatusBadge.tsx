@@ -1,15 +1,10 @@
 import React from 'react';
-import { useContextApp } from '@/contexts';
 
 interface CallStatusBadgeProps {
   status: string;
 }
 
 const CallStatusBadge: React.FC<CallStatusBadgeProps> = ({ status }) => {
-  const { theme } = useContextApp();
-  const isDark = theme === 'dark';
-
-  // Determinar o estilo com base no status
   const getStatusStyle = () => {
     switch (status.toUpperCase()) {
       case 'ATENDIDA':

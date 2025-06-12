@@ -14,7 +14,17 @@ import {
   CardTitle,
 } from '../components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
-import { User, Mail, LockKeyhole, UserCheck, Clock, CheckCircle, Clock2 } from 'lucide-react';
+import {
+  User,
+  Mail,
+  LockKeyhole,
+  UserCheck,
+  Clock,
+  CheckCircle,
+  Clock2,
+  IdCard,
+  IdCardLanyard,
+} from 'lucide-react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RegisterData } from '@/types';
@@ -31,6 +41,8 @@ const registerSchema = z
       .regex(/^[a-zA-Z0-9_]+$/, 'Nome de usuário pode conter apenas letras, números e underscore')
       .regex(/.*[a-zA-Z].*/, 'Nome de usuário deve conter pelo menos 1 letra'),
     email: z.string().min(1, 'Email é obrigatório').email('Formato de email inválido'),
+    department: z.string().min(1, 'Departamento é obrigatório'),
+    role: z.string().min(1, 'Cargo é obrigatório'),
     password: z
       .string()
       .min(1, 'Senha é obrigatória')
@@ -72,8 +84,7 @@ const Register: React.FC = () => {
       toast.success('Dados enviados com sucesso!');
       setIsApprovalModalOpen(true);
     } catch (error) {
-      console.error('Erro no registro:', error);
-      toast.error('Falha ao enviar dados. Verifique os dados e tente novamente.');
+      toast.error(`Erro ao registrar: ${error.response.data.message}`);
     }
   };
 
@@ -85,7 +96,7 @@ const Register: React.FC = () => {
   return (
     <div className="w-full flex items-center justify-center bg-gradient-to-br from-[#1bb5da] to-[#004a80] font-sora">
       <div className="flex-1 flex justify-center items-center">
-        <Card className="border-none shadow-xl w-full max-w-md">
+        <Card className="border-none shadow-xl w-full max-w-xl">
           <CardHeader className="space-y-1 text-center">
             <CardTitle className="text-3xl font-extrabold tracking-tight text-[#004a80]">
               Criar Conta
@@ -141,6 +152,41 @@ const Register: React.FC = () => {
                 {errors.email && (
                   <span className="text-xs text-red-500">{errors.email.message}</span>
                 )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="department">Departamento:</Label>
+                  <div className="relative">
+                    <IdCard className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="department"
+                      type="text"
+                      placeholder="Ex: Desenvolvimento"
+                      className={`pl-10 font-sora ${errors.department ? 'border-red-500' : ''}`}
+                      {...register('department')}
+                    />
+                  </div>
+                  {errors.department && (
+                    <span className="text-xs text-red-500">{errors.department.message}</span>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="role">Cargo:</Label>
+                  <div className="relative">
+                    <IdCardLanyard className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="role"
+                      type="text"
+                      placeholder="Ex: Telefonista"
+                      className={`pl-10 font-sora ${errors.role ? 'border-red-500' : ''}`}
+                      {...register('role')}
+                    />
+                  </div>
+                  {errors.role && (
+                    <span className="text-xs text-red-500">{errors.role.message}</span>
+                  )}
+                </div>
               </div>
 
               <div className="space-y-2">
