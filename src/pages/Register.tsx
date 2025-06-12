@@ -156,7 +156,6 @@ const Register: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  {/* Icone */}
                   <Label htmlFor="department">Departamento:</Label>
                   <div className="relative">
                     <IdCard className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
