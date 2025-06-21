@@ -8,7 +8,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Card, CardContent } from '@/components/ui/card';
-import CallStatusBadge from './CallStatusBadge';
+import { CallStatusBadge } from './CallStatusBadge';
 import ExtensionHoverCard, { DepartmentInfo } from './ExtensionHoverCard';
 
 // Type for call data

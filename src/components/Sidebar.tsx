@@ -1,5 +1,5 @@
 import { UserProfile } from './UserProfile';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useContextApp } from '@/contexts';
 import { DarkModeToggle } from './DarkModeToggle';
@@ -36,7 +36,7 @@ const menuItems = [
 ];
 
 export function Sidebar() {
-  const { activePage, setActivePage, theme } = useContextApp();
+  const { activePage, setActivePage } = useContextApp();
   const navigate = useNavigate();
 
   const handleMenuClick = (route: string) => {

@@ -4,7 +4,7 @@ export const STORAGE_KEYS = {
 };
 
 export const AUTH_ENDPOINTS = {
-  LOGIN: '/auth/login',
-  REGISTER: '/auth/register',
-  FORGOT_PASSWORD: '/auth/forgot-password',
+  LOGIN: '/v1/auth/login',
+  REGISTER: '/v1/auth/register',
+  FORGOT_PASSWORD: '/v1/auth/forgot-password',
 };
