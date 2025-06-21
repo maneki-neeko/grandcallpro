@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,8 +10,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
-import { callData, extensionInfo } from '@/data/callsData';
-import CallStatusBadge from '@/components/calls/CallStatusBadge';
+import { CallStatusBadge } from '@/components/calls/CallStatusBadge';
 import {
   Table,
   TableBody,
@@ -22,14 +21,34 @@ import {
 } from '@/components/ui/table';
 import { BarChart3 } from 'lucide-react';
 import { useContextApp } from '@/contexts';
+import { useQuery } from '@tanstack/react-query';
+import { formatDateWithTime } from '@/utils/date';
+import dashboardServices from '@/services/dashboard';
+import { socket } from '@/socket';
+import { Dashboard } from '@/types/dashboard';
 
 const Index = () => {
   const navigate = useNavigate();
   const { setActivePage } = useContextApp();
   const [notificationModalOpen, setNotificationModalOpen] = useState(false);
+  const [dashboardData, setDashboardData] = useState<Dashboard | null>(null);
 
-  // Mock data for recent calls
-  const recentCalls = callData.slice(0, 5);
+  useEffect(() => {
+    socket.on('dashboard', value => setDashboardData(value));
+  }, []);
+
+  const getDataDashboard = async () => {
+    try {
+      const data = await dashboardServices.getDataDashboard();
+      setDashboardData(data);
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+    }
+  };
+
+  useEffect(() => {
+    getDataDashboard();
+  }, []);
 
   // Mock notifications
   const notifications = [
@@ -95,35 +114,19 @@ const Index = () => {
         </Dialog>
 
         {/* Stats overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 w-full">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Total de Chamadas Hoje</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">142</div>
-              <p className="text-xs text-muted-foreground">+12% em relação a ontem</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Chamadas Perdidas</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">8</div>
-              <p className="text-xs text-muted-foreground">-3% em relação a ontem</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Duração Média</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">3:25</div>
-              <p className="text-xs text-muted-foreground">+30s em relação a ontem</p>
-            </CardContent>
-          </Card>
-        </div>
+        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-6 w-full">
+          {dashboardData?.cards?.map((card, index) => (
+            <Card key={index}>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{card.content}</div>
+                <p className="text-xs text-muted-foreground">{card.percentualDifference}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div> */}
 
         {/* Recent calls */}
         <Card className="w-full">
@@ -143,75 +146,76 @@ const Index = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody className="last:border-b">
-                  {recentCalls.map((call, idx) => (
-                    <TableRow key={idx}>
-                      <TableCell className="text-center">
-                        <HoverCard>
-                          <HoverCardTrigger className="underline cursor-help text-blue-500">
-                            {call.origem}
-                          </HoverCardTrigger>
-                          <HoverCardContent className="bg-card-custom p-4 w-72">
-                            <div className="space-y-1">
-                              <p>
-                                <strong>Departamento:</strong>{' '}
-                                {extensionInfo[call.origem]?.departamento || '-'}
-                              </p>
-                              <p>
-                                <strong>Setor:</strong> {extensionInfo[call.origem]?.setor || '-'}
-                              </p>
-                              <p>
-                                <strong>Subsetor:</strong>{' '}
-                                {extensionInfo[call.origem]?.subsetor || '-'}
-                              </p>
-                              <p>
-                                <strong>Colaborador:</strong>{' '}
-                                {extensionInfo[call.origem]?.colaborador || '-'}
-                              </p>
-                            </div>
-                          </HoverCardContent>
-                        </HoverCard>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <HoverCard>
-                          <HoverCardTrigger className="underline cursor-help text-blue-500">
-                            {call.destino}
-                          </HoverCardTrigger>
-                          <HoverCardContent className="bg-card-custom p-4 w-72">
-                            <div className="space-y-1">
-                              <p>
-                                <strong>Departamento:</strong>{' '}
-                                {extensionInfo[call.destino]?.departamento || '-'}
-                              </p>
-                              <p>
-                                <strong>Setor:</strong> {extensionInfo[call.destino]?.setor || '-'}
-                              </p>
-                              <p>
-                                <strong>Subsetor:</strong>{' '}
-                                {extensionInfo[call.destino]?.subsetor || '-'}
-                              </p>
-                              <p>
-                                <strong>Colaborador:</strong>{' '}
-                                {extensionInfo[call.destino]?.colaborador || '-'}
-                              </p>
-                            </div>
-                          </HoverCardContent>
-                        </HoverCard>
-                      </TableCell>
-                      <TableCell className="text-center">{call.data}</TableCell>
-                      <TableCell className="text-center">
-                        <CallStatusBadge status={call.desfecho} />
-                      </TableCell>
-                      <TableCell className="text-center">{call.duracao}</TableCell>
-                    </TableRow>
-                  ))}
+                  {/* {React.Children.toArray(
+                    dashboardData?.calls?.map(call => (
+                      <TableRow>
+                        <TableCell className="text-center">
+                          <HoverCard>
+                            <HoverCardTrigger className="underline cursor-help text-blue-500">
+                              {call.origin.value}
+                            </HoverCardTrigger>
+                            <HoverCardContent className="bg-card-custom p-4 w-72">
+                              <div className="space-y-1">
+                                <p>
+                                  <strong>Departamento:</strong> {'-'}
+                                </p>
+                                <p>
+                                  <strong>Setor:</strong> {'-'}
+                                </p>
+                                <p>
+                                  <strong>Subsetor:</strong> {'-'}
+                                </p>
+                                <p>
+                                  <strong>Colaborador:</strong> {'-'}
+                                </p>
+                              </div>
+                            </HoverCardContent>
+                          </HoverCard>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <HoverCard>
+                            <HoverCardTrigger className="underline cursor-help text-blue-500">
+                              {call.destiny.value}
+                            </HoverCardTrigger>
+                            <HoverCardContent className="bg-card-custom p-4 w-72">
+                              <div className="space-y-1">
+                                <p>
+                                  <strong>Departamento:</strong> {'-'}
+                                </p>
+                                <p>
+                                  <strong>Setor:</strong> {'-'}
+                                </p>
+                                <p>
+                                  <strong>Subsetor:</strong> {'-'}
+                                </p>
+                                <p>
+                                  <strong>Colaborador:</strong> {'-'}
+                                </p>
+                              </div>
+                            </HoverCardContent>
+                          </HoverCard>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {formatDateWithTime(call.timestamp)}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <CallStatusBadge status={call.status.value} />
+                        </TableCell>
+                        <TableCell className="text-center">{call.duration}</TableCell>
+                      </TableRow>
+                    ))
+                  )} */}
                 </TableBody>
               </Table>
             </div>
             <div className="my-4 mr-4 flex justify-end">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => navigate('/calls')}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  navigate('/calls');
+                  setActivePage('calls');
+                }}
                 className="dark:bg-[#141413] dark:text-white dark:border dark:border-border dark:hover:bg-[#222] border border-border"
               >
                 Ver todas as chamadas
