@@ -6,13 +6,13 @@ type EnvironmentType = 'development' | 'test' | 'production';
 
 const environments: Record<EnvironmentType, Environment> = {
   development: {
-    API_URL: 'http://localhost:8081/v1',
+    API_URL: 'http://localhost:8081',
   },
   test: {
-    API_URL: 'https://api.tst.grandcallpro.com/v1',
+    API_URL: 'https://api.tst.grandcallpro.com',
   },
   production: {
-    API_URL: 'https://api.grandcallpro.com/v1',
+    API_URL: 'https://api.grandcallpro.com',
   },
 };
 
